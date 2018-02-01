@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyBudget.Data;
 using EasyBudget.Models;
+using EasyBudget.Models.DataModels;
 using EasyBudget.Business;
+using EasyBudget.Business.UoWResults;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

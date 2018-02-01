@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EasyBudget.Models;
+using EasyBudget.Models.DataModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;

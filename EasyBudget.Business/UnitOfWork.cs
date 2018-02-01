@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyBudget.Data;
 using EasyBudget.Models;
+using EasyBudget.Models.DataModels;
+using EasyBudget.Business.UoWResults;
 
 namespace EasyBudget.Business
 {

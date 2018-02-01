@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyBudget.Models;
+using EasyBudget.Models.DataModels;
 
 namespace EasyBudget.Data
 {
