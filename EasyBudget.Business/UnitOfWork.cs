@@ -9,7 +9,7 @@ using EasyBudget.Business.UoWResults;
 
 namespace EasyBudget.Business
 {
-    public class UnitOfWork : IDisposable
+    public sealed class UnitOfWork : IDisposable
     {
         private IEasyBudgetRepository repository;
 
@@ -47,7 +47,7 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<BudgetCategoriesResults> GetMatchingBudgetCategories(string searchText)
+        public async Task<BudgetCategoriesResults> GetMatchingBudgetCategoriesAsync(string searchText)
         {
             BudgetCategoriesResults _results = new BudgetCategoriesResults();
 
@@ -177,7 +177,7 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<BudgetCategoriesResults> GetAllBudgetCategories()
+        public async Task<BudgetCategoriesResults> GetAllBudgetCategoriesAsync()
         {
             BudgetCategoriesResults _results = new BudgetCategoriesResults();
 
@@ -202,7 +202,7 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<CheckingAccountsResults> GetAllCheckingAccounts()
+        public async Task<CheckingAccountsResults> GetAllCheckingAccountsAsync()
         {
             CheckingAccountsResults _results = new CheckingAccountsResults();
 
@@ -228,7 +228,7 @@ namespace EasyBudget.Business
 
         }
 
-        public async Task<SavingsAccountsResults> GetAllSavingsAccounts()
+        public async Task<SavingsAccountsResults> GetAllSavingsAccountsAsync()
         {
             SavingsAccountsResults _results = new SavingsAccountsResults();
 

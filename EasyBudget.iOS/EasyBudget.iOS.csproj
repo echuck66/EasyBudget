@@ -124,6 +124,7 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="FileAccessHelper.cs" />
+    <Compile Include="EasyBudgetDataService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">
@@ -133,6 +134,10 @@
     <ProjectReference Include="..\EasyBudget.Models\EasyBudget.Models.csproj">
       <Project>{8F1ADF08-B405-45D0-8E8C-6A3CF192C8DB}</Project>
       <Name>EasyBudget.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EasyBudget.Data\EasyBudget.Data.csproj">
+      <Project>{5311CF8D-F32F-4C58-A6FA-4822CC3EBC27}</Project>
+      <Name>EasyBudget.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

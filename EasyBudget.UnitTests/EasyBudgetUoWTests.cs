@@ -105,7 +105,7 @@ namespace EasyBudget.UnitTests
             repositoryMock.Setup(r => r.GetMatchingCategoriesAsync(It.IsAny<string>())).ReturnsAsync(categories);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
-                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategories(searchText);
+                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategoriesAsync(searchText);
                 Assert.IsNotNull(_results.Results);
                 Assert.AreEqual(_results.Results.Count, categories.Count);
                 Assert.IsNull(_results.WorkException);
@@ -119,7 +119,7 @@ namespace EasyBudget.UnitTests
             repositoryMock.Setup(r => r.GetMatchingCategoriesAsync(It.IsAny<string>())).ReturnsAsync(emptyCategoryList);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
-                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategories(searchText);
+                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategoriesAsync(searchText);
                 Assert.IsNull(_results.Results);
                 Assert.IsNotNull(_results.WorkException);
                 Assert.IsFalse(_results.Successful);
@@ -131,7 +131,7 @@ namespace EasyBudget.UnitTests
             repositoryMock.Setup(r => r.GetMatchingCategoriesAsync(It.IsAny<string>())).ReturnsAsync(emptyCategoryList);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
-                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategories(searchText);
+                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategoriesAsync(searchText);
                 Assert.IsNull(_results.Results);
                 Assert.IsNotNull(_results.WorkException);
                 Assert.IsFalse(_results.Successful);
