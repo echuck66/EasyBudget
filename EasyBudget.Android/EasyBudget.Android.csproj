@@ -177,7 +177,7 @@
       <Name>EasyBudget.Business</Name>
     </ProjectReference>
     <ProjectReference Include="..\EasyBudget.Models\EasyBudget.Models.csproj">
-      <Project>{8F1ADF08-B405-45D0-8E8C-6A3CF192C8DB}</Project>
+      <Project>{80897FD6-55D8-49A5-A6F4-CDD6E8F7323C}</Project>
       <Name>EasyBudget.Models</Name>
     </ProjectReference>
   </ItemGroup>
