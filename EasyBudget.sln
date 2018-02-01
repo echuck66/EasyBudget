@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBudget.Business", "Easy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBudget.iOS", "EasyBudget.iOS\EasyBudget.iOS.csproj", "{985DC1AD-C7E4-401D-AC2F-D1D38E35A083}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBudget.Android", "EasyBudget.Android\EasyBudget.Android.csproj", "{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,5 +83,17 @@ Global
 		{985DC1AD-C7E4-401D-AC2F-D1D38E35A083}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{985DC1AD-C7E4-401D-AC2F-D1D38E35A083}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{985DC1AD-C7E4-401D-AC2F-D1D38E35A083}.Debug|iPhone.Build.0 = Debug|iPhone
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Release|iPhone.Build.0 = Release|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{D71F9FDF-913D-4E8C-A06A-74C04847DD4B}.Debug|iPhone.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
