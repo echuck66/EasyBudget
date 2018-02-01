@@ -3,7 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EasyBudget.Models;
+<<<<<<< HEAD
 using EasyBudget.Models.DataModels;
+=======
+>>>>>>> b95e39f... * EasyBudget.UnitTests.csproj: Corrected Unit Tests for updated   UnitOfWork class
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;

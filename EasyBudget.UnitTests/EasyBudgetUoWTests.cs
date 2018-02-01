@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyBudget.Data;
 using EasyBudget.Models;
+<<<<<<< HEAD
 using EasyBudget.Models.DataModels;
 using EasyBudget.Business;
 using EasyBudget.Business.UoWResults;
+=======
+using EasyBudget.Business;
+>>>>>>> b95e39f... * EasyBudget.UnitTests.csproj: Corrected Unit Tests for updated   UnitOfWork class
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -105,7 +109,11 @@ namespace EasyBudget.UnitTests
             repositoryMock.Setup(r => r.GetMatchingCategoriesAsync(It.IsAny<string>())).ReturnsAsync(categories);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
+<<<<<<< HEAD
                 BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategoriesAsync(searchText);
+=======
+                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategories(searchText);
+>>>>>>> b95e39f... * EasyBudget.UnitTests.csproj: Corrected Unit Tests for updated   UnitOfWork class
                 Assert.IsNotNull(_results.Results);
                 Assert.AreEqual(_results.Results.Count, categories.Count);
                 Assert.IsNull(_results.WorkException);
@@ -119,7 +127,11 @@ namespace EasyBudget.UnitTests
             repositoryMock.Setup(r => r.GetMatchingCategoriesAsync(It.IsAny<string>())).ReturnsAsync(emptyCategoryList);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
+<<<<<<< HEAD
                 BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategoriesAsync(searchText);
+=======
+                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategories(searchText);
+>>>>>>> b95e39f... * EasyBudget.UnitTests.csproj: Corrected Unit Tests for updated   UnitOfWork class
                 Assert.IsNull(_results.Results);
                 Assert.IsNotNull(_results.WorkException);
                 Assert.IsFalse(_results.Successful);
@@ -131,7 +143,11 @@ namespace EasyBudget.UnitTests
             repositoryMock.Setup(r => r.GetMatchingCategoriesAsync(It.IsAny<string>())).ReturnsAsync(emptyCategoryList);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
+<<<<<<< HEAD
                 BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategoriesAsync(searchText);
+=======
+                BudgetCategoriesResults _results = await uow.GetMatchingBudgetCategories(searchText);
+>>>>>>> b95e39f... * EasyBudget.UnitTests.csproj: Corrected Unit Tests for updated   UnitOfWork class
                 Assert.IsNull(_results.Results);
                 Assert.IsNotNull(_results.WorkException);
                 Assert.IsFalse(_results.Successful);

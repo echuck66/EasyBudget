@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+<<<<<<< HEAD
   <ItemGroup>
     <Compile Remove="Class1.cs" />
   </ItemGroup>
@@ -17,4 +18,6 @@
   <ItemGroup>
     <Folder Include="UoWResults\" />
   </ItemGroup>
+=======
+>>>>>>> b95e39f... * EasyBudget.UnitTests.csproj: Corrected Unit Tests for updated   UnitOfWork class
 </Project>
