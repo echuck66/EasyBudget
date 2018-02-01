@@ -1,5 +1,4 @@
-﻿using System;
-using EasyBudget.Models;
+﻿using EasyBudget.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyBudget.Data
