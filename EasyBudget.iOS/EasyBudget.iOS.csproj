@@ -124,7 +124,6 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="FileAccessHelper.cs" />
-    <Compile Include="EasyBudgetDataService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">
