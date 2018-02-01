@@ -1,8 +1,9 @@
 ﻿using System;
+using EasyBudget.Models;
 
-namespace EasyBudget.Services
+namespace EasyBudget.Business
 {
-    public class UnitOfWorkResults<T>
+    public abstract class UnitOfWorkResults<T>
     {
         public UnitOfWorkResults()
         {

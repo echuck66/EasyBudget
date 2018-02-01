@@ -3,9 +3,13 @@ using EasyBudget.Models;
 
 namespace EasyBudget.Business
 {
-    public class DeletionResults : UnitOfWorkResults<bool>
+    public class DeleteBudgetCategoryResults : UnitOfWorkResults<bool>
     {
-        public DeletionResults()
+        public Guid CategoryId { get; set; }
+
+        public BudgetCategory Category { get; set; }
+
+        public DeleteBudgetCategoryResults()
         {
         }
     }

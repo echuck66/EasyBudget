@@ -3,7 +3,7 @@ using EasyBudget.Models;
 
 namespace EasyBudget.Business
 {
-    public class BankTransferResults : UnitOfWorkResults<BankAccountFundsTransfer>
+    public class FundsTransferResults : UnitOfWorkResults<BankAccountFundsTransfer>
     {
         
         public decimal sourceAccountBeginningBalance { get; set; }
@@ -28,7 +28,7 @@ namespace EasyBudget.Business
 
         public decimal transactionAmount { get; set; }
 
-        public BankTransferResults()
+        public FundsTransferResults()
         {
         }
     }

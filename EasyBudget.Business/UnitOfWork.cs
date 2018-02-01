@@ -7,16 +7,16 @@ using EasyBudget.Models;
 
 namespace EasyBudget.Business
 {
-    public class EasyBudgetUnitOfWork : IDisposable
+    public class UnitOfWork : IDisposable
     {
         private IEasyBudgetRepository repository;
 
-        public EasyBudgetUnitOfWork(string dbFilePath)
+        public UnitOfWork(string dbFilePath)
         {
             repository = new EasyBudgetRepository(dbFilePath);
         }
 
-        public EasyBudgetUnitOfWork(IEasyBudgetRepository repo)
+        public UnitOfWork(IEasyBudgetRepository repo)
         {
             repository = repo;
         }
@@ -26,9 +26,9 @@ namespace EasyBudget.Business
             this.repository?.Dispose();
         }
 
-        public async Task<UnitOfWorkResults<BudgetCategory>> GetBudgetCategoryAsync(Guid id)
+        public async Task<BudgetCategoryResults> GetBudgetCategoryAsync(Guid id)
         {
-            UnitOfWorkResults<BudgetCategory> _results = new UnitOfWorkResults<BudgetCategory>();
+            BudgetCategoryResults _results = new BudgetCategoryResults();
 
             try
             {
@@ -45,9 +45,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<ICollection<BudgetCategory>>> GetMatchingBudgetCategories(string searchText)
+        public async Task<BudgetCategoriesResults> GetMatchingBudgetCategories(string searchText)
         {
-            UnitOfWorkResults<ICollection<BudgetCategory>> _results = new UnitOfWorkResults<ICollection<BudgetCategory>>();
+            BudgetCategoriesResults _results = new BudgetCategoriesResults();
 
             try
             {
@@ -69,9 +69,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> AddBudgetCategoryAsync(BudgetCategory category)
+        public async Task<BudgetCategoryResults> AddBudgetCategoryAsync(BudgetCategory category)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            BudgetCategoryResults _results = new BudgetCategoryResults();
 
             try
             {
@@ -81,12 +81,12 @@ namespace EasyBudget.Business
                 }
                 await repository.AddBudgetCategoryAsync(category);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = objectsAdded == 1;
-                _results.Successful = _results.Results;
+                _results.Results = category; 
+                _results.Successful = objectsAdded == 1;
             }
             catch (Exception ex)
             {
-                _results.Results = false;
+                _results.Results = null;
                 _results.Successful = false;
                 _results.WorkException = ex;
             }
@@ -94,9 +94,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> UpdateBudgetCategoryAsync(BudgetCategory category)
+        public async Task<BudgetCategoryResults> UpdateBudgetCategoryAsync(BudgetCategory category)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            BudgetCategoryResults _results = new BudgetCategoryResults();
 
             try
             {
@@ -106,12 +106,12 @@ namespace EasyBudget.Business
                 }
                 await repository.UpdateBudgetCategoryAsync(category);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = objectsAdded == 1;
-                _results.Successful = _results.Results;
+                _results.Successful = objectsAdded == 1;
+                _results.Results = category;
             }
             catch (Exception ex)
             {
-                _results.Results = false;
+                _results.Results = null;
                 _results.Successful = false;
                 _results.WorkException = ex;
             }
@@ -119,9 +119,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> DeleteBudgetCategoryAsync(BudgetCategory category)
+        public async Task<DeleteBudgetCategoryResults> DeleteBudgetCategoryAsync(BudgetCategory category)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            DeleteBudgetCategoryResults _results = new DeleteBudgetCategoryResults();
 
             try
             {
@@ -150,9 +150,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<ExpenseItem>> GetExpenseItemAsync(Guid id)
+        public async Task<ExpenseItemResults> GetExpenseItemAsync(Guid id)
         {
-            UnitOfWorkResults<ExpenseItem> _results = new UnitOfWorkResults<ExpenseItem>();
+            ExpenseItemResults _results = new ExpenseItemResults();
 
             try
             {
@@ -175,9 +175,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<ICollection<BudgetCategory>>> GetAllBudgetCategories()
+        public async Task<BudgetCategoriesResults> GetAllBudgetCategories()
         {
-            UnitOfWorkResults<ICollection<BudgetCategory>> _results = new UnitOfWorkResults<ICollection<BudgetCategory>>();
+            BudgetCategoriesResults _results = new BudgetCategoriesResults();
 
             try
             {
@@ -200,9 +200,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<ICollection<CheckingAccount>>> GetAllCheckingAccounts()
+        public async Task<CheckingAccountsResults> GetAllCheckingAccounts()
         {
-            UnitOfWorkResults<ICollection<CheckingAccount>> _results = new UnitOfWorkResults<ICollection<CheckingAccount>>();
+            CheckingAccountsResults _results = new CheckingAccountsResults();
 
             try
             {
@@ -226,9 +226,9 @@ namespace EasyBudget.Business
 
         }
 
-        public async Task<UnitOfWorkResults<ICollection<SavingsAccount>>> GetAllSavingsAccounts()
+        public async Task<SavingsAccountsResults> GetAllSavingsAccounts()
         {
-            UnitOfWorkResults<ICollection<SavingsAccount>> _results = new UnitOfWorkResults<ICollection<SavingsAccount>>();
+            SavingsAccountsResults _results = new SavingsAccountsResults();
 
             try
             {
@@ -252,9 +252,9 @@ namespace EasyBudget.Business
 
         }
 
-        public async Task<UnitOfWorkResults<ICollection<ExpenseItem>>> GetCategoryExpenseItemsAsync(BudgetCategory category)
+        public async Task<ExpenseItemsResults> GetCategoryExpenseItemsAsync(BudgetCategory category)
         {
-            UnitOfWorkResults<ICollection<ExpenseItem>> _results = new UnitOfWorkResults<ICollection<ExpenseItem>>();
+            ExpenseItemsResults _results = new ExpenseItemsResults();
 
             try
             {
@@ -276,9 +276,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<ICollection<IncomeItem>>> GetCategoryIncomeItemsAsync(BudgetCategory category)
+        public async Task<IncomeItemsResults> GetCategoryIncomeItemsAsync(BudgetCategory category)
         {
-            UnitOfWorkResults<ICollection<IncomeItem>> _results = new UnitOfWorkResults<ICollection<IncomeItem>>();
+            IncomeItemsResults _results = new IncomeItemsResults();
 
             try
             {
@@ -300,9 +300,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<IncomeItemResults> AddExpenseItemAsync(ExpenseItem expItem)
+        public async Task<ExpenseItemResults> AddExpenseItemAsync(ExpenseItem expItem)
         {
-            IncomeItemResults _results = new IncomeItemResults();
+            ExpenseItemResults _results = new ExpenseItemResults();
 
             try
             {
@@ -320,7 +320,7 @@ namespace EasyBudget.Business
                 await repository.AddExpenseItemAsync(expItem);
                 int objectsAdded = await this.repository.SaveChangesAsync();
                 _results.Successful = true;
-
+                _results.Results = expItem;
                 _results.BudgetCategory = expItem.budgetCategory;
                 _results.BudgetCategoryId = expItem.budgetCategoryId;
                 _results.NewBudgetCategoryAmount = newCategoryBudgetAmount;
@@ -370,9 +370,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<IncomeItemResults> UpdateExpenseItemAsync(ExpenseItem expItem)
+        public async Task<ExpenseItemResults> UpdateExpenseItemAsync(ExpenseItem expItem)
         {
-            IncomeItemResults _results = new IncomeItemResults();
+            ExpenseItemResults _results = new ExpenseItemResults();
 
             try
             {
@@ -402,6 +402,7 @@ namespace EasyBudget.Business
 
                 // Finish updating the return object
                 _results.Successful = true;
+                _results.Results = expItem;
                 _results.BudgetCategory = expItem.budgetCategory;
                 _results.BudgetCategoryId = expItem.budgetCategoryId;
                 _results.NewBudgetedAmount = expItem.budgetedAmount;
@@ -456,9 +457,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<IncomeItemResults> DeleteExpenseItemAsync(ExpenseItem expItem)
+        public async Task<DeleteExpenseItemResults> DeleteExpenseItemAsync(ExpenseItem expItem)
         {
-            IncomeItemResults _results = new IncomeItemResults();
+            DeleteExpenseItemResults _results = new DeleteExpenseItemResults();
 
             try
             {
@@ -492,9 +493,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<IncomeItemResults> DeleteIncomeItemAsync(IncomeItem incItem)
+        public async Task<DeleteIncomeItemResults> DeleteIncomeItemAsync(IncomeItem incItem)
         {
-            IncomeItemResults _results = new IncomeItemResults();
+            DeleteIncomeItemResults _results = new DeleteIncomeItemResults();
 
             try
             {
@@ -502,8 +503,25 @@ namespace EasyBudget.Business
                 {
                     throw new NullReferenceException("Income Item cannot be NULL");
                 }
+                incItem.budgetCategory = await repository.GetBudgetCategoryAsync(incItem.budgetCategoryId);
+                decimal previousBudgetCategoryAmount = incItem.budgetCategory.budgetAmount;
+                _results.PreviousBudgetedAmount = incItem.budgetedAmount;
+                _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
+                decimal newCategoryBudgetAmount = previousBudgetCategoryAmount - incItem.budgetedAmount;
+                incItem.budgetCategory.budgetAmount = newCategoryBudgetAmount;
+
+
                 await repository.DeleteIncomeItemAsync(incItem);
                 int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+
+                _results.BudgetCategory = incItem.budgetCategory;
+                _results.BudgetCategoryId = incItem.budgetCategoryId;
+                _results.NewBudgetCategoryAmount = newCategoryBudgetAmount;
+                _results.NewBudgetedAmount = incItem.budgetedAmount;
+
+                //await repository.DeleteIncomeItemAsync(incItem);
+                //int objectsAdded = await this.repository.SaveChangesAsync();
                 _results.Successful = true;
             }
             catch (Exception ex)
@@ -515,9 +533,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<CheckingAccount>> GetCheckingAccountAsync(Guid accountId)
+        public async Task<CheckingAccountResults> GetCheckingAccountAsync(Guid accountId)
         {
-            UnitOfWorkResults<CheckingAccount> _results = new UnitOfWorkResults<CheckingAccount>();
+            CheckingAccountResults _results = new CheckingAccountResults();
 
             try
             {
@@ -540,9 +558,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<SavingsAccount>> GetSavingsAccountAsync(Guid accountId)
+        public async Task<SavingsAccountResults> GetSavingsAccountAsync(Guid accountId)
         {
-            UnitOfWorkResults<SavingsAccount> _results = new UnitOfWorkResults<SavingsAccount>();
+            SavingsAccountResults _results = new SavingsAccountResults();
 
             try
             {
@@ -565,9 +583,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> AddCheckingAccountAsync(CheckingAccount account)
+        public async Task<CheckingAccountResults> AddCheckingAccountAsync(CheckingAccount account)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            CheckingAccountResults _results = new CheckingAccountResults();
 
             try
             {
@@ -577,12 +595,12 @@ namespace EasyBudget.Business
                 }
                 await repository.AddCheckingAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = objectsAdded == 1;
-                _results.Successful = _results.Results;
+                _results.Successful = objectsAdded == 1;
+                _results.Results = account;
             }
             catch (Exception ex)
             {
-                _results.Results = false;
+                _results.Results = null;
                 _results.Successful = false;
                 _results.WorkException = ex;
             }
@@ -590,9 +608,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> AddSavingsAccountAsync(SavingsAccount account)
+        public async Task<SavingsAccountResults> AddSavingsAccountAsync(SavingsAccount account)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            SavingsAccountResults _results = new SavingsAccountResults();
 
             try
             {
@@ -602,12 +620,12 @@ namespace EasyBudget.Business
                 }
                 await repository.AddSavingsAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = objectsAdded == 1;
-                _results.Successful = _results.Results;
+                _results.Successful = objectsAdded == 1;
+                _results.Results = account;
             }
             catch (Exception ex)
             {
-                _results.Results = false;
+                _results.Results = null;
                 _results.Successful = false;
                 _results.WorkException = ex;
             }
@@ -615,9 +633,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> UpdateCheckingAccountAsync(CheckingAccount account)
+        public async Task<CheckingAccountResults> UpdateCheckingAccountAsync(CheckingAccount account)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            CheckingAccountResults _results = new CheckingAccountResults();
 
             try
             {
@@ -627,12 +645,12 @@ namespace EasyBudget.Business
                 }
                 await repository.UpdateCheckingAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = objectsAdded == 1;
-                _results.Successful = _results.Results;
+                _results.Successful = objectsAdded == 1;
+                _results.Results = account;
             }
             catch (Exception ex)
             {
-                _results.Results = false;
+                _results.Results = null;
                 _results.Successful = false;
                 _results.WorkException = ex;
             }
@@ -640,9 +658,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> UpdateSavingsAccountAsync(SavingsAccount account)
+        public async Task<SavingsAccountResults> UpdateSavingsAccountAsync(SavingsAccount account)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            SavingsAccountResults _results = new SavingsAccountResults();
 
             try
             {
@@ -652,12 +670,12 @@ namespace EasyBudget.Business
                 }
                 await repository.UpdateSavingsAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = objectsAdded == 1;
-                _results.Successful = _results.Results;
+                _results.Successful = objectsAdded == 1;
+                _results.Results = account;
             }
             catch (Exception ex)
             {
-                _results.Results = false;
+                _results.Results = null;
                 _results.Successful = false;
                 _results.WorkException = ex;
             }
@@ -665,9 +683,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> DeleteCheckingAccountAsync(CheckingAccount account)
+        public async Task<DeleteCheckingAccountResults> DeleteCheckingAccountAsync(CheckingAccount account)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            DeleteCheckingAccountResults _results = new DeleteCheckingAccountResults();
 
             try
             {
@@ -690,9 +708,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<UnitOfWorkResults<bool>> DeleteSavingsAccountAsync(SavingsAccount account)
+        public async Task<DeleteSavingsAccountResults> DeleteSavingsAccountAsync(SavingsAccount account)
         {
-            UnitOfWorkResults<bool> _results = new UnitOfWorkResults<bool>();
+            DeleteSavingsAccountResults _results = new DeleteSavingsAccountResults();
 
             try
             {
@@ -703,7 +721,7 @@ namespace EasyBudget.Business
                 await repository.DeleteSavingsAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
                 _results.Results = objectsAdded == 1;
-                _results.Successful = _results.Results;
+                _results.Successful = true;
             }
             catch (Exception ex)
             {
@@ -715,9 +733,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<CheckingAccountResults> SpendMoneyCheckingAsync(CheckingWithdrawal withdrawal)
+        public async Task<CheckingAccountWithdrawalResults> SpendMoneyCheckingAsync(CheckingWithdrawal withdrawal)
         {
-            CheckingAccountResults _results = new CheckingAccountResults();
+            CheckingAccountWithdrawalResults _results = new CheckingAccountWithdrawalResults();
 
             try
             {
@@ -739,8 +757,10 @@ namespace EasyBudget.Business
                 await repository.AddCheckingWithdrawalAsync(withdrawal);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
+                _results.Results = withdrawal;
                 _results.EndingAccountBalance = withdrawal.checkingAccount.currentBalance;
-                _results.CheckingAccountId = withdrawal.checkingAccount.id;
+                _results.AccountId = withdrawal.checkingAccount.id;
+                _results.Account = withdrawal.checkingAccount;
                 _results.TransactionAmount = withdrawal.transactionAmount;
             }
             catch (Exception ex)
@@ -752,9 +772,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<CheckingAccountResults> DepositMoneyCheckingAsync(CheckingDeposit deposit)
+        public async Task<CheckingAccountDepositResults> DepositMoneyCheckingAsync(CheckingDeposit deposit)
         {
-            CheckingAccountResults _results = new CheckingAccountResults();
+            CheckingAccountDepositResults _results = new CheckingAccountDepositResults();
 
             try
             {
@@ -776,8 +796,10 @@ namespace EasyBudget.Business
                 await repository.AddCheckingDepositAsync(deposit);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
+                _results.Results = deposit;
                 _results.EndingAccountBalance = deposit.checkingAccount.currentBalance;
-                _results.CheckingAccountId = deposit.checkingAccount.id;
+                _results.AccountId = deposit.checkingAccount.id;
+                _results.Account = deposit.checkingAccount;
                 _results.TransactionAmount = deposit.transactionAmount;
             }
             catch (Exception ex)
@@ -789,9 +811,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<SavingsAccountResults> SpendMoneySavingsAsync(SavingsWithdrawal withdrawal)
+        public async Task<SavingsAccountWithdrawalResults> SpendMoneySavingsAsync(SavingsWithdrawal withdrawal)
         {
-            SavingsAccountResults _results = new SavingsAccountResults();
+            SavingsAccountWithdrawalResults _results = new SavingsAccountWithdrawalResults();
 
             try
             {
@@ -811,8 +833,10 @@ namespace EasyBudget.Business
                 await repository.AddSavingsWithdrawalAsync(withdrawal);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
+                _results.Results = withdrawal;
                 _results.EndingAccountBalance = withdrawal.savingsAccount.currentBalance;
-                _results.SavingsAccountId = withdrawal.savingsAccount.id;
+                _results.AccountId = withdrawal.savingsAccount.id;
+                _results.Account = withdrawal.savingsAccount;
                 _results.TransactionAmount = withdrawal.transactionAmount;
             }
             catch (Exception ex)
@@ -824,9 +848,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<SavingsAccountResults> DepositMoneySavingsAsync(SavingsDeposit deposit)
+        public async Task<SavingsAccountDepositResults> DepositMoneySavingsAsync(SavingsDeposit deposit)
         {
-            SavingsAccountResults _results = new SavingsAccountResults();
+            SavingsAccountDepositResults _results = new SavingsAccountDepositResults();
 
             try
             {
@@ -846,8 +870,10 @@ namespace EasyBudget.Business
                 await repository.AddSavingsDepositAsync(deposit);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
+                _results.Results = deposit;
                 _results.EndingAccountBalance = deposit.savingsAccount.currentBalance;
-                _results.SavingsAccountId = deposit.savingsAccount.id;
+                _results.AccountId = deposit.savingsAccount.id;
+                _results.Account = deposit.savingsAccount;
                 _results.TransactionAmount = deposit.transactionAmount;
             }
             catch (Exception ex)
@@ -859,9 +885,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<BankTransferResults> TransferMoneyAsync(BankAccountFundsTransfer fundsTransfer)
+        public async Task<FundsTransferResults> TransferMoneyAsync(BankAccountFundsTransfer fundsTransfer)
         {
-            BankTransferResults _results = new BankTransferResults();
+            FundsTransferResults _results = new FundsTransferResults();
 
             try
             {
@@ -967,9 +993,9 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<BankTransferResults> VoidFundsTransferAsync(BankAccountFundsTransfer fundsTransfer)
+        public async Task<FundsTransferResults> VoidFundsTransferAsync(BankAccountFundsTransfer fundsTransfer)
         {
-            BankTransferResults _results = new BankTransferResults();
+            FundsTransferResults _results = new FundsTransferResults();
 
             try
             {

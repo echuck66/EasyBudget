@@ -1,21 +1,19 @@
 ﻿using System;
+using EasyBudget.Models;
+
 namespace EasyBudget.Business
 {
-    public class SavingsAccountTransactionUnitOfWorkResults
+    public class SavingsAccountResults : UnitOfWorkResults<SavingsAccount>
     {
-        public Guid SavingsAccountId { get; set; }
+        public Guid AccountId { get; set; }
 
-        public bool Successful { get; set; }
-
-        public string Message { get; set; }
-
-        public Exception WorkException { get; set; }
+        public SavingsAccount Account { get; set; }
 
         public decimal TransactionAmount { get; set; }
 
         public decimal EndingAccountBalance { get; set; }
 
-        public SavingsAccountTransactionUnitOfWorkResults()
+        public SavingsAccountResults()
         {
         }
     }

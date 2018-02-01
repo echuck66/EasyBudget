@@ -3,7 +3,7 @@ using EasyBudget.Models;
 
 namespace EasyBudget.Business
 {
-    public class BudgetItemUnitOfWorkResults
+    public class IncomeItemResults : UnitOfWorkResults<IncomeItem>
     {
         public Guid BudgetCategoryId { get; set; }
 
@@ -17,13 +17,7 @@ namespace EasyBudget.Business
 
         public decimal NewBudgetCategoryAmount { get; set; }
 
-        public bool Successful { get; set; }
-
-        public string Message { get; set; }
-
-        public Exception WorkException { get; set; }
-
-        public BudgetItemUnitOfWorkResults()
+        public IncomeItemResults()
         {
         }
     }
