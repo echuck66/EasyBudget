@@ -726,6 +726,4 @@ namespace EasyBudget.Business
         }
     }
 
-    // this is dummy text
-
 }
