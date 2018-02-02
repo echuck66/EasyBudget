@@ -177,6 +177,31 @@ namespace EasyBudget.Business
             return _results;
         }
 
+        public async Task<IncomeItemResults> GetIncomeItemAsync(Guid id)
+        {
+            IncomeItemResults _results = new IncomeItemResults();
+
+            try
+            {
+                IncomeItem expItm = await repository.GetIncomeItemAsync(id);
+                _results.Results = expItm;
+                _results.Successful = expItm != null;
+                if (expItm == null)
+                {
+                    _results.Message = "No matching IncomeItem found";
+                }
+                _results.WorkException = null;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
         public async Task<BudgetCategoriesResults> GetAllBudgetCategoriesAsync()
         {
             BudgetCategoriesResults _results = new BudgetCategoriesResults();

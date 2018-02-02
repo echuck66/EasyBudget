@@ -380,12 +380,67 @@ namespace EasyBudget.Business
                     }
                     else
                     {
-                        WriteErrorCondition("An unknown error has occurred");
+                        WriteErrorCondition("An unknown error has occurred loading Checking Account");
                     }
                 }
             }
         }
     
+    }
+
+    public class SavingsAccountVM : BaseViewModel, INotifyPropertyChanged
+    {
+        SavingsAccount SavingsAccount { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string RoutingNumber { get; set; }
+
+        public string AccountNumber { get; set; }
+
+        public string BankName { get; set; }
+
+        public string AccountNickname { get; set; }
+
+        public decimal CurrentBalance { get; set; }
+
+        public SavingsAccountVM(string dbFilePath)
+            : base(dbFilePath)
+        {
+
+        }
+
+        public async Task LoadSavingsAccountDetailsAsync(Guid accountId)
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _results = await uow.GetSavingsAccountAsync(accountId);
+                if (_results.Successful)
+                {
+                    this.SavingsAccount = _results.Results;
+                    this.RoutingNumber = this.SavingsAccount?.routingNumber ?? string.Empty;
+                    this.AccountNumber = this.SavingsAccount?.accountNumber ?? string.Empty;
+                    this.BankName = this.SavingsAccount?.bankName ?? string.Empty;
+                    this.AccountNickname = this.SavingsAccount?.accountNickname ?? string.Empty;
+                    this.CurrentBalance = this.SavingsAccount?.currentBalance ?? 0;
+                }
+                else
+                {
+                    if (_results.WorkException != null)
+                    {
+                        WriteErrorCondition(_results.WorkException.Message);
+                    }
+                    else if (!string.IsNullOrEmpty(_results.Message))
+                    {
+                        WriteErrorCondition(_results.Message);
+                    }
+                    else
+                    {
+                        WriteErrorCondition("An unknown error has occurred loading Savings Account");
+                    }
+                }
+            }
+        }
     }
 
     public class IncomeItemsVM : BaseViewModel, INotifyPropertyChanged
@@ -493,7 +548,7 @@ namespace EasyBudget.Business
                         }
                         else
                         {
-                            WriteErrorCondition("An unknown error has occurred");
+                            WriteErrorCondition("An unknown error has occurred loading Expense Items");
                         }
                     }
                 }
@@ -523,7 +578,13 @@ namespace EasyBudget.Business
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public decimal BudgetedAmount { get; set; }
 
+        public string Description { get; set; }
+
+        public string Notation { get; set; }
+
+        public bool Recurring { get; set; }
 
         public ExpenseItemVM(string dbFilePath)
             : base(dbFilePath)
@@ -531,17 +592,91 @@ namespace EasyBudget.Business
             
         }
 
+        public async Task LoadExpenseItemAsync(Guid itemId)
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _results = await uow.GetExpenseItemAsync(itemId);
+                if (_results.Successful)
+                {
+                    this.ExpenseItem = _results.Results;
+
+                    this.BudgetedAmount = this.ExpenseItem?.budgetedAmount ?? 0;
+                    this.Description = this.ExpenseItem?.description ?? string.Empty;
+                    this.Notation = this.ExpenseItem?.notation ?? string.Empty;
+                    this.Recurring = this.ExpenseItem?.recurring ?? false;
+
+                }
+                else 
+                {
+                    if (_results.WorkException != null)
+                    {
+                        WriteErrorCondition(_results.WorkException.Message);
+                    }
+                    else if (!string.IsNullOrEmpty(_results.Message))
+                    {
+                        WriteErrorCondition(_results.Message);
+                    }
+                    else
+                    {
+                        WriteErrorCondition("An unknown error has occurred loading Expense Item");
+                    }
+                }
+            }
+        }
     }
 
     public class IncomeItemVM : BaseViewModel, INotifyPropertyChanged
     {
+        IncomeItem IncomeItem;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public decimal BudgetedAmount { get; set; }
 
-        public IncomeItemVM(string dbFilePath) 
+        public string Description { get; set; }
+
+        public string Notation { get; set; }
+
+        public bool Recurring { get; set; }
+
+        public IncomeItemVM(string dbFilePath)
             : base(dbFilePath)
         {
-            
+
+        }
+
+        public async Task LoadExpenseItemAsync(Guid itemId)
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _results = await uow.GetIncomeItemAsync(itemId);
+                if (_results.Successful)
+                {
+                    this.IncomeItem = _results.Results;
+
+                    this.BudgetedAmount = this.IncomeItem?.budgetedAmount ?? 0;
+                    this.Description = this.IncomeItem?.description ?? string.Empty;
+                    this.Notation = this.IncomeItem?.notation ?? string.Empty;
+                    this.Recurring = this.IncomeItem?.recurring ?? false;
+
+                }
+                else
+                {
+                    if (_results.WorkException != null)
+                    {
+                        WriteErrorCondition(_results.WorkException.Message);
+                    }
+                    else if (!string.IsNullOrEmpty(_results.Message))
+                    {
+                        WriteErrorCondition(_results.Message);
+                    }
+                    else
+                    {
+                        WriteErrorCondition("An unknown error has occurred loading Income Item");
+                    }
+                }
+            }
         }
     }
 }
