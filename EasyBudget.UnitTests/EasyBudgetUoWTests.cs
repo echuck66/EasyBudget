@@ -391,6 +391,60 @@ namespace EasyBudget.UnitTests
         }
 
         [TestMethod]
+        public async Task GetIncomeItemTests()
+        {
+            // Set up test data
+            BudgetCategory category = new BudgetCategory()
+            {
+                categoryIcon = AppIcon.None,
+                categoryName = "Category",
+                systemCategory = false,
+                budgetAmount = 0
+            };
+
+            IncomeItem incomeItem = new IncomeItem()
+            {
+                budgetCategory = category,
+                budgetCategoryId = category.id,
+                notation = "Test item",
+                dateCreated = DateTime.Now,
+                dateModified = DateTime.Now
+            };
+
+            // Happy Path test
+            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<Guid>())).ReturnsAsync(incomeItem);
+            using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
+            {
+                IncomeItemResults uowResults = await uow.GetIncomeItemAsync(incomeItem.id);
+                Assert.IsNotNull(uowResults.Results);
+                Assert.IsTrue(uowResults.Successful);
+                Assert.IsNotNull(uowResults.Results.budgetCategory);
+                Assert.AreEqual(uowResults.Results.budgetCategoryId, category.id);
+            }
+
+            // Not Found test
+            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<Guid>())).ReturnsAsync((IncomeItem)null);
+            using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
+            {
+                IncomeItemResults uowResults = await uow.GetIncomeItemAsync(incomeItem.id);
+                Assert.IsNull(uowResults.Results);
+                Assert.IsFalse(uowResults.Successful);
+                Assert.IsTrue(uowResults.Message.ToLower() == "no matching incomeitem found");
+            }
+
+            // Excaption Handling test
+            Exception ex = new Exception("dummy exception");
+            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
+            {
+                IncomeItemResults uowResults = await uow.GetIncomeItemAsync(incomeItem.id);
+                Assert.IsNull(uowResults.Results);
+                Assert.IsFalse(uowResults.Successful);
+                Assert.IsNotNull(uowResults.WorkException);
+            }
+        }
+
+        [TestMethod]
         public async Task GetCategoryExpenseItemsTests()
         {
             // Set up test data
