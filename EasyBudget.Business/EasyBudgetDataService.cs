@@ -208,7 +208,6 @@ namespace EasyBudget.Business
             }
         }
 
-
     }
 
     public class BudgetCategoriesVM : BaseViewModel, INotifyPropertyChanged
