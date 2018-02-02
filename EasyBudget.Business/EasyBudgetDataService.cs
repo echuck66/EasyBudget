@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
@@ -50,8 +51,45 @@ namespace EasyBudget.Business
             return vm;
         }
 
+        public async Task<SavingsAccountVM> GetSavingsAccountVMAsync(Guid accountId)
+        {
+            SavingsAccountVM vm = new SavingsAccountVM(this.dbFilePath);
+            await vm.LoadSavingsAccountDetailsAsync(accountId);
 
+            return vm;
+        }
 
+        public async Task<IncomeItemsVM> GetIncomeItemsVMAsync(Guid categoryId)
+        {
+            IncomeItemsVM vm = new IncomeItemsVM(this.dbFilePath);
+            await vm.LoadIncomeItemsAsync(categoryId);
+
+            return vm;
+        }
+
+        public async Task<ExpenseItemsVM> GetExpenseItemsVMAsync(Guid categoryId)
+        {
+            ExpenseItemsVM vm = new ExpenseItemsVM(this.dbFilePath);
+            await vm.LoadExpenseItemsAsync(categoryId);
+
+            return vm;
+        }
+    
+        public async Task<IncomeItemVM> GetIncomeItemVMAsync(Guid itemId)
+        {
+            IncomeItemVM vm = new IncomeItemVM(this.dbFilePath);
+            await vm.LoadIncomeItemAsync(itemId);
+
+            return vm;
+        }
+
+        public async Task<ExpenseItemVM> GetExpenseItemVMAsync(Guid itemId)
+        {
+            ExpenseItemVM vm = new ExpenseItemVM(this.dbFilePath);
+            await vm.LoadExpenseItemAsync(itemId);
+
+            return vm;
+        }
     }
 
     public abstract class BaseViewModel
@@ -348,6 +386,14 @@ namespace EasyBudget.Business
 
         public decimal CurrentBalance { get; set; }
 
+        public DateTime LoadTransactionsFromDate { get; set; }
+
+        public DateTime LoadTransactionsToDate { get; set; }
+
+        public ObservableCollection<CheckingWithdrawal> Withdrawals { get; set; }
+
+        public ObservableCollection<CheckingDeposit> Deposits { get; set; }
+
         public CheckingAccountVM(string dbFilePath)
             : base(dbFilePath)
         {
@@ -455,7 +501,7 @@ namespace EasyBudget.Business
             
         }
 
-        public async Task LoadIncomeItems(Guid categoryId)
+        public async Task LoadIncomeItemsAsync(Guid categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -519,7 +565,7 @@ namespace EasyBudget.Business
             
         }
 
-        public async Task LoadExpenseItems(Guid categoryId)
+        public async Task LoadExpenseItemsAsync(Guid categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -646,7 +692,7 @@ namespace EasyBudget.Business
 
         }
 
-        public async Task LoadExpenseItemAsync(Guid itemId)
+        public async Task LoadIncomeItemAsync(Guid itemId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -679,4 +725,7 @@ namespace EasyBudget.Business
             }
         }
     }
+
+    // this is dummy text
+
 }
