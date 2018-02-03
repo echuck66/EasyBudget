@@ -63,9 +63,9 @@ namespace EasyBudget.Data
             }
         }
 
-        protected override void OnModelCreating(ModelBuilder mb)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(mb);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
