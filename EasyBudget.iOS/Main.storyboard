@@ -40,10 +40,7 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="LabelCategoryName" destination="1529" id="name-outlet-1529"/>
-                                    <outlet property="LabelCategoryTotalAmount" destination="1530" id="name-outlet-1530"/>
-                                </connections>
+                                <connections/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -51,6 +48,10 @@
                             <outlet property="delegate" destination="1310" id="1313"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections/>
+                    <navigationItem title="Title" id="6361" key="navigationItem"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1316" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -3,11 +3,30 @@ using System;
 using UIKit;
 using EasyBudget.Business;
 using System.Threading.Tasks;
+using EasyBudget.Models.DataModels;
 
 namespace EasyBudget.iOS
 {
     public partial class BudgetCategoriesTableViewController : UITableViewController
     {
+        BudgetCategoriesViewSource viewSource;
+
+        private async void OnNewExpenseCategoryClicked(Object sender, EventArgs e)
+        {
+            BudgetCategory cat = new BudgetCategory();
+            await viewSource.AddNewCategory();
+            //this.TableView.InsertRows(0, UITableViewRowAnimation.Automatic);
+            viewSource.WillBeginTableEditing(this.TableView);
+
+        }
+        private async void OnNewIncomeCategoryClicked(Object sender, EventArgs e)
+        {
+            BudgetCategory cat = new BudgetCategory();
+            await viewSource.AddNewCategory();
+            //this.TableView.InsertRows(0, UITableViewRowAnimation.Automatic);
+            viewSource.WillBeginTableEditing(this.TableView);
+
+        }
         EasyBudgetDataService ds;
         public BudgetCategoriesTableViewController (IntPtr handle) : base (handle)
         {
@@ -15,14 +34,14 @@ namespace EasyBudget.iOS
             string dbFileName = "dbEasyBudget";
             string dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
             ds = new EasyBudgetDataService(dbFilePath);
-
+            this.NavigationItem.RightBarButtonItems = new[] { new UIBarButtonItem("+Exp", UIBarButtonItemStyle.Plain, OnNewExpenseCategoryClicked), new UIBarButtonItem("+Inc", UIBarButtonItemStyle.Plain, OnNewIncomeCategoryClicked) };
         }
 
         public async override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
-            this.TableView.Source = await BudgetCategoriesViewSource.CreateAsync(this, ds);
-
+            viewSource = await BudgetCategoriesViewSource.CreateAsync(this, ds);
+            this.TableView.Source = viewSource;
         }
 
         public async override void ViewDidLoad()
@@ -67,6 +86,9 @@ namespace EasyBudget.iOS
                 cell.ImageView.Image.Dispose();
             }
 
+            cell.TextLabel.Text = vmodel.BudgetCategories[indexPath.Row].categoryName;
+            cell.DetailTextLabel.Text = "Total Budgeted $0.00";
+
             return cell;
         }
 
@@ -74,5 +96,34 @@ namespace EasyBudget.iOS
         {
             return vmodel.BudgetCategories.Count;
         }
+    
+        public async Task AddNewCategory()
+        {
+            BudgetCategory newCategory = new BudgetCategory();
+            newCategory.categoryName = "New Category";
+            newCategory.categoryType = Models.BudgetCategoryType.Expense;
+            await Task.Run(() => this.vmodel.BudgetCategories.Add(newCategory));
+
+        }
+
+        public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            return true;
+        }
+
+        public nint GetNewRowIndex()
+        {
+            return this.vmodel.BudgetCategories.Count;
+        }
+
+        public void WillBeginTableEditing(UITableView tableView)
+        {
+            tableView.BeginUpdates();
+            tableView.InsertRows(new NSIndexPath[] {
+                NSIndexPath.FromRowSection (tableView.NumberOfRowsInSection (0), 0)
+            }, UITableViewRowAnimation.Fade);
+            tableView.EndUpdates(); 
+        }
+
     }
 }
