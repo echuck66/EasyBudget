@@ -212,8 +212,8 @@ namespace EasyBudget.iOS
 
             });
 
-            // set the edit button's background color to green:
-            editButton.BackgroundColor = UIColor.Green;
+            // set the edit button's background color to orange:
+            editButton.BackgroundColor = UIColor.Orange;
 
             // Locate the source item and determine if it can be deleted or not:
             var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
