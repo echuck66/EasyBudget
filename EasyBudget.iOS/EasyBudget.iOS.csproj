@@ -198,6 +198,14 @@
     <Compile Include="ViewControllers\MainMenuTableViewController.designer.cs">
       <DependentUpon>MainMenuTableViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewControllers\EditBudgetCategoryViewController.cs" />
+    <Compile Include="ViewControllers\EditBudgetCategoryViewController.designer.cs">
+      <DependentUpon>EditBudgetCategoryViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewBudgetCategoryViewController.cs" />
+    <Compile Include="ViewControllers\ViewBudgetCategoryViewController.designer.cs">
+      <DependentUpon>ViewBudgetCategoryViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">

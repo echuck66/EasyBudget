@@ -97,7 +97,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3025" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="925" y="134"/>
+            <point key="canvasLocation" x="904" y="133"/>
         </scene>
         <scene sceneID="3505">
             <objects>
@@ -245,6 +245,40 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="11234" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="908" y="-1383"/>
+        </scene>
+        <scene sceneID="15828">
+            <objects>
+                <viewController id="15829" sceneMemberID="viewController" customClass="EditBudgetCategoryViewController" storyboardIdentifier="EditBudgetCategoryViewController" useStoryboardIdentifierAsRestorationIdentifier="YES">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="15826"/>
+                        <viewControllerLayoutGuide type="bottom" id="15827"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="15830">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="15831" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1339" y="-1385"/>
+        </scene>
+        <scene sceneID="16058">
+            <objects>
+                <viewController id="16059" sceneMemberID="viewController" customClass="ViewBudgetCategoryViewController" storyboardIdentifier="ViewBudgetCategoryViewController" useStoryboardIdentifierAsRestorationIdentifier="YES">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="16056"/>
+                        <viewControllerLayoutGuide type="bottom" id="16057"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="16060">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="16061" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1797" y="-1382"/>
         </scene>
     </scenes>
     <resources>

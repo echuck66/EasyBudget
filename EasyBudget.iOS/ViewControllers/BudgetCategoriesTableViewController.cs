@@ -218,7 +218,7 @@ namespace EasyBudget.iOS
             // Locate the source item and determine if it can be deleted or not:
             var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
             UITableViewRowAction[] rowActions;
-            if (itm.CanDelete)
+            if (!itm.CanDelete)
             {
                 rowActions = new UITableViewRowAction[] { editButton };
             }
