@@ -37,6 +37,8 @@ namespace EasyBudget.Models.DataModels
 
         public bool recurring { get; set; }
 
+        public Frequency frequency { get; set; }
+
         public ExpenseItem()
         {
         }
