@@ -14,6 +14,8 @@
 //    limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using SQLite;
 
 namespace EasyBudget.Models.DataModels
@@ -39,5 +41,6 @@ namespace EasyBudget.Models.DataModels
         public AppIcon categoryIcon { get; set; }
 
         public BudgetCategoryType categoryType { get; set; }
+
     }
 }

@@ -32,6 +32,22 @@ namespace EasyBudget.Business
             this.dbFilePath = dbFilePath;
         }
 
+        public async Task EnsureSystemItemsExistAsync()
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _results = await uow.EnsureSystemDataItemsAsync();
+                if (_results.Successful)
+                {
+                    var _categoryCount = _results.BudgetCategoriesCount;
+                }
+                else
+                {
+                    var _categoriesExist = _results.BudgetCategoriesExist;
+                }
+            }
+        }
+
         public async Task<BankAccountsVM> GetBankAccountsViewModelAsync()
         {
             BankAccountsVM vm = new BankAccountsVM(this.dbFilePath);

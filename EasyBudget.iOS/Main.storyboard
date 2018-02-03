@@ -40,7 +40,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections/>
+                                <connections>
+                                    <outlet property="TextBudgetedAmount" destination="1530" id="name-outlet-1530"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -51,7 +53,7 @@
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections/>
-                    <navigationItem title="Title" id="6361" key="navigationItem"/>
+                    <navigationItem title="Categories" id="6361" key="navigationItem"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1316" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

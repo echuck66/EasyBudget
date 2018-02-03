@@ -12,34 +12,12 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using SQLite;
-
 namespace EasyBudget.Models.DataModels
 {
-    [SQLite.Table("IncomeItem")]
-    public class IncomeItem : BudgetItem
+    public abstract class BudgetItem : BaseObject
     {
-        public decimal budgetedAmount { get; set; }
-
-        public Guid budgetCategoryId { get; set; }
-
-        public virtual BudgetCategory budgetCategory { get; set; }
-
-        [MaxLength(250)]
-        public string description { get; set; }
-
-        [MaxLength(250)]
-        public string notation { get; set; }
-
-        public bool recurring { get; set; }
-
-        public Frequency frequency { get; set; }
-
-        public IncomeItem()
+        public BudgetItem()
         {
         }
     }
