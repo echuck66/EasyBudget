@@ -84,20 +84,20 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="SQLitePCLRaw.core">
-      <HintPath>..\packages\SQLitePCLRaw.core.1.1.5\lib\Xamarin.iOS10\SQLitePCLRaw.core.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.provider.sqlite3">
-      <HintPath>..\packages\SQLitePCLRaw.provider.sqlite3.ios_unified.1.1.5\lib\Xamarin.iOS10\SQLitePCLRaw.provider.sqlite3.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_green">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.5\lib\Xamarin.iOS10\SQLitePCLRaw.batteries_green.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_v2">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.5\lib\Xamarin.iOS10\SQLitePCLRaw.batteries_v2.dll</HintPath>
-    </Reference>
     <Reference Include="SQLite-net">
       <HintPath>..\packages\sqlite-net-pcl.1.4.118\lib\netstandard1.1\SQLite-net.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.core">
+      <HintPath>..\packages\SQLitePCLRaw.core.1.1.9\lib\Xamarin.iOS10\SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.provider.sqlite3">
+      <HintPath>..\packages\SQLitePCLRaw.provider.sqlite3.ios_unified.1.1.9\lib\Xamarin.iOS10\SQLitePCLRaw.provider.sqlite3.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_green">
+      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.9\lib\Xamarin.iOS10\SQLitePCLRaw.batteries_green.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_v2">
+      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.9\lib\Xamarin.iOS10\SQLitePCLRaw.batteries_v2.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="ViewControllers\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -124,21 +125,21 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="FileAccessHelper.cs" />
-    <Compile Include="MainMenuTableViewController.cs" />
-    <Compile Include="MainMenuTableViewController.designer.cs">
-      <DependentUpon>MainMenuTableViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BudgetCategoriesTableViewController.cs" />
-    <Compile Include="BudgetCategoriesTableViewController.designer.cs">
-      <DependentUpon>BudgetCategoriesTableViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BankAccountsTableViewController.cs" />
-    <Compile Include="BankAccountsTableViewController.designer.cs">
+    <Compile Include="ViewControllers\BankAccountsTableViewController.cs" />
+    <Compile Include="ViewControllers\BankAccountsTableViewController.designer.cs">
       <DependentUpon>BankAccountsTableViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="BudgetItemsTableViewController.cs" />
-    <Compile Include="BudgetItemsTableViewController.designer.cs">
+    <Compile Include="ViewControllers\BudgetCategoriesTableViewController.cs" />
+    <Compile Include="ViewControllers\BudgetCategoriesTableViewController.designer.cs">
+      <DependentUpon>BudgetCategoriesTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\BudgetItemsTableViewController.cs" />
+    <Compile Include="ViewControllers\BudgetItemsTableViewController.designer.cs">
       <DependentUpon>BudgetItemsTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\MainMenuTableViewController.cs" />
+    <Compile Include="ViewControllers\MainMenuTableViewController.designer.cs">
+      <DependentUpon>MainMenuTableViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

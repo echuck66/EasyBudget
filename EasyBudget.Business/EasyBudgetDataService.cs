@@ -217,7 +217,13 @@ namespace EasyBudget.Business
         public BudgetCategoriesVM(string dbFilePath)
             : base(dbFilePath)
         {
+            this.BudgetCategories = new ObservableCollection<BudgetCategory>();
+        }
+
+        public void LoadBudgetCategories()
+        {
             
+
         }
 
         public async Task LoadBudgetCategoriesAsync()
