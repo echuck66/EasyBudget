@@ -18,8 +18,8 @@ namespace EasyBudget.iOS
         //    await viewSource.AddNewExpenseCategory();
         //    //this.TableView.InsertRows(0, UITableViewRowAnimation.Automatic);
         //    viewSource.WillBeginTableEditing(this.TableView);
-
         //}
+
         //private async void OnNewIncomeCategoryClicked(Object sender, EventArgs e)
         //{
         //    BudgetCategory cat = new BudgetCategory();
@@ -28,13 +28,18 @@ namespace EasyBudget.iOS
         //    viewSource.WillBeginTableEditing(this.TableView);
         //}
 
+        private async void OnNewCategoryClicked(Object sender, EventArgs e)
+        {
+            // TODO ad logic to change VCs to Add New Budget Category item
+        }
+
         public BudgetCategoriesTableViewController (IntPtr handle) : base (handle)
         {
 
             string dbFileName = "dbEasyBudget";
             string dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
             ds = new EasyBudgetDataService(dbFilePath);
-
+            this.NavigationItem.RightBarButtonItem = new UIBarButtonItem("New", UIBarButtonItemStyle.Plain, OnNewCategoryClicked);
             //this.NavigationItem.RightBarButtonItems = new[] { new UIBarButtonItem("+Exp", UIBarButtonItemStyle.Plain, OnNewExpenseCategoryClicked), new UIBarButtonItem("+Inc", UIBarButtonItemStyle.Plain, OnNewIncomeCategoryClicked) };
         }
 
@@ -151,29 +156,103 @@ namespace EasyBudget.iOS
         //                //select g).ToArray();
         //}
 
-        public async override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+        //public override UISwipeActionsConfiguration GetLeadingSwipeActionsConfiguration(UITableView tableView, NSIndexPath indexPath)
+        //{
+        //    //return base.GetLeadingSwipeActionsConfiguration(tableView, indexPath);
+        //    //UIContextualActions
+        //    var definitionAction = ContextualDefinitionAction(indexPath.Row);
+        //    var flagAction = ContextualFlagAction(indexPath.Row);
+
+        //    //UISwipeActionsConfiguration
+        //    var leadingSwipe = UISwipeActionsConfiguration.FromActions(new UIContextualAction[] { flagAction, definitionAction });
+
+        //    leadingSwipe.PerformsFirstActionWithFullSwipe = false;
+
+        //    return leadingSwipe;
+        //}
+
+        public UIContextualAction ContextualFlagAction(int row)
         {
-            //base.CommitEditingStyle(tableView, editingStyle, indexPath);
-            switch (editingStyle)
-            {
-                case UITableViewCellEditingStyle.Delete:
-                    // remove the item from the underlying data source
-                    var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
-                    if (await ds.DeleteBudgetCategoryAsync(itm))
-                    {
-                        await GetViewModelAsync(this.ds);
-                        // delete the row from the table
-                        tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
-                    }
-                    break;
-                case UITableViewCellEditingStyle.Insert:
+            var action = UIContextualAction.FromContextualActionStyle
+                            (UIContextualActionStyle.Normal,
+                                "Flag",
+                                (FlagAction, view, success) => {
+                                    //var alertController = UIAlertController.Create($"Report {words[row]}?", "", UIAlertControllerStyle.Alert);
+                                    //alertController.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, null));
+                                    //alertController.AddAction(UIAlertAction.Create("Yes", UIAlertActionStyle.Destructive, null));
+                                    
+                                    //PresentViewController(alertController, true, null);
 
-                    break;
-                case UITableViewCellEditingStyle.None:
+                                    success(true);
+                                });
 
-                    break;
-            }
+            action.Image = UIImage.FromFile("feedback.png");
+            action.BackgroundColor = UIColor.Blue;
+
+            return action;
         }
+
+        public override UITableViewRowAction[] EditActionsForRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            UITableViewRowAction editButton = UITableViewRowAction.Create(
+                UITableViewRowActionStyle.Default,
+                "Edit",
+                delegate {
+                    Console.WriteLine("Call to edit category triggered");
+                // TODO add logic to edit the category
+
+            });
+            UITableViewRowAction deleteButton = UITableViewRowAction.Create(
+                UITableViewRowActionStyle.Default,
+                "Delete",
+                delegate
+                {
+                    Console.WriteLine("Call to delete category triggered");
+                // TODO add logic to delete the category
+
+            });
+
+            // set the edit button's background color to orange:
+            editButton.BackgroundColor = UIColor.Orange;
+
+            // Locate the source item and determine if it can be deleted or not:
+            var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
+            UITableViewRowAction[] rowActions;
+            if (!itm.CanDelete)
+            {
+                rowActions = new UITableViewRowAction[] { editButton };
+            }
+            else
+            {
+                rowActions = new UITableViewRowAction[] { editButton, deleteButton };
+            }
+
+            return rowActions;
+        }
+
+        //public async override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+        //{
+        //    //base.CommitEditingStyle(tableView, editingStyle, indexPath);
+        //    switch (editingStyle)
+        //    {
+        //        case UITableViewCellEditingStyle.Delete:
+        //            // remove the item from the underlying data source
+        //            var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
+        //            //if (await ds.DeleteBudgetCategoryAsync(itm))
+        //            //{
+        //            //    await GetViewModelAsync(this.ds);
+        //            //    // delete the row from the table
+        //            //    tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
+        //            //}
+        //            break;
+        //        case UITableViewCellEditingStyle.Insert:
+
+        //            break;
+        //        case UITableViewCellEditingStyle.None:
+
+        //            break;
+        //    }
+        //}
 
         public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
         {
