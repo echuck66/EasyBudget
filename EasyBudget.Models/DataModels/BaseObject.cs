@@ -27,6 +27,10 @@ namespace EasyBudget.Models.DataModels
 
         public DateTime dateModified { get; set; }
 
+        public bool CanEdit { get; set; }
+
+        public bool CanDelete { get; set; }
+
         public BaseObject()
         {
             this.id = Guid.NewGuid();

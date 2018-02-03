@@ -13,7 +13,7 @@ namespace EasyBudget.iOS
         public override void ViewDidLayoutSubviews()
         {
             base.ViewDidLayoutSubviews();
-            TableView.ContentInset = new UIEdgeInsets(this.TopLayoutGuide.Length, 0, 0, 0);
+            //TableView.ContentInset = new UIEdgeInsets(this.TopLayoutGuide.Length, 0, 0, 0);
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)

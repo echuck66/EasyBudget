@@ -21,7 +21,7 @@ using SQLite;
 namespace EasyBudget.Models.DataModels
 {
     [SQLite.Table("ExpenseItem")]
-    public class ExpenseItem : BaseObject
+    public class ExpenseItem : BudgetItem
     {
         public decimal budgetedAmount { get; set; }
 

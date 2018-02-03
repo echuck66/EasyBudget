@@ -43,6 +43,235 @@ namespace EasyBudget.Business
             this.repository?.Dispose();
         }
 
+        public async Task<SystemDataInitializationResults> EnsureSystemDataItemsAsync()
+        {
+            SystemDataInitializationResults _results = new SystemDataInitializationResults();
+            bool dataChanged = false;
+
+            try
+            {
+                
+                ICollection<BudgetCategory> _budgetCategories = await repository.GetAllCategoriesAsync();
+                // To correct an issue (will remove later)
+                ///////////////////////////////////////////////////////////////////////////////
+                //foreach(BudgetCategory c in _budgetCategories)
+                //{
+                //    var iItms = await repository.GetIncomeItemsForBudgetCategoryAsync(c.id);
+                //    foreach(IncomeItem itm in iItms)
+                //    {
+                //        await repository.DeleteIncomeItemAsync(itm);
+                //    }
+                //    await repository.SaveChangesAsync();
+                //    var xItms = await repository.GetExpenseItemsForBudgetCategoryAsync(c.id);
+                //    foreach(ExpenseItem itm in xItms)
+                //    {
+                //        await repository.DeleteExpenseItemAsync(itm);
+                //    }
+                //    await repository.SaveChangesAsync();
+                //    await repository.DeleteBudgetCategoryAsync(c);
+                //    await repository.SaveChangesAsync();
+                //}
+                //_budgetCategories = await repository.GetAllCategoriesAsync();
+                ///////////////////////////////////////////////////////////////////////////////
+                int _categoryCount = _budgetCategories.Count;
+                int _incomeItemCount = 0;
+                int _expenseItemCount = 0;
+                int _checkingAccountCount = 0;
+                int _savingsAccountCount = 0;
+
+                if (!_budgetCategories.Any(c => c.categoryType == BudgetCategoryType.Income))
+                {
+                    BudgetCategory _defaultIncomeCategory = new BudgetCategory();
+                    _defaultIncomeCategory.CanEdit = true;
+                    _defaultIncomeCategory.CanDelete = false;
+                    _defaultIncomeCategory.categoryName = "Default Category";
+                    _defaultIncomeCategory.categoryType = BudgetCategoryType.Income;
+                    _defaultIncomeCategory.dateCreated = DateTime.Now;
+                    _defaultIncomeCategory.dateModified = DateTime.Now;
+                    _defaultIncomeCategory.categoryIcon = AppIcon.None;
+                    _defaultIncomeCategory.budgetAmount = 0;
+                    await repository.AddBudgetCategoryAsync(_defaultIncomeCategory);
+                    _categoryCount++;
+                    dataChanged = true;
+                    await repository.SaveChangesAsync();
+
+                    IncomeItem _defaultIncomeItem = new IncomeItem();
+                    _defaultIncomeItem.CanEdit = true;
+                    _defaultIncomeItem.CanDelete = false;
+                    _defaultIncomeItem.description = "Default Item";
+                    _defaultIncomeItem.notation = string.Empty;
+                    _defaultIncomeItem.budgetCategory = _defaultIncomeCategory;
+                    _defaultIncomeItem.budgetCategoryId = _defaultIncomeCategory.id;
+                    _defaultIncomeItem.budgetedAmount = 0;
+                    _defaultIncomeItem.dateCreated = DateTime.Now;
+                    _defaultIncomeItem.dateModified = DateTime.Now;
+                    _defaultIncomeItem.frequency = Frequency.Monthly;
+                    await repository.AddIncomeItemAsync(_defaultIncomeItem);
+                    _incomeItemCount++;
+                    dataChanged = true;
+                    await repository.SaveChangesAsync();
+                }
+                else
+                {
+                    foreach(BudgetCategory _category in _budgetCategories.Where(c => c.categoryType == BudgetCategoryType.Income))
+                    {
+                        ICollection<IncomeItem> _incomeItems = await repository.GetIncomeItemsForBudgetCategoryAsync(_category.id);
+                        if (_incomeItems.Count == 0)
+                        {
+                            IncomeItem _defaultIncomeItem = new IncomeItem();
+                            _defaultIncomeItem.CanEdit = true;
+                            _defaultIncomeItem.CanDelete = false;
+                            _defaultIncomeItem.description = "Default Item";
+                            _defaultIncomeItem.notation = string.Empty;
+                            _defaultIncomeItem.budgetCategory = _category;
+                            _defaultIncomeItem.budgetCategoryId = _category.id;
+                            _defaultIncomeItem.budgetedAmount = 0;
+                            _defaultIncomeItem.dateCreated = DateTime.Now;
+                            _defaultIncomeItem.dateModified = DateTime.Now;
+                            _defaultIncomeItem.frequency = Frequency.Monthly;
+                            await repository.AddIncomeItemAsync(_defaultIncomeItem);
+                            _incomeItemCount++;
+                            dataChanged = true;
+                            await repository.SaveChangesAsync();
+                        }
+                    }
+                }
+
+                if (!_budgetCategories.Any(c => c.categoryType == BudgetCategoryType.Expense))
+                {
+                    BudgetCategory _defaultExpenseCategory = new BudgetCategory();
+                    _defaultExpenseCategory.CanEdit = true;
+                    _defaultExpenseCategory.CanDelete = false;
+                    _defaultExpenseCategory.categoryName = "Default Category";
+                    _defaultExpenseCategory.categoryType = BudgetCategoryType.Expense;
+                    _defaultExpenseCategory.dateCreated = DateTime.Now;
+                    _defaultExpenseCategory.dateModified = DateTime.Now;
+                    _defaultExpenseCategory.categoryIcon = AppIcon.None;
+                    _defaultExpenseCategory.budgetAmount = 0;
+                    await repository.AddBudgetCategoryAsync(_defaultExpenseCategory);
+                    _categoryCount++;
+                    dataChanged = true;
+                    await repository.SaveChangesAsync();
+
+                    ExpenseItem _defaultExpenseItem = new ExpenseItem();
+                    _defaultExpenseItem.CanEdit = true;
+                    _defaultExpenseItem.CanDelete = false;
+                    _defaultExpenseItem.description = "Default Item";
+                    _defaultExpenseItem.notation = string.Empty;
+                    _defaultExpenseItem.budgetCategory = _defaultExpenseCategory;
+                    _defaultExpenseItem.budgetCategoryId = _defaultExpenseCategory.id;
+                    _defaultExpenseItem.budgetedAmount = 0;
+                    _defaultExpenseItem.dateCreated = DateTime.Now;
+                    _defaultExpenseItem.dateModified = DateTime.Now;
+                    _defaultExpenseItem.frequency = Frequency.Monthly;
+                    await repository.AddExpenseItemAsync(_defaultExpenseItem);
+                    _expenseItemCount++;
+                    dataChanged = true;
+                    await repository.SaveChangesAsync();
+                }
+                else
+                {
+                    foreach (BudgetCategory _category in _budgetCategories.Where(c => c.categoryType == BudgetCategoryType.Expense))
+                    {
+                        ICollection<ExpenseItem> _incomeItems = await repository.GetExpenseItemsForBudgetCategoryAsync(_category.id);
+                        if (_incomeItems.Count == 0)
+                        {
+                            ExpenseItem _defaultExpenseItem = new ExpenseItem();
+                            _defaultExpenseItem.CanEdit = true;
+                            _defaultExpenseItem.CanDelete = false;
+                            _defaultExpenseItem.description = "Default Item";
+                            _defaultExpenseItem.notation = string.Empty;
+                            _defaultExpenseItem.budgetCategory = _category;
+                            _defaultExpenseItem.budgetCategoryId = _category.id;
+                            _defaultExpenseItem.budgetedAmount = 0;
+                            _defaultExpenseItem.dateCreated = DateTime.Now;
+                            _defaultExpenseItem.dateModified = DateTime.Now;
+                            _defaultExpenseItem.frequency = Frequency.Monthly;
+                            await repository.AddExpenseItemAsync(_defaultExpenseItem);
+                            _expenseItemCount++;
+                            dataChanged = true;
+                            await repository.SaveChangesAsync();
+                        }
+                    }
+                }
+
+                _results.BudgetCategoriesExist = _categoryCount > 0;
+                _results.BudgetCategoriesCount = _categoryCount;
+
+                ICollection<CheckingAccount> _checkingAccounts = await repository.GetAllCheckingAccountsAsync();
+                _checkingAccountCount = _checkingAccounts.Count;
+                if (_checkingAccountCount == 0)
+                {
+                    CheckingAccount _defaultCheckingAccount = new CheckingAccount();
+                    _defaultCheckingAccount.CanEdit = true;
+                    _defaultCheckingAccount.CanDelete = false;
+                    _defaultCheckingAccount.accountType = BankAccountType.Checking;
+                    _defaultCheckingAccount.bankName = "Default Account";
+                    _defaultCheckingAccount.accountNickname = string.Empty;
+                    _defaultCheckingAccount.routingNumber = string.Empty;
+                    _defaultCheckingAccount.accountNumber = string.Empty;
+                    _defaultCheckingAccount.dateCreated = DateTime.Now;
+                    _defaultCheckingAccount.dateModified = DateTime.Now;
+                    _defaultCheckingAccount.currentBalance = 0;
+                    _defaultCheckingAccount.deposits = new List<CheckingDeposit>();
+                    _defaultCheckingAccount.withdrawals = new List<CheckingWithdrawal>();
+                    await repository.AddCheckingAccountAsync(_defaultCheckingAccount);
+                    _checkingAccountCount++;
+                    dataChanged = true;
+                    await repository.SaveChangesAsync();
+                }
+
+                ICollection<SavingsAccount> _savingsAccounts = await repository.GetAllSavingsAccountsAsync();
+                _savingsAccountCount = _savingsAccounts.Count;
+                if (_savingsAccountCount == 0)
+                {
+                    SavingsAccount _defaultSavingsAccount = new SavingsAccount();
+                    _defaultSavingsAccount.CanEdit = true;
+                    _defaultSavingsAccount.CanDelete = false;
+                    _defaultSavingsAccount.accountType = BankAccountType.Savings;
+                    _defaultSavingsAccount.bankName = "Default Account";
+                    _defaultSavingsAccount.accountNickname = string.Empty;
+                    _defaultSavingsAccount.routingNumber = string.Empty;
+                    _defaultSavingsAccount.accountNumber = string.Empty;
+                    _defaultSavingsAccount.dateCreated = DateTime.Now;
+                    _defaultSavingsAccount.dateModified = DateTime.Now;
+                    _defaultSavingsAccount.currentBalance = 0;
+                    _defaultSavingsAccount.deposits = new List<SavingsDeposit>();
+                    _defaultSavingsAccount.withdrawals = new List<SavingsWithdrawal>();
+                    await repository.AddSavingsAccountAsync(_defaultSavingsAccount);
+                    _savingsAccountCount++;
+                    dataChanged = true;
+                    await repository.SaveChangesAsync();
+                }
+
+                if (dataChanged)
+                {
+                    
+                }
+                _results.BudgetCategoriesCount = _categoryCount;
+                _results.BudgetCategoriesExist = _categoryCount > 0;
+                _results.IncomeItemsCount = _incomeItemCount;
+                _results.IncomeItemsExist = _incomeItemCount > 0;
+                _results.ExpenseItemsCount = _expenseItemCount;
+                _results.ExpenseItemsExist = _expenseItemCount > 0;
+                _results.CheckingAccountsCount = _checkingAccountCount;
+                _results.CheckingAccountsExist = _checkingAccountCount > 0;
+                _results.SavingsAccountsCount = _savingsAccountCount;
+                _results.SavingsAccountsExist = _savingsAccountCount > 0;
+
+                _results.Successful = true;
+                _results.Results = true;
+            }
+            catch (Exception ex)
+            {
+                _results.Successful = false;
+                _results.Results = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
         public async Task<BudgetCategoryResults> GetBudgetCategoryAsync(Guid id)
         {
             BudgetCategoryResults _results = new BudgetCategoryResults();
@@ -223,12 +452,12 @@ namespace EasyBudget.Business
 
             try
             {
-                var accounts = await repository.GetAllCategoriesAsync();
+                var categories = await repository.GetAllCategoriesAsync();
 
-                _results.Results = accounts;
+                _results.Results = categories;
                 _results.Successful = true;
 
-                if (accounts.Count == 0)
+                if (categories.Count == 0)
                 {
                     _results.Message = "No Budget Categories found";
                 }

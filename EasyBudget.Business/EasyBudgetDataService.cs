@@ -14,6 +14,7 @@
 //    limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
@@ -30,6 +31,22 @@ namespace EasyBudget.Business
         public EasyBudgetDataService(string dbFilePath)
         {
             this.dbFilePath = dbFilePath;
+        }
+
+        public async Task EnsureSystemItemsExistAsync()
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _results = await uow.EnsureSystemDataItemsAsync();
+                if (_results.Successful)
+                {
+                    var _categoryCount = _results.BudgetCategoriesCount;
+                }
+                else
+                {
+                    var _categoriesExist = _results.BudgetCategoriesExist;
+                }
+            }
         }
 
         public async Task<BankAccountsVM> GetBankAccountsViewModelAsync()
@@ -103,6 +120,35 @@ namespace EasyBudget.Business
             await vm.LoadExpenseItemAsync(itemId);
 
             return vm;
+        }
+    
+        public async Task<bool> DeleteBudgetCategoryAsync(BudgetCategory category)
+        {
+            bool _success = false;  
+
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(category);
+                if (_resultsIncomeItems.Successful)
+                {
+                    foreach(IncomeItem itm in _resultsIncomeItems.Results)
+                    {
+                        var _resDel = await uow.DeleteIncomeItemAsync(itm);
+                    }
+                }
+                var _resultsExpenseItems = await uow.GetCategoryExpenseItemsAsync(category);
+                if (_resultsExpenseItems.Successful)
+                {
+                    foreach(ExpenseItem itm in _resultsExpenseItems.Results)
+                    {
+                        var _resDel = await uow.DeleteExpenseItemAsync(itm);
+                    }
+                }
+                var _resultsDeleteCategory = await uow.DeleteBudgetCategoryAsync(category);
+                _success = _resultsDeleteCategory.Successful;
+            }
+
+            return _success;
         }
     }
 
@@ -207,17 +253,17 @@ namespace EasyBudget.Business
 
     }
 
-    public class BudgetCategoriesVM : BaseViewModel, INotifyPropertyChanged
+    public class BudgetCategoriesVM : BaseViewModel
     {
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<BudgetCategory> BudgetCategories { get; set; }
+        public ICollection<BudgetCategory> BudgetCategories { get; set; }
 
         public BudgetCategoriesVM(string dbFilePath)
             : base(dbFilePath)
         {
-            this.BudgetCategories = new ObservableCollection<BudgetCategory>();
+            //this.BudgetCategories = new List<BudgetCategory>();
         }
 
         public void LoadBudgetCategories()
@@ -228,16 +274,16 @@ namespace EasyBudget.Business
 
         public async Task LoadBudgetCategoriesAsync()
         {
-            this.BudgetCategories = new ObservableCollection<BudgetCategory>();
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
                 var _results = await uow.GetAllBudgetCategoriesAsync();
                 if (_results.Successful)
                 {
-                    foreach (var category in _results.Results)
-                    {
-                        this.BudgetCategories.Add(category);
-                    }
+                    this.BudgetCategories = _results.Results;
+                    //foreach (var category in _results.Results)
+                    //{
+                    //    this.BudgetCategories.Add(category);
+                    //}
                 }
                 else
                 {
