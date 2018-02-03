@@ -52,6 +52,27 @@ namespace EasyBudget.Business
             {
                 
                 ICollection<BudgetCategory> _budgetCategories = await repository.GetAllCategoriesAsync();
+                // To correct an issue (will remove later)
+                ///////////////////////////////////////////////////////////////////////////////
+                //foreach(BudgetCategory c in _budgetCategories)
+                //{
+                //    var iItms = await repository.GetIncomeItemsForBudgetCategoryAsync(c.id);
+                //    foreach(IncomeItem itm in iItms)
+                //    {
+                //        await repository.DeleteIncomeItemAsync(itm);
+                //    }
+                //    await repository.SaveChangesAsync();
+                //    var xItms = await repository.GetExpenseItemsForBudgetCategoryAsync(c.id);
+                //    foreach(ExpenseItem itm in xItms)
+                //    {
+                //        await repository.DeleteExpenseItemAsync(itm);
+                //    }
+                //    await repository.SaveChangesAsync();
+                //    await repository.DeleteBudgetCategoryAsync(c);
+                //    await repository.SaveChangesAsync();
+                //}
+                //_budgetCategories = await repository.GetAllCategoriesAsync();
+                ///////////////////////////////////////////////////////////////////////////////
                 int _categoryCount = _budgetCategories.Count;
                 int _incomeItemCount = 0;
                 int _expenseItemCount = 0;
@@ -227,6 +248,17 @@ namespace EasyBudget.Business
                 {
                     
                 }
+                _results.BudgetCategoriesCount = _categoryCount;
+                _results.BudgetCategoriesExist = _categoryCount > 0;
+                _results.IncomeItemsCount = _incomeItemCount;
+                _results.IncomeItemsExist = _incomeItemCount > 0;
+                _results.ExpenseItemsCount = _expenseItemCount;
+                _results.ExpenseItemsExist = _expenseItemCount > 0;
+                _results.CheckingAccountsCount = _checkingAccountCount;
+                _results.CheckingAccountsExist = _checkingAccountCount > 0;
+                _results.SavingsAccountsCount = _savingsAccountCount;
+                _results.SavingsAccountsExist = _savingsAccountCount > 0;
+
                 _results.Successful = true;
                 _results.Results = true;
             }
@@ -420,12 +452,12 @@ namespace EasyBudget.Business
 
             try
             {
-                var accounts = await repository.GetAllCategoriesAsync();
+                var categories = await repository.GetAllCategoriesAsync();
 
-                _results.Results = accounts;
+                _results.Results = categories;
                 _results.Successful = true;
 
-                if (accounts.Count == 0)
+                if (categories.Count == 0)
                 {
                     _results.Message = "No Budget Categories found";
                 }

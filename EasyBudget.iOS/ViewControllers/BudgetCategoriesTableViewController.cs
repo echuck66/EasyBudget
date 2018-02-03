@@ -10,7 +10,7 @@ namespace EasyBudget.iOS
 {
     public partial class BudgetCategoriesTableViewController : UITableViewController
     {
-        BudgetCategoriesViewSource viewSource;
+        EasyBudgetDataService ds;
 
         //private async void OnNewExpenseCategoryClicked(Object sender, EventArgs e)
         //{
@@ -28,7 +28,6 @@ namespace EasyBudget.iOS
         //    viewSource.WillBeginTableEditing(this.TableView);
         //}
 
-        EasyBudgetDataService ds;
         public BudgetCategoriesTableViewController (IntPtr handle) : base (handle)
         {
 
@@ -39,17 +38,11 @@ namespace EasyBudget.iOS
             //this.NavigationItem.RightBarButtonItems = new[] { new UIBarButtonItem("+Exp", UIBarButtonItemStyle.Plain, OnNewExpenseCategoryClicked), new UIBarButtonItem("+Inc", UIBarButtonItemStyle.Plain, OnNewIncomeCategoryClicked) };
         }
 
-        public async override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-            viewSource = await BudgetCategoriesViewSource.CreateAsync(this, ds);
-            this.TableView.Source = viewSource;
-        }
-
         public async override void ViewDidLoad()
         {
             base.ViewDidLoad();
             this.TableView.Source = await BudgetCategoriesViewSource.CreateAsync(this, ds);
+            this.TableView.ReloadData();
         }
 
     }
@@ -57,6 +50,7 @@ namespace EasyBudget.iOS
     public class BudgetCategoriesViewSource : UITableViewSource
     {   
         UITableViewController controller;
+        EasyBudgetDataService ds;
         BudgetCategoriesVM vmodel;
         IGrouping<string, BudgetCategory>[] grouping;
         static string CELL_ID = "BudgetCategoryCellId";
@@ -69,14 +63,9 @@ namespace EasyBudget.iOS
         public static async Task<BudgetCategoriesViewSource> CreateAsync(UITableViewController controller, EasyBudgetDataService dataService)
         {
             var tableViewSource = new BudgetCategoriesViewSource(controller);
+            tableViewSource.ds = dataService;
             await dataService.EnsureSystemItemsExistAsync();
             await tableViewSource.GetViewModelAsync(dataService);
-            // Configure Grouping
-            tableViewSource.grouping = (from w in tableViewSource.vmodel.BudgetCategories
-                                        orderby w.categoryType ascending
-                                        group w by w.categoryType.ToString() into g
-                                        select g).ToArray();
-            
             return tableViewSource;
         }
 
@@ -84,6 +73,10 @@ namespace EasyBudget.iOS
         {
             var vm = await dataService.GetBudgetCategoriesViewModelAsync();
             this.vmodel = vm;
+            grouping = (from c in this.vmodel.BudgetCategories
+                        orderby c.categoryType ascending
+                        group c by c.categoryType.ToString() into g
+                        select g).ToArray();
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
@@ -118,7 +111,10 @@ namespace EasyBudget.iOS
 
         public override string TitleForFooter(UITableView tableView, nint section)
         {
-            return base.TitleForFooter(tableView, section);
+            //return base.TitleForFooter(tableView, section);
+            var sumBudgetedAmounts = (from g in grouping[section] select g.budgetAmount).Sum();
+            string footerText = "Total Budgeted " + string.Format("{0:C}", sumBudgetedAmounts);
+            return footerText;
         }
 
         public override nint NumberOfSections(UITableView tableView)
@@ -131,28 +127,52 @@ namespace EasyBudget.iOS
             return grouping[section].Count();
         }
     
-        public async Task AddNewExpenseCategory()
-        {
-            BudgetCategory newCategory = new BudgetCategory();
-            newCategory.categoryName = "New Expense Category";
-            newCategory.categoryType = Models.BudgetCategoryType.Expense;
-            await Task.Run(() => this.vmodel.BudgetCategories.Add(newCategory));
-            grouping = (from w in vmodel.BudgetCategories
-                        orderby w.categoryType ascending
-                        group w by w.categoryType.ToString() into g
-                        select g).ToArray();
-        }
+        //public async Task AddNewExpenseCategory()
+        //{
+        //    BudgetCategory newCategory = new BudgetCategory();
+        //    newCategory.categoryName = "New Expense Category";
+        //    newCategory.categoryType = Models.BudgetCategoryType.Expense;
+        //    await Task.Run(() => this.vmodel.BudgetCategories.Add(newCategory));
+        //    //grouping = (from w in vmodel.BudgetCategories
+        //                //orderby w.categoryType ascending
+        //                //group w by w.categoryType.ToString() into g
+        //                //select g).ToArray();
+        //}
 
-        public async Task AddNewIncomeCategory()
+        //public async Task AddNewIncomeCategory()
+        //{
+        //    BudgetCategory newCategory = new BudgetCategory();
+        //    newCategory.categoryName = "New Income Category";
+        //    newCategory.categoryType = Models.BudgetCategoryType.Income;
+        //    await Task.Run(() => this.vmodel.BudgetCategories.Add(newCategory));
+        //    //grouping = (from w in vmodel.BudgetCategories
+        //                //orderby w.categoryType ascending
+        //                //group w by w.categoryType.ToString() into g
+        //                //select g).ToArray();
+        //}
+
+        public async override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
         {
-            BudgetCategory newCategory = new BudgetCategory();
-            newCategory.categoryName = "New Income Category";
-            newCategory.categoryType = Models.BudgetCategoryType.Income;
-            await Task.Run(() => this.vmodel.BudgetCategories.Add(newCategory));
-            grouping = (from w in vmodel.BudgetCategories
-                        orderby w.categoryType ascending
-                        group w by w.categoryType.ToString() into g
-                        select g).ToArray();
+            //base.CommitEditingStyle(tableView, editingStyle, indexPath);
+            switch (editingStyle)
+            {
+                case UITableViewCellEditingStyle.Delete:
+                    // remove the item from the underlying data source
+                    var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
+                    if (await ds.DeleteBudgetCategoryAsync(itm))
+                    {
+                        await GetViewModelAsync(this.ds);
+                        // delete the row from the table
+                        tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
+                    }
+                    break;
+                case UITableViewCellEditingStyle.Insert:
+
+                    break;
+                case UITableViewCellEditingStyle.None:
+
+                    break;
+            }
         }
 
         public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
