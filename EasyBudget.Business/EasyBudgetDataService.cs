@@ -134,21 +134,19 @@ namespace EasyBudget.Business
     public class BankAccountsVM : BaseViewModel, INotifyPropertyChanged
     {
 
-        public ObservableCollection<CheckingAccount> CheckingAccounts { get; set; }
-
-        public ObservableCollection<SavingsAccount> SavingsAccounts { get; set; }
+        public ObservableCollection<BankAccount> BankAccounts { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public BankAccountsVM(string dbFilePath)
             : base(dbFilePath)
         {
-            
+            this.BankAccounts = new ObservableCollection<BankAccount>();
         }
 
         public async Task LoadCheckingAccountsAsync()
         {
-            this.CheckingAccounts = new ObservableCollection<CheckingAccount>();
+
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
                 var _results = await uow.GetAllCheckingAccountsAsync();
@@ -156,7 +154,7 @@ namespace EasyBudget.Business
                 {
                     foreach (var account in _results.Results)
                     {
-                        this.CheckingAccounts.Add(account);
+                        this.BankAccounts.Add(account);
                     }
                 }
                 else
@@ -179,7 +177,6 @@ namespace EasyBudget.Business
 
         public async Task LoadSavingsAccountsAsync()
         {
-            this.SavingsAccounts = new ObservableCollection<SavingsAccount>();
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
                 var _results = await uow.GetAllSavingsAccountsAsync();
@@ -187,7 +184,7 @@ namespace EasyBudget.Business
                 {
                     foreach (var account in _results.Results)
                     {
-                        this.SavingsAccounts.Add(account);
+                        this.BankAccounts.Add(account);
                     }
                 }
                 else

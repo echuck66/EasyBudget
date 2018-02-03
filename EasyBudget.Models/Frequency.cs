@@ -12,16 +12,17 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-
 using System;
-namespace EasyBudget.Models.DataModels
+namespace EasyBudget.Models
 {
-    public abstract class BankAccount : BaseObject
+    public enum Frequency
     {
-        public BankAccountType accountType { get; set; }
-
-        public BankAccount()
-        {
-        }
+        OneTime,
+        Daily,
+        Weekly,
+        BiWeekly,
+        SemiMonthly,
+        Monthly,
+        Annually
     }
 }

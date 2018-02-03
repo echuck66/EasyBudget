@@ -124,6 +124,22 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="FileAccessHelper.cs" />
+    <Compile Include="MainMenuTableViewController.cs" />
+    <Compile Include="MainMenuTableViewController.designer.cs">
+      <DependentUpon>MainMenuTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetCategoriesTableViewController.cs" />
+    <Compile Include="BudgetCategoriesTableViewController.designer.cs">
+      <DependentUpon>BudgetCategoriesTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BankAccountsTableViewController.cs" />
+    <Compile Include="BankAccountsTableViewController.designer.cs">
+      <DependentUpon>BankAccountsTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BudgetItemsTableViewController.cs" />
+    <Compile Include="BudgetItemsTableViewController.designer.cs">
+      <DependentUpon>BudgetItemsTableViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">
@@ -138,6 +154,13 @@
       <Project>{62CB7B2E-A000-40AF-8D46-9FE34C64B558}</Project>
       <Name>EasyBudget.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\icons8-bus-50.png" />
+    <BundleResource Include="Resources\icons8-grid-3-50.png" />
+    <BundleResource Include="Resources\icons8-museum-50.png" />
+    <BundleResource Include="Resources\icons8-administrative-tools-50.png" />
+    <BundleResource Include="Resources\EasyBudget_IconLarge.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
