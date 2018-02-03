@@ -140,6 +140,10 @@
     <Compile Include="BudgetItemsTableViewController.designer.cs">
       <DependentUpon>BudgetItemsTableViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="EasyBudgetNavigationController.cs" />
+    <Compile Include="EasyBudgetNavigationController.designer.cs">
+      <DependentUpon>EasyBudgetNavigationController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">
