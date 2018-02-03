@@ -52,27 +52,7 @@ namespace EasyBudget.Business
             {
                 
                 ICollection<BudgetCategory> _budgetCategories = await repository.GetAllCategoriesAsync();
-                // To correct an issue (will remove later)
-                ///////////////////////////////////////////////////////////////////////////////
-                //foreach(BudgetCategory c in _budgetCategories)
-                //{
-                //    var iItms = await repository.GetIncomeItemsForBudgetCategoryAsync(c.id);
-                //    foreach(IncomeItem itm in iItms)
-                //    {
-                //        await repository.DeleteIncomeItemAsync(itm);
-                //    }
-                //    await repository.SaveChangesAsync();
-                //    var xItms = await repository.GetExpenseItemsForBudgetCategoryAsync(c.id);
-                //    foreach(ExpenseItem itm in xItms)
-                //    {
-                //        await repository.DeleteExpenseItemAsync(itm);
-                //    }
-                //    await repository.SaveChangesAsync();
-                //    await repository.DeleteBudgetCategoryAsync(c);
-                //    await repository.SaveChangesAsync();
-                //}
-                //_budgetCategories = await repository.GetAllCategoriesAsync();
-                ///////////////////////////////////////////////////////////////////////////////
+
                 int _categoryCount = _budgetCategories.Count;
                 int _incomeItemCount = 0;
                 int _expenseItemCount = 0;

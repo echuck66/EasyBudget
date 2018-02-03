@@ -206,6 +206,14 @@
     <Compile Include="ViewControllers\ViewBudgetCategoryViewController.designer.cs">
       <DependentUpon>ViewBudgetCategoryViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewControllers\EditBudgetItemViewController.cs" />
+    <Compile Include="ViewControllers\EditBudgetItemViewController.designer.cs">
+      <DependentUpon>EditBudgetItemViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewBudgetItemViewController.cs" />
+    <Compile Include="ViewControllers\ViewBudgetItemViewController.designer.cs">
+      <DependentUpon>ViewBudgetItemViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">

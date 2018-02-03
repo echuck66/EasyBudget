@@ -11,19 +11,11 @@ using UIKit;
 
 namespace EasyBudget.iOS
 {
-    [Register ("ViewBudgetCategoryViewController")]
-    partial class ViewBudgetCategoryViewController
+    [Register ("EditBudgetItemViewController")]
+    partial class EditBudgetItemViewController
     {
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UILabel LabelCategoryName { get; set; }
-
         void ReleaseDesignerOutlets ()
         {
-            if (LabelCategoryName != null) {
-                LabelCategoryName.Dispose ();
-                LabelCategoryName = null;
-            }
         }
     }
 }
