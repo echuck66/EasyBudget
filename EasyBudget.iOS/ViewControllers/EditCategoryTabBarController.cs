@@ -26,7 +26,7 @@ namespace EasyBudget.iOS
                     (vcCategory as EditBudgetCategoryViewController).Category = this.Category;
                 }
                 var vcItems = controllers[1];
-                if (vcItems != null)
+                if (vcItems != null && this.Category != null)
                 {
                     (vcItems as BudgetItemsTableViewController).CategoryId = this.Category.id;
                 }
