@@ -28,7 +28,6 @@ namespace EasyBudget.iOS
                     }
                 }
             }
-            //base.ViewDidLoad();
         }
     }
 }
