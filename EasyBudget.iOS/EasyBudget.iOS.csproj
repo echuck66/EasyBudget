@@ -210,10 +210,6 @@
     <Compile Include="ViewControllers\EditBudgetItemViewController.designer.cs">
       <DependentUpon>EditBudgetItemViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewControllers\ViewBudgetItemViewController.cs" />
-    <Compile Include="ViewControllers\ViewBudgetItemViewController.designer.cs">
-      <DependentUpon>ViewBudgetItemViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ViewControllers\ViewCheckingTabViewController.cs" />
     <Compile Include="ViewControllers\ViewCheckingTabViewController.designer.cs">
       <DependentUpon>ViewCheckingTabViewController.cs</DependentUpon>
@@ -237,6 +233,10 @@
     <Compile Include="ViewControllers\EditCheckingTabBarController.cs" />
     <Compile Include="ViewControllers\EditCheckingTabBarController.designer.cs">
       <DependentUpon>EditCheckingTabBarController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewBudgetItemViewController.cs" />
+    <Compile Include="ViewControllers\ViewBudgetItemViewController.designer.cs">
+      <DependentUpon>ViewBudgetItemViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

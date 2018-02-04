@@ -17,6 +17,10 @@ namespace EasyBudget.Models.DataModels
 {
     public abstract class BudgetItem : BaseObject
     {
+        public BudgetItemType ItemType { get; set; }
+
+        public decimal budgetedAmount { get; set; }
+
         public BudgetItem()
         {
         }

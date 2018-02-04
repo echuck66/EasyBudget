@@ -174,7 +174,7 @@ namespace EasyBudget.iOS
 
             if (cell == null)
             {
-                cell = new UITableViewCell(UITableViewCellStyle.Subtitle, CELL_ID);
+                cell = new UITableViewCell(UITableViewCellStyle.Value1, CELL_ID);
             }
 
             if (cell.ImageView.Image != null)
@@ -185,7 +185,7 @@ namespace EasyBudget.iOS
             var category = this.grouping[indexPath.Section].ElementAt(indexPath.Row);
             string titleText = category.categoryName;
             decimal budgetedAmount = category.budgetAmount;
-            string subTitleText = "Budgeted Amount " + string.Format("{0:C}", budgetedAmount);
+            string subTitleText = string.Format("{0:C}", budgetedAmount);
 
             cell.TextLabel.Text = titleText;
             cell.DetailTextLabel.Text = subTitleText;

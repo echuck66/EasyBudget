@@ -74,6 +74,14 @@ namespace EasyBudget.Business
             return vm;
         }
 
+        public async Task<BudgetItemsVM> GetBudgetItemsVM(Guid categoryId)
+        {
+            BudgetItemsVM vm = new BudgetItemsVM(this.dbFilePath);
+            await vm.LoadBudgetItemsAsync(categoryId);
+
+            return vm;
+        }
+
         public async Task<CheckingAccountVM> GetCheckingAccountVMAsync(Guid accountId)
         {
             CheckingAccountVM vm = new CheckingAccountVM(this.dbFilePath);
@@ -90,22 +98,6 @@ namespace EasyBudget.Business
             return vm;
         }
 
-        public async Task<IncomeItemsVM> GetIncomeItemsVMAsync(Guid categoryId)
-        {
-            IncomeItemsVM vm = new IncomeItemsVM(this.dbFilePath);
-            await vm.LoadIncomeItemsAsync(categoryId);
-
-            return vm;
-        }
-
-        public async Task<ExpenseItemsVM> GetExpenseItemsVMAsync(Guid categoryId)
-        {
-            ExpenseItemsVM vm = new ExpenseItemsVM(this.dbFilePath);
-            await vm.LoadExpenseItemsAsync(categoryId);
-
-            return vm;
-        }
-    
         public async Task<IncomeItemVM> GetIncomeItemVMAsync(Guid itemId)
         {
             IncomeItemVM vm = new IncomeItemVM(this.dbFilePath);
@@ -177,17 +169,15 @@ namespace EasyBudget.Business
 
     }
 
-    public class BankAccountsVM : BaseViewModel, INotifyPropertyChanged
+    public class BankAccountsVM : BaseViewModel
     {
 
-        public ObservableCollection<BankAccount> BankAccounts { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        public ICollection<BankAccount> BankAccounts { get; set; }
 
         public BankAccountsVM(string dbFilePath)
             : base(dbFilePath)
         {
-            this.BankAccounts = new ObservableCollection<BankAccount>();
+            BankAccounts = new List<BankAccount>();
         }
 
         public async Task LoadCheckingAccountsAsync()
@@ -256,20 +246,12 @@ namespace EasyBudget.Business
     public class BudgetCategoriesVM : BaseViewModel
     {
 
-        //public event PropertyChangedEventHandler PropertyChanged;
-
         public ICollection<BudgetCategory> BudgetCategories { get; set; }
 
         public BudgetCategoriesVM(string dbFilePath)
             : base(dbFilePath)
         {
-            //this.BudgetCategories = new List<BudgetCategory>();
-        }
-
-        public void LoadBudgetCategories()
-        {
             
-
         }
 
         public async Task LoadBudgetCategoriesAsync()
@@ -303,14 +285,11 @@ namespace EasyBudget.Business
             }
         }
 
-
     }
 
-    public class BudgetCategoryVM : BaseViewModel, INotifyPropertyChanged
+    public class BudgetCategoryVM : BaseViewModel
     {
         BudgetCategory Category { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Name { get; set; }
 
@@ -432,11 +411,9 @@ namespace EasyBudget.Business
 
     }
 
-    public class CheckingAccountVM : BaseViewModel, INotifyPropertyChanged
+    public class CheckingAccountVM : BaseViewModel
     {
         CheckingAccount CheckingAccount { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string RoutingNumber { get; set; }
 
@@ -496,11 +473,9 @@ namespace EasyBudget.Business
     
     }
 
-    public class SavingsAccountVM : BaseViewModel, INotifyPropertyChanged
+    public class SavingsAccountVM : BaseViewModel
     {
         SavingsAccount SavingsAccount { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string RoutingNumber { get; set; }
 
@@ -551,19 +526,24 @@ namespace EasyBudget.Business
         }
     }
 
-    public class IncomeItemsVM : BaseViewModel, INotifyPropertyChanged
+    public class BudgetItemsVM : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<IncomeItem> IncomeItems { get; set; }
+        public List<BudgetItem> BudgetItems { get; set; }
 
-        public IncomeItemsVM(string dbFilePath)
+        public BudgetItemsVM(string dbFilePath) 
             : base(dbFilePath)
         {
-            
+            BudgetItems = new List<BudgetItem>();
         }
 
-        public async Task LoadIncomeItemsAsync(Guid categoryId)
+        public async Task LoadBudgetItemsAsync(Guid categoryId)
+        {
+            await LoadIncomeItemsAsync(categoryId);
+            await LoadExpenseItemsAsync(categoryId);
+        }
+
+        private async Task LoadIncomeItemsAsync(Guid categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -574,10 +554,10 @@ namespace EasyBudget.Business
                     var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(category);
                     if (_resultsIncomeItems.Successful)
                     {
-                        this.IncomeItems = new ObservableCollection<IncomeItem>();
                         foreach (var item in _resultsIncomeItems.Results)
                         {
-                            this.IncomeItems.Add(item);
+                            item.ItemType = BudgetItemType.Income;
+                            this.BudgetItems.Add(item);
                         }
                     }
                     else
@@ -613,21 +593,8 @@ namespace EasyBudget.Business
                 }
             }
         }
-    }
 
-    public class ExpenseItemsVM : BaseViewModel, INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public ObservableCollection<ExpenseItem> ExpenseItems { get; set; }
-
-        public ExpenseItemsVM(string dbFilePath)
-            : base(dbFilePath)
-        {
-            
-        }
-
-        public async Task LoadExpenseItemsAsync(Guid categoryId)
+        private async Task LoadExpenseItemsAsync(Guid categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -638,10 +605,10 @@ namespace EasyBudget.Business
                     var _resultsIncomeItems = await uow.GetCategoryExpenseItemsAsync(category);
                     if (_resultsIncomeItems.Successful)
                     {
-                        this.ExpenseItems = new ObservableCollection<ExpenseItem>();
                         foreach (var item in _resultsIncomeItems.Results)
                         {
-                            this.ExpenseItems.Add(item);
+                            item.ItemType = BudgetItemType.Expense;
+                            this.BudgetItems.Add(item);
                         }
                     }
                     else
@@ -679,12 +646,10 @@ namespace EasyBudget.Business
         }
     }
 
-    public class ExpenseItemVM : BaseViewModel, INotifyPropertyChanged
+    public class ExpenseItemVM : BaseViewModel
     {
         
         ExpenseItem ExpenseItem;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public decimal BudgetedAmount { get; set; }
 
@@ -707,8 +672,9 @@ namespace EasyBudget.Business
                 var _results = await uow.GetExpenseItemAsync(itemId);
                 if (_results.Successful)
                 {
+                    
                     this.ExpenseItem = _results.Results;
-
+                    this.ExpenseItem.ItemType = BudgetItemType.Expense;
                     this.BudgetedAmount = this.ExpenseItem?.budgetedAmount ?? 0;
                     this.Description = this.ExpenseItem?.description ?? string.Empty;
                     this.Notation = this.ExpenseItem?.notation ?? string.Empty;
@@ -734,11 +700,9 @@ namespace EasyBudget.Business
         }
     }
 
-    public class IncomeItemVM : BaseViewModel, INotifyPropertyChanged
+    public class IncomeItemVM : BaseViewModel
     {
         IncomeItem IncomeItem;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public decimal BudgetedAmount { get; set; }
 
@@ -762,7 +726,7 @@ namespace EasyBudget.Business
                 if (_results.Successful)
                 {
                     this.IncomeItem = _results.Results;
-
+                    this.IncomeItem.ItemType = BudgetItemType.Income;
                     this.BudgetedAmount = this.IncomeItem?.budgetedAmount ?? 0;
                     this.Description = this.IncomeItem?.description ?? string.Empty;
                     this.Notation = this.IncomeItem?.notation ?? string.Empty;

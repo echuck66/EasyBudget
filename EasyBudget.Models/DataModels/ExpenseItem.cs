@@ -23,8 +23,6 @@ namespace EasyBudget.Models.DataModels
     [SQLite.Table("ExpenseItem")]
     public class ExpenseItem : BudgetItem
     {
-        public decimal budgetedAmount { get; set; }
-
         public Guid budgetCategoryId { get; set; }
 
         public virtual BudgetCategory budgetCategory { get; set; }
