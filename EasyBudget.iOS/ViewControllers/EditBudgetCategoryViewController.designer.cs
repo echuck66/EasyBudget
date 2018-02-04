@@ -14,8 +14,25 @@ namespace EasyBudget.iOS
     [Register ("EditBudgetCategoryViewController")]
     partial class EditBudgetCategoryViewController
     {
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UITextField TextCategoryDescription { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UITextField TextCategoryName { get; set; }
+
         void ReleaseDesignerOutlets ()
         {
+            if (TextCategoryDescription != null) {
+                TextCategoryDescription.Dispose ();
+                TextCategoryDescription = null;
+            }
+
+            if (TextCategoryName != null) {
+                TextCategoryName.Dispose ();
+                TextCategoryName = null;
+            }
         }
     }
 }
