@@ -214,6 +214,34 @@
     <Compile Include="ViewControllers\ViewBudgetItemViewController.designer.cs">
       <DependentUpon>ViewBudgetItemViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewControllers\ViewCategoryTabViewController.cs" />
+    <Compile Include="ViewControllers\ViewCategoryTabViewController.designer.cs">
+      <DependentUpon>ViewCategoryTabViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\EditCategoryTabViewController.cs" />
+    <Compile Include="ViewControllers\EditCategoryTabViewController.designer.cs">
+      <DependentUpon>EditCategoryTabViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewCheckingTabViewController.cs" />
+    <Compile Include="ViewControllers\ViewCheckingTabViewController.designer.cs">
+      <DependentUpon>ViewCheckingTabViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\EditCheckingTabViewController.cs" />
+    <Compile Include="ViewControllers\EditCheckingTabViewController.designer.cs">
+      <DependentUpon>EditCheckingTabViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewCheckingViewController.cs" />
+    <Compile Include="ViewControllers\ViewCheckingViewController.designer.cs">
+      <DependentUpon>ViewCheckingViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\CheckRegisterTableViewController.cs" />
+    <Compile Include="ViewControllers\CheckRegisterTableViewController.designer.cs">
+      <DependentUpon>CheckRegisterTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\EditCheckingViewController.cs" />
+    <Compile Include="ViewControllers\EditCheckingViewController.designer.cs">
+      <DependentUpon>EditCheckingViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">

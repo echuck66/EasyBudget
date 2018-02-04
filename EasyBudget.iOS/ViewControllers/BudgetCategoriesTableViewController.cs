@@ -11,29 +11,15 @@ namespace EasyBudget.iOS
     public partial class BudgetCategoriesTableViewController : UITableViewController
     {
         EasyBudgetDataService ds;
-
-        //private async void OnNewExpenseCategoryClicked(Object sender, EventArgs e)
-        //{
-        //    BudgetCategory cat = new BudgetCategory();
-        //    await viewSource.AddNewExpenseCategory();
-        //    //this.TableView.InsertRows(0, UITableViewRowAnimation.Automatic);
-        //    viewSource.WillBeginTableEditing(this.TableView);
-        //}
-
-        //private async void OnNewIncomeCategoryClicked(Object sender, EventArgs e)
-        //{
-        //    BudgetCategory cat = new BudgetCategory();
-        //    await viewSource.AddNewIncomeCategory();
-        //    //this.TableView.InsertRows(0, UITableViewRowAnimation.Automatic);
-        //    viewSource.WillBeginTableEditing(this.TableView);
-        //}
+        BudgetCategoriesViewSource vs;
 
         private async void OnNewCategoryClicked(Object sender, EventArgs e)
         {
-            // TODO ad logic to change VCs to Add New Budget Category item
+            var categoriesVC = this.Storyboard.InstantiateViewController("EditCategoryTabViewController");
+            this.NavigationController.PushViewController(categoriesVC, true);
         }
 
-        public BudgetCategoriesTableViewController (IntPtr handle) : base (handle)
+        public BudgetCategoriesTableViewController(IntPtr handle) : base(handle)
         {
 
             string dbFileName = "dbEasyBudget";
@@ -46,18 +32,32 @@ namespace EasyBudget.iOS
         public async override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            this.TableView.Source = await BudgetCategoriesViewSource.CreateAsync(this, ds);
+            this.vs = await BudgetCategoriesViewSource.CreateAsync(this, ds);
+            this.TableView.Source = this.vs;
+            //this.vs.CategorySelected += OnCategorySelected;
+            if (this.TableView.Source != null)
+            {
+                (this.TableView.Source as BudgetCategoriesViewSource).CategorySelected += OnCategorySelected;
+            }
             this.TableView.ReloadData();
         }
 
+        protected virtual void OnCategorySelected(object sender, CategorySelectedEventArgs e)
+        {
+            var category = e.Category;
+            var categoriesTVC = this.Storyboard.InstantiateViewController("ViewCategoryTabViewController");
+            //categoriesTVC.Category = category;
+            this.NavigationController.PushViewController(categoriesTVC, true);
+        }
     }
 
     public class BudgetCategoriesViewSource : UITableViewSource
-    {   
+    {
         UITableViewController controller;
         EasyBudgetDataService ds;
         BudgetCategoriesVM vmodel;
-        IGrouping<string, BudgetCategory>[] grouping;
+        public IGrouping<string, BudgetCategory>[] grouping { get; set; }
+
         static string CELL_ID = "BudgetCategoryCellId";
 
         private BudgetCategoriesViewSource(UITableViewController controller)
@@ -78,10 +78,10 @@ namespace EasyBudget.iOS
         {
             var vm = await dataService.GetBudgetCategoriesViewModelAsync();
             this.vmodel = vm;
-            grouping = (from c in this.vmodel.BudgetCategories
-                        orderby c.categoryType ascending
-                        group c by c.categoryType.ToString() into g
-                        select g).ToArray();
+            this.grouping = (from c in this.vmodel.BudgetCategories
+                             orderby c.categoryType ascending
+                             group c by c.categoryType.ToString() into g
+                             select g).ToArray();
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
@@ -98,7 +98,7 @@ namespace EasyBudget.iOS
                 cell.ImageView.Image.Dispose();
             }
 
-            var category = grouping[indexPath.Section].ElementAt(indexPath.Row);
+            var category = this.grouping[indexPath.Section].ElementAt(indexPath.Row);
             string titleText = category.categoryName;
             decimal budgetedAmount = category.budgetAmount;
             string subTitleText = "Budgeted Amount " + string.Format("{0:C}", budgetedAmount);
@@ -111,85 +111,25 @@ namespace EasyBudget.iOS
 
         public override string TitleForHeader(UITableView tableView, nint section)
         {
-            return grouping[section].Key;
+            return this.grouping[section].Key;
         }
 
         public override string TitleForFooter(UITableView tableView, nint section)
         {
             //return base.TitleForFooter(tableView, section);
-            var sumBudgetedAmounts = (from g in grouping[section] select g.budgetAmount).Sum();
+            var sumBudgetedAmounts = (from g in this.grouping[section] select g.budgetAmount).Sum();
             string footerText = "Total Budgeted " + string.Format("{0:C}", sumBudgetedAmounts);
             return footerText;
         }
 
         public override nint NumberOfSections(UITableView tableView)
         {
-            return grouping.Length;
+            return this.grouping.Length;
         }
 
         public override nint RowsInSection(UITableView tableview, nint section)
         {
-            return grouping[section].Count();
-        }
-    
-        //public async Task AddNewExpenseCategory()
-        //{
-        //    BudgetCategory newCategory = new BudgetCategory();
-        //    newCategory.categoryName = "New Expense Category";
-        //    newCategory.categoryType = Models.BudgetCategoryType.Expense;
-        //    await Task.Run(() => this.vmodel.BudgetCategories.Add(newCategory));
-        //    //grouping = (from w in vmodel.BudgetCategories
-        //                //orderby w.categoryType ascending
-        //                //group w by w.categoryType.ToString() into g
-        //                //select g).ToArray();
-        //}
-
-        //public async Task AddNewIncomeCategory()
-        //{
-        //    BudgetCategory newCategory = new BudgetCategory();
-        //    newCategory.categoryName = "New Income Category";
-        //    newCategory.categoryType = Models.BudgetCategoryType.Income;
-        //    await Task.Run(() => this.vmodel.BudgetCategories.Add(newCategory));
-        //    //grouping = (from w in vmodel.BudgetCategories
-        //                //orderby w.categoryType ascending
-        //                //group w by w.categoryType.ToString() into g
-        //                //select g).ToArray();
-        //}
-
-        //public override UISwipeActionsConfiguration GetLeadingSwipeActionsConfiguration(UITableView tableView, NSIndexPath indexPath)
-        //{
-        //    //return base.GetLeadingSwipeActionsConfiguration(tableView, indexPath);
-        //    //UIContextualActions
-        //    var definitionAction = ContextualDefinitionAction(indexPath.Row);
-        //    var flagAction = ContextualFlagAction(indexPath.Row);
-
-        //    //UISwipeActionsConfiguration
-        //    var leadingSwipe = UISwipeActionsConfiguration.FromActions(new UIContextualAction[] { flagAction, definitionAction });
-
-        //    leadingSwipe.PerformsFirstActionWithFullSwipe = false;
-
-        //    return leadingSwipe;
-        //}
-
-        public UIContextualAction ContextualFlagAction(int row)
-        {
-            var action = UIContextualAction.FromContextualActionStyle
-                            (UIContextualActionStyle.Normal,
-                                "Flag",
-                                (FlagAction, view, success) => {
-                                    //var alertController = UIAlertController.Create($"Report {words[row]}?", "", UIAlertControllerStyle.Alert);
-                                    //alertController.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, null));
-                                    //alertController.AddAction(UIAlertAction.Create("Yes", UIAlertActionStyle.Destructive, null));
-                                    
-                                    //PresentViewController(alertController, true, null);
-
-                                    success(true);
-                                });
-
-            action.Image = UIImage.FromFile("feedback.png");
-            action.BackgroundColor = UIColor.Blue;
-
-            return action;
+            return this.grouping[section].Count();
         }
 
         public override UITableViewRowAction[] EditActionsForRow(UITableView tableView, NSIndexPath indexPath)
@@ -197,26 +137,27 @@ namespace EasyBudget.iOS
             UITableViewRowAction editButton = UITableViewRowAction.Create(
                 UITableViewRowActionStyle.Default,
                 "Edit",
-                delegate {
+                delegate
+                {
                     Console.WriteLine("Call to edit category triggered");
-                // TODO add logic to edit the category
+                    // TODO add logic to edit the category
 
-            });
+                });
             UITableViewRowAction deleteButton = UITableViewRowAction.Create(
                 UITableViewRowActionStyle.Default,
                 "Delete",
                 delegate
                 {
                     Console.WriteLine("Call to delete category triggered");
-                // TODO add logic to delete the category
+                    // TODO add logic to delete the category
 
-            });
+                });
 
             // set the edit button's background color to orange:
             editButton.BackgroundColor = UIColor.Orange;
 
             // Locate the source item and determine if it can be deleted or not:
-            var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
+            var itm = this.grouping[indexPath.Section].ElementAt(indexPath.Row);
             UITableViewRowAction[] rowActions;
             if (!itm.CanDelete)
             {
@@ -230,44 +171,40 @@ namespace EasyBudget.iOS
             return rowActions;
         }
 
-        //public async override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
-        //{
-        //    //base.CommitEditingStyle(tableView, editingStyle, indexPath);
-        //    switch (editingStyle)
-        //    {
-        //        case UITableViewCellEditingStyle.Delete:
-        //            // remove the item from the underlying data source
-        //            var itm = grouping[indexPath.Section].ElementAt(indexPath.Row);
-        //            //if (await ds.DeleteBudgetCategoryAsync(itm))
-        //            //{
-        //            //    await GetViewModelAsync(this.ds);
-        //            //    // delete the row from the table
-        //            //    tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
-        //            //}
-        //            break;
-        //        case UITableViewCellEditingStyle.Insert:
-
-        //            break;
-        //        case UITableViewCellEditingStyle.None:
-
-        //            break;
-        //    }
-        //}
-
         public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
         {
             //return true;
-            return grouping[indexPath.Section].ElementAt(indexPath.Row).CanEdit;
+            return this.grouping[indexPath.Section].ElementAt(indexPath.Row).CanEdit;
         }
 
-        //public void WillBeginTableEditing(UITableView tableView)
-        //{
-        //    tableView.BeginUpdates();
-        //    tableView.InsertRows(new NSIndexPath[] {
-        //        NSIndexPath.FromRowSection (tableView.NumberOfRowsInSection (0), 0)
-        //    }, UITableViewRowAnimation.Fade);
-        //    tableView.EndUpdates(); 
-        //}
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            //base.RowSelected(tableView, indexPath);
+            BudgetCategory category = grouping[indexPath.Section].ElementAt(indexPath.Row);
+            var e = new CategorySelectedEventArgs();
+            e.Category = category;
+            OnCategorySelected(e);
+        }
 
+        public delegate void CategorySelectedEventHandler(Object sender, CategorySelectedEventArgs e);
+
+        public event CategorySelectedEventHandler CategorySelected;
+
+        protected virtual void OnCategorySelected(CategorySelectedEventArgs e)
+        {
+            CategorySelectedEventHandler handler = CategorySelected;
+
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+
+        }
+
+    }
+
+    public class CategorySelectedEventArgs : EventArgs
+    {
+        public BudgetCategory Category { get; set; }
     }
 }
