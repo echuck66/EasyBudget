@@ -14,5 +14,8 @@ namespace EasyBudget.iOS
     [Register ("ViewCategoryTabBarController")]
     partial class ViewCategoryTabBarController
     {
+        void ReleaseDesignerOutlets ()
+        {
+        }
     }
 }
