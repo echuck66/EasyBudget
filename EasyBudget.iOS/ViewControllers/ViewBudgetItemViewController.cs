@@ -6,6 +6,11 @@ namespace EasyBudget.iOS
 {
     public partial class ViewBudgetItemViewController : UIViewController
     {
+        public ViewBudgetItemViewController()
+        {
+            
+        }
+
         public ViewBudgetItemViewController (IntPtr handle) : base (handle)
         {
         }

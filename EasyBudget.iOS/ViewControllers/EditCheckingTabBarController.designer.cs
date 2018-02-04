@@ -11,8 +11,8 @@ using UIKit;
 
 namespace EasyBudget.iOS
 {
-    [Register ("ViewCategoryTabViewController")]
-    partial class ViewCategoryTabViewController
+    [Register ("EditCheckingTabBarController")]
+    partial class EditCheckingTabBarController
     {
     }
 }

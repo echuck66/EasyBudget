@@ -14,5 +14,8 @@ namespace EasyBudget.iOS
     [Register ("CheckRegisterTableViewController")]
     partial class CheckRegisterTableViewController
     {
+        void ReleaseDesignerOutlets ()
+        {
+        }
     }
 }

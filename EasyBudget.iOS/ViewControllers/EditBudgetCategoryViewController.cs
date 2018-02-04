@@ -12,11 +12,16 @@ namespace EasyBudget.iOS
 
         public EditBudgetCategoryViewController (IntPtr handle) : base (handle)
         {
+            
         }
 
-        //public async override void ViewDidLoad()
-        //{
-        //    base.ViewDidLoad();
-        //}
+        public override void ViewDidLoad()
+        {
+            if (this.Category != null)
+            {
+                TextCategoryName.Text = Category.categoryName;
+                TextCategoryDescription.Text = Category.description;
+            }
+        }
     }
 }

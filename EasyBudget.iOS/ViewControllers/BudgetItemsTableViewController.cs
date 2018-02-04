@@ -6,6 +6,11 @@ namespace EasyBudget.iOS
 {
     public partial class BudgetItemsTableViewController : UITableViewController
     {
+        public BudgetItemsTableViewController()
+        {
+            
+        }
+
         public BudgetItemsTableViewController (IntPtr handle) : base (handle)
         {
         }

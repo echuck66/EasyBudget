@@ -14,5 +14,8 @@ namespace EasyBudget.iOS
     [Register ("ViewCheckingViewController")]
     partial class ViewCheckingViewController
     {
+        void ReleaseDesignerOutlets ()
+        {
+        }
     }
 }

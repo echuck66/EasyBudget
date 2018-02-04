@@ -306,6 +306,10 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Category" id="16635"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="TextCategoryName" destination="17252" id="name-outlet-17252"/>
+                        <outlet property="TextCategoryDescription" destination="17257" id="name-outlet-17257"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="15831" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -351,7 +355,7 @@
         </scene>
         <scene sceneID="16551">
             <objects>
-                <tabBarController id="16552" sceneMemberID="viewController" customClass="EditCategoryTabViewController" storyboardIdentifier="EditCategoryTabViewController" useStoryboardIdentifierAsRestorationIdentifier="YES">
+                <tabBarController id="16552" sceneMemberID="viewController" storyboardIdentifier="EditCategoryTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" customClass="EditCategoryTabBarController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="16555">
                         <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -368,7 +372,7 @@
         </scene>
         <scene sceneID="16789">
             <objects>
-                <tabBarController id="16790" sceneMemberID="viewController" customClass="ViewCategoryTabViewController" storyboardIdentifier="ViewCategoryTabViewController" useStoryboardIdentifierAsRestorationIdentifier="YES">
+                <tabBarController id="16790" sceneMemberID="viewController" storyboardIdentifier="ViewCategoryTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" customClass="ViewCategoryTabBarController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="16793">
                         <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -499,7 +503,7 @@
         </scene>
         <scene sceneID="20575">
             <objects>
-                <tabBarController id="20576" sceneMemberID="viewController" customClass="EditCheckingTabViewController" storyboardIdentifier="EditCheckingTabViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" title="Checking">
+                <tabBarController id="20576" sceneMemberID="viewController" storyboardIdentifier="EditCheckingTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" title="Checking" customClass="EditCheckingTabBarController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="20579">
                         <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

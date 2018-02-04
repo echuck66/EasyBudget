@@ -13,9 +13,9 @@ namespace EasyBudget.iOS
         EasyBudgetDataService ds;
         BudgetCategoriesViewSource vs;
 
-        private async void OnNewCategoryClicked(Object sender, EventArgs e)
+        private void OnNewCategoryClicked(Object sender, EventArgs e)
         {
-            var categoriesVC = this.Storyboard.InstantiateViewController("EditCategoryTabViewController");
+            var categoriesVC = this.Storyboard.InstantiateViewController("EditCategoryTabBarController");
             this.NavigationController.PushViewController(categoriesVC, true);
         }
 
@@ -38,6 +38,7 @@ namespace EasyBudget.iOS
             if (this.TableView.Source != null)
             {
                 (this.TableView.Source as BudgetCategoriesViewSource).CategorySelected += OnCategorySelected;
+                (this.TableView.Source as BudgetCategoriesViewSource).CategoryEdit += OnCategoryEdit;
             }
             this.TableView.ReloadData();
         }
@@ -45,9 +46,19 @@ namespace EasyBudget.iOS
         protected virtual void OnCategorySelected(object sender, CategorySelectedEventArgs e)
         {
             var category = e.Category;
-            var categoriesTVC = this.Storyboard.InstantiateViewController("ViewCategoryTabViewController");
-            //categoriesTVC.Category = category;
-            this.NavigationController.PushViewController(categoriesTVC, true);
+            //ViewCategoryTabViewController categoryTVC = this.Storyboard.InstantiateViewController("ViewCategoryTabViewController") as ViewCategoryTabViewController;
+            //ViewCategoryTabViewController categoryTVC = new ViewCategoryTabViewController();
+            var categoryTBC = this.Storyboard.InstantiateViewController("ViewCategoryTabBarController") as ViewCategoryTabBarController;
+            categoryTBC.Category = category;
+            this.NavigationController.PushViewController(categoryTBC, true);
+        }
+
+        protected virtual void OnCategoryEdit(object sender, CategorySelectedEventArgs e)
+        {
+            var category = e.Category;
+            var categoryTBC = this.Storyboard.InstantiateViewController("EditCategoryTabBarController") as EditCategoryTabBarController;
+            categoryTBC.Category = category;
+            this.NavigationController.PushViewController(categoryTBC, true);
         }
     }
 
@@ -139,9 +150,10 @@ namespace EasyBudget.iOS
                 "Edit",
                 delegate
                 {
-                    Console.WriteLine("Call to edit category triggered");
-                    // TODO add logic to edit the category
-
+                    BudgetCategory category = grouping[indexPath.Section].ElementAt(indexPath.Row);
+                    var e = new CategorySelectedEventArgs();
+                    e.Category = category;
+                    OnCategoryEdit(e);
                 });
             UITableViewRowAction deleteButton = UITableViewRowAction.Create(
                 UITableViewRowActionStyle.Default,
@@ -150,7 +162,7 @@ namespace EasyBudget.iOS
                 {
                     Console.WriteLine("Call to delete category triggered");
                     // TODO add logic to delete the category
-
+                    
                 });
 
             // set the edit button's background color to orange:
@@ -187,18 +199,27 @@ namespace EasyBudget.iOS
         }
 
         public delegate void CategorySelectedEventHandler(Object sender, CategorySelectedEventArgs e);
+        public delegate void CategoryEditEventHandler(Object sender, CategorySelectedEventArgs e);
 
         public event CategorySelectedEventHandler CategorySelected;
+        public event CategoryEditEventHandler CategoryEdit;
 
         protected virtual void OnCategorySelected(CategorySelectedEventArgs e)
         {
             CategorySelectedEventHandler handler = CategorySelected;
-
             if (handler != null)
             {
                 handler(this, e);
             }
+        }
 
+        protected virtual void OnCategoryEdit(CategorySelectedEventArgs e)
+        {
+            CategoryEditEventHandler handler = CategoryEdit;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
 
     }
