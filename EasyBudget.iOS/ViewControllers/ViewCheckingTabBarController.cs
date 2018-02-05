@@ -5,11 +5,11 @@ using EasyBudget.Models.DataModels;
 
 namespace EasyBudget.iOS
 {
-    public partial class EditCheckingTabBarController : UITabBarController
+    public partial class ViewCheckingTabBarController : UITabBarController
     {
         public CheckingAccount Account { get; set; }
 
-        public EditCheckingTabBarController (IntPtr handle) : base (handle)
+        public ViewCheckingTabBarController (IntPtr handle) : base (handle)
         {
         }
     }

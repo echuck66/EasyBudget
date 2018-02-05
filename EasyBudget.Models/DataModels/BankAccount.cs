@@ -14,11 +14,19 @@
 //    limitations under the License.
 
 using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace EasyBudget.Models.DataModels
 {
     public abstract class BankAccount : BaseObject
     {
+
+        [MaxLength(250)]
+        public string bankName { get; set; }
+
         public BankAccountType accountType { get; set; }
+
+        public decimal currentBalance { get; set; }
 
         public BankAccount()
         {

@@ -52,8 +52,7 @@ namespace EasyBudget.Business
         public async Task<BankAccountsVM> GetBankAccountsViewModelAsync()
         {
             BankAccountsVM vm = new BankAccountsVM(this.dbFilePath);
-            await vm.LoadCheckingAccountsAsync();
-            await vm.LoadSavingsAccountsAsync();
+            await vm.LoadBankAccountsAsync();
 
             return vm;
         }
@@ -180,7 +179,13 @@ namespace EasyBudget.Business
             BankAccounts = new List<BankAccount>();
         }
 
-        public async Task LoadCheckingAccountsAsync()
+        public async Task LoadBankAccountsAsync()
+        {
+            await LoadCheckingAccountsAsync();
+            await LoadSavingsAccountsAsync();
+        }
+
+        private async Task LoadCheckingAccountsAsync()
         {
 
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
@@ -211,7 +216,7 @@ namespace EasyBudget.Business
             }
         }
 
-        public async Task LoadSavingsAccountsAsync()
+        private async Task LoadSavingsAccountsAsync()
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -241,6 +246,126 @@ namespace EasyBudget.Business
             }
         }
 
+    }
+    
+    public class BudgetItemsVM : BaseViewModel
+    {
+
+        public List<BudgetItem> BudgetItems { get; set; }
+
+        public BudgetItemsVM(string dbFilePath)
+            : base(dbFilePath)
+        {
+            BudgetItems = new List<BudgetItem>();
+        }
+
+        public async Task LoadBudgetItemsAsync(Guid categoryId)
+        {
+            await LoadIncomeItemsAsync(categoryId);
+            await LoadExpenseItemsAsync(categoryId);
+        }
+
+        private async Task LoadIncomeItemsAsync(Guid categoryId)
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _resultsCategory = await uow.GetBudgetCategoryAsync(categoryId);
+                if (_resultsCategory.Successful)
+                {
+                    BudgetCategory category = _resultsCategory.Results;
+                    var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(category);
+                    if (_resultsIncomeItems.Successful)
+                    {
+                        foreach (var item in _resultsIncomeItems.Results)
+                        {
+                            item.ItemType = BudgetItemType.Income;
+                            this.BudgetItems.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        if (_resultsIncomeItems.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsIncomeItems.WorkException.Message);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
+                        {
+                            WriteErrorCondition(_resultsIncomeItems.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+                    }
+                }
+                else
+                {
+                    if (_resultsCategory.WorkException != null)
+                    {
+                        WriteErrorCondition(_resultsCategory.WorkException.Message);
+                    }
+                    else if (!string.IsNullOrEmpty(_resultsCategory.Message))
+                    {
+                        WriteErrorCondition(_resultsCategory.Message);
+                    }
+                    else
+                    {
+                        WriteErrorCondition("An unknown error has occurred");
+                    }
+                }
+            }
+        }
+
+        private async Task LoadExpenseItemsAsync(Guid categoryId)
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                var _resultsCategory = await uow.GetBudgetCategoryAsync(categoryId);
+                if (_resultsCategory.Successful)
+                {
+                    BudgetCategory category = _resultsCategory.Results;
+                    var _resultsIncomeItems = await uow.GetCategoryExpenseItemsAsync(category);
+                    if (_resultsIncomeItems.Successful)
+                    {
+                        foreach (var item in _resultsIncomeItems.Results)
+                        {
+                            item.ItemType = BudgetItemType.Expense;
+                            this.BudgetItems.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        if (_resultsIncomeItems.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsIncomeItems.WorkException.Message);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
+                        {
+                            WriteErrorCondition(_resultsIncomeItems.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred loading Expense Items");
+                        }
+                    }
+                }
+                else
+                {
+                    if (_resultsCategory.WorkException != null)
+                    {
+                        WriteErrorCondition(_resultsCategory.WorkException.Message);
+                    }
+                    else if (!string.IsNullOrEmpty(_resultsCategory.Message))
+                    {
+                        WriteErrorCondition(_resultsCategory.Message);
+                    }
+                    else
+                    {
+                        WriteErrorCondition("An unknown error has occurred");
+                    }
+                }
+            }
+        }
     }
 
     public class BudgetCategoriesVM : BaseViewModel
@@ -520,126 +645,6 @@ namespace EasyBudget.Business
                     else
                     {
                         WriteErrorCondition("An unknown error has occurred loading Savings Account");
-                    }
-                }
-            }
-        }
-    }
-
-    public class BudgetItemsVM : BaseViewModel
-    {
-
-        public List<BudgetItem> BudgetItems { get; set; }
-
-        public BudgetItemsVM(string dbFilePath) 
-            : base(dbFilePath)
-        {
-            BudgetItems = new List<BudgetItem>();
-        }
-
-        public async Task LoadBudgetItemsAsync(Guid categoryId)
-        {
-            await LoadIncomeItemsAsync(categoryId);
-            await LoadExpenseItemsAsync(categoryId);
-        }
-
-        private async Task LoadIncomeItemsAsync(Guid categoryId)
-        {
-            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
-            {
-                var _resultsCategory = await uow.GetBudgetCategoryAsync(categoryId);
-                if (_resultsCategory.Successful)
-                {
-                    BudgetCategory category = _resultsCategory.Results;
-                    var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(category);
-                    if (_resultsIncomeItems.Successful)
-                    {
-                        foreach (var item in _resultsIncomeItems.Results)
-                        {
-                            item.ItemType = BudgetItemType.Income;
-                            this.BudgetItems.Add(item);
-                        }
-                    }
-                    else
-                    {
-                        if (_resultsIncomeItems.WorkException != null)
-                        {
-                            WriteErrorCondition(_resultsIncomeItems.WorkException.Message);
-                        }
-                        else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
-                        {
-                            WriteErrorCondition(_resultsIncomeItems.Message);
-                        }
-                        else
-                        {
-                            WriteErrorCondition("An unknown error has occurred");
-                        }
-                    }
-                }
-                else
-                {
-                    if (_resultsCategory.WorkException != null)
-                    {
-                        WriteErrorCondition(_resultsCategory.WorkException.Message);
-                    }
-                    else if (!string.IsNullOrEmpty(_resultsCategory.Message))
-                    {
-                        WriteErrorCondition(_resultsCategory.Message);
-                    }
-                    else
-                    {
-                        WriteErrorCondition("An unknown error has occurred");
-                    }
-                }
-            }
-        }
-
-        private async Task LoadExpenseItemsAsync(Guid categoryId)
-        {
-            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
-            {
-                var _resultsCategory = await uow.GetBudgetCategoryAsync(categoryId);
-                if (_resultsCategory.Successful)
-                {
-                    BudgetCategory category = _resultsCategory.Results;
-                    var _resultsIncomeItems = await uow.GetCategoryExpenseItemsAsync(category);
-                    if (_resultsIncomeItems.Successful)
-                    {
-                        foreach (var item in _resultsIncomeItems.Results)
-                        {
-                            item.ItemType = BudgetItemType.Expense;
-                            this.BudgetItems.Add(item);
-                        }
-                    }
-                    else
-                    {
-                        if (_resultsIncomeItems.WorkException != null)
-                        {
-                            WriteErrorCondition(_resultsIncomeItems.WorkException.Message);
-                        }
-                        else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
-                        {
-                            WriteErrorCondition(_resultsIncomeItems.Message);
-                        }
-                        else
-                        {
-                            WriteErrorCondition("An unknown error has occurred loading Expense Items");
-                        }
-                    }
-                }
-                else
-                {
-                    if (_resultsCategory.WorkException != null)
-                    {
-                        WriteErrorCondition(_resultsCategory.WorkException.Message);
-                    }
-                    else if (!string.IsNullOrEmpty(_resultsCategory.Message))
-                    {
-                        WriteErrorCondition(_resultsCategory.Message);
-                    }
-                    else
-                    {
-                        WriteErrorCondition("An unknown error has occurred");
                     }
                 }
             }

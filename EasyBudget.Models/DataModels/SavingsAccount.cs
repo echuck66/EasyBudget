@@ -27,13 +27,8 @@ namespace EasyBudget.Models.DataModels
 
         public string accountNumber { get; set; }
 
-        [MaxLength(250)]
-        public string bankName { get; set; }
-
         [MaxLength(75), Unique]
         public string accountNickname { get; set; }
-
-        public decimal currentBalance { get; set; }
 
         [NotMapped]
         public ICollection<SavingsDeposit> deposits { get; set; }

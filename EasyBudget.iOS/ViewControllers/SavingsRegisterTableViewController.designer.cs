@@ -11,11 +11,8 @@ using UIKit;
 
 namespace EasyBudget.iOS
 {
-    [Register ("ViewBudgetItemViewController")]
-    partial class ViewBudgetItemViewController
+    [Register ("SavingsRegisterTableViewController")]
+    partial class SavingsRegisterTableViewController
     {
-        void ReleaseDesignerOutlets ()
-        {
-        }
     }
 }
