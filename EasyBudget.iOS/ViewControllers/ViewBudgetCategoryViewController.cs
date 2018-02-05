@@ -16,15 +16,14 @@ namespace EasyBudget.iOS
 
         public ViewBudgetCategoryViewController (IntPtr handle) : base (handle)
         {
-            //this.LabelCategoryName.Text = Category?.categoryName;
-
         }
 
         public override void ViewDidLoad()
         {
             if (this.Category != null)
             {
-                this.LabelCategoryName.Text = Category?.categoryName;
+                this.lblCategoryName.Text = Category?.categoryName;
+                lblCategoryDescription.Text = Category?.description;
             }
         }
     }

@@ -11,7 +11,7 @@
         <!--View Controller-->
         <scene sceneID="1553">
             <objects>
-                <tableViewController id="1554" sceneMemberID="viewController" customClass="BankAccountsTableViewController" storyboardIdentifier="BankAccountsTableViewController" title="Bank Accounts">
+                <tableViewController id="1554" sceneMemberID="viewController" customClass="BankAccountsTableViewController" storyboardIdentifier="BankAccountsTableViewController" title="Accounts">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="1555">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -304,8 +304,10 @@
                     <tabBarItem key="tabBarItem" title="Category" id="16635"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="TextCategoryName" destination="17252" id="name-outlet-17252"/>
-                        <outlet property="TextCategoryDescription" destination="17257" id="name-outlet-17257"/>
+                        <outlet property="txtCategoryName" destination="17252" id="name-outlet-17252"/>
+                        <outlet property="txtCategoryDescription" destination="17257" id="name-outlet-17257"/>
+                        <outlet property="btnSave" destination="17232" id="name-outlet-17232"/>
+                        <outlet property="btnCancel" destination="17233" id="name-outlet-17233"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="15831" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -338,10 +340,25 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="27399" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="25" y="151" width="148" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17" weight="semibold"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="27400" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="27" y="188" width="294" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                     </view>
                     <connections>
-                        <outlet property="LabelCategoryName" destination="16288" id="name-outlet-16288"/>
+                        <outlet property="lblCategoryName" destination="16288" id="name-outlet-16288"/>
+                        <outlet property="lblCategoryDescription" destination="27400" id="name-outlet-27400"/>
                     </connections>
                     <tabBarItem key="tabBarItem" title="Category" id="16956"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
@@ -476,6 +493,15 @@
                             </label>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="txtItemDescription" destination="16996" id="name-outlet-16996"/>
+                        <outlet property="lblCategoryName" destination="17254" id="name-outlet-17254"/>
+                        <outlet property="selectFrequency" destination="16991" id="name-outlet-16991"/>
+                        <outlet property="switchRecurring" destination="16989" id="name-outlet-16989"/>
+                        <outlet property="txtBudgetedAmount" destination="16995" id="name-outlet-16995"/>
+                        <outlet property="btnSave" destination="16998" id="name-outlet-16998"/>
+                        <outlet property="btnCancel" destination="16999" id="name-outlet-16999"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="16964" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -652,8 +678,19 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="27401" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" text="Description">
+                                <rect key="frame" x="27" y="172" width="294" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="lblCategoryName" destination="24195" id="name-outlet-24195"/>
+                        <outlet property="lblItemDescription" destination="27401" id="name-outlet-27401"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="24198" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -661,13 +698,16 @@
         </scene>
         <scene sceneID="25439">
             <objects>
-                <tabBarController id="25440" sceneMemberID="viewController" storyboardIdentifier="ViewSavingsTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" customClass="ViewSavingsTabBarController">
+                <tabBarController id="25440" sceneMemberID="viewController" storyboardIdentifier="ViewSavingsTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" customClass="ViewSavingsTabBarController" title="Savings">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="25443">
                         <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
-                    <connections/>
+                    <connections>
+                        <segue id="26766" destination="25511" kind="relationship" relationship="viewControllers"/>
+                        <segue id="26865" destination="25493" kind="relationship" relationship="viewControllers"/>
+                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="25444" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -675,13 +715,16 @@
         </scene>
         <scene sceneID="25479">
             <objects>
-                <tabBarController id="25480" sceneMemberID="viewController" storyboardIdentifier="EditSavingsTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" customClass="EditSavingsTabBarController">
+                <tabBarController id="25480" sceneMemberID="viewController" storyboardIdentifier="EditSavingsTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" customClass="EditSavingsTabBarController" title="Savings">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="25483">
                         <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
-                    <connections/>
+                    <connections>
+                        <segue id="26638" destination="25504" kind="relationship" relationship="viewControllers"/>
+                        <segue id="26710" destination="25493" kind="relationship" relationship="viewControllers"/>
+                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="25484" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -725,6 +768,8 @@
                             <outlet property="delegate" destination="25493" id="25496"/>
                         </connections>
                     </tableView>
+                    <tabBarItem key="tabBarItem" title="Register" id="26709"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="25499" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -742,6 +787,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Account Details" id="26637"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="25506" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -759,6 +806,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Account Details" id="26765"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="25513" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
