@@ -19,8 +19,8 @@ namespace EasyBudget.iOS
         {
             if (this.Category != null)
             {
-                TextCategoryName.Text = Category.categoryName;
-                TextCategoryDescription.Text = Category.description;
+                txtCategoryName.Text = Category.categoryName;
+                txtCategoryDescription.Text = Category.description;
             }
         }
     }

@@ -14,8 +14,25 @@ namespace EasyBudget.iOS
     [Register ("ViewBudgetItemViewController")]
     partial class ViewBudgetItemViewController
     {
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel lblCategoryName { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel lblItemDescription { get; set; }
+
         void ReleaseDesignerOutlets ()
         {
+            if (lblCategoryName != null) {
+                lblCategoryName.Dispose ();
+                lblCategoryName = null;
+            }
+
+            if (lblItemDescription != null) {
+                lblItemDescription.Dispose ();
+                lblItemDescription = null;
+            }
         }
     }
 }

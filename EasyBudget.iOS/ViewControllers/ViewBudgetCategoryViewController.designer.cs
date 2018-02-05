@@ -16,13 +16,22 @@ namespace EasyBudget.iOS
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UILabel LabelCategoryName { get; set; }
+        UIKit.UILabel lblCategoryDescription { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel lblCategoryName { get; set; }
 
         void ReleaseDesignerOutlets ()
         {
-            if (LabelCategoryName != null) {
-                LabelCategoryName.Dispose ();
-                LabelCategoryName = null;
+            if (lblCategoryDescription != null) {
+                lblCategoryDescription.Dispose ();
+                lblCategoryDescription = null;
+            }
+
+            if (lblCategoryName != null) {
+                lblCategoryName.Dispose ();
+                lblCategoryName = null;
             }
         }
     }

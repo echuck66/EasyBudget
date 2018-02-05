@@ -14,5 +14,8 @@ namespace EasyBudget.iOS
     [Register ("EditSavingsViewController")]
     partial class EditSavingsViewController
     {
+        void ReleaseDesignerOutlets ()
+        {
+        }
     }
 }

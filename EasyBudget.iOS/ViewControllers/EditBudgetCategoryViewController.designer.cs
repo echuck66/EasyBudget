@@ -16,22 +16,40 @@ namespace EasyBudget.iOS
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UITextField TextCategoryDescription { get; set; }
+        UIKit.UIButton btnCancel { get; set; }
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UITextField TextCategoryName { get; set; }
+        UIKit.UIButton btnSave { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UITextField txtCategoryDescription { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UITextField txtCategoryName { get; set; }
 
         void ReleaseDesignerOutlets ()
         {
-            if (TextCategoryDescription != null) {
-                TextCategoryDescription.Dispose ();
-                TextCategoryDescription = null;
+            if (btnCancel != null) {
+                btnCancel.Dispose ();
+                btnCancel = null;
             }
 
-            if (TextCategoryName != null) {
-                TextCategoryName.Dispose ();
-                TextCategoryName = null;
+            if (btnSave != null) {
+                btnSave.Dispose ();
+                btnSave = null;
+            }
+
+            if (txtCategoryDescription != null) {
+                txtCategoryDescription.Dispose ();
+                txtCategoryDescription = null;
+            }
+
+            if (txtCategoryName != null) {
+                txtCategoryName.Dispose ();
+                txtCategoryName = null;
             }
         }
     }
