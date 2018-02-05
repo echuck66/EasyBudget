@@ -210,10 +210,6 @@
     <Compile Include="ViewControllers\EditBudgetItemViewController.designer.cs">
       <DependentUpon>EditBudgetItemViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewControllers\ViewCheckingTabViewController.cs" />
-    <Compile Include="ViewControllers\ViewCheckingTabViewController.designer.cs">
-      <DependentUpon>ViewCheckingTabViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ViewControllers\ViewCheckingViewController.cs" />
     <Compile Include="ViewControllers\ViewCheckingViewController.designer.cs">
       <DependentUpon>ViewCheckingViewController.cs</DependentUpon>
@@ -237,6 +233,30 @@
     <Compile Include="ViewControllers\ViewBudgetItemViewController.cs" />
     <Compile Include="ViewControllers\ViewBudgetItemViewController.designer.cs">
       <DependentUpon>ViewBudgetItemViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\EditSavingsTabBarController.cs" />
+    <Compile Include="ViewControllers\EditSavingsTabBarController.designer.cs">
+      <DependentUpon>EditSavingsTabBarController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewSavingsTabBarController.cs" />
+    <Compile Include="ViewControllers\ViewSavingsTabBarController.designer.cs">
+      <DependentUpon>ViewSavingsTabBarController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\EditSavingsViewController.cs" />
+    <Compile Include="ViewControllers\EditSavingsViewController.designer.cs">
+      <DependentUpon>EditSavingsViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\SavingsRegisterTableViewController.cs" />
+    <Compile Include="ViewControllers\SavingsRegisterTableViewController.designer.cs">
+      <DependentUpon>SavingsRegisterTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewSavingsViewController.cs" />
+    <Compile Include="ViewControllers\ViewSavingsViewController.designer.cs">
+      <DependentUpon>ViewSavingsViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\ViewCheckingTabBarController.cs" />
+    <Compile Include="ViewControllers\ViewCheckingTabBarController.designer.cs">
+      <DependentUpon>ViewCheckingTabBarController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
