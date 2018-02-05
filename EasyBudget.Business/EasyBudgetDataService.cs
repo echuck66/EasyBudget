@@ -430,14 +430,15 @@ namespace EasyBudget.Business
 
         public BudgetCategoryType CategoryType { get; set; }
 
-        public ObservableCollection<IncomeItem> IncomeItems { get; set; }
+        public ICollection<IncomeItem> IncomeItems { get; set; }
 
-        public ObservableCollection<ExpenseItem> ExpenseItems { get; set; }
+        public ICollection<ExpenseItem> ExpenseItems { get; set; }
 
         public BudgetCategoryVM(string dbFilePath)
             : base(dbFilePath)
         {
-            
+            this.IncomeItems = new List<IncomeItem>();
+            this.ExpenseItems = new List<ExpenseItem>();
         }
 
         public async Task LoadBudgetCategoryDetails(Guid categoryId)
@@ -464,9 +465,10 @@ namespace EasyBudget.Business
                                 var _resultsExpenseItems = await uow.GetCategoryExpenseItemsAsync(this.Category);
                                 if (_resultsExpenseItems.Successful)
                                 {
-                                    this.ExpenseItems = new ObservableCollection<ExpenseItem>();
+
                                     foreach(var item in _resultsExpenseItems.Results)
                                     {
+                                        item.ItemType = BudgetItemType.Expense;
                                         this.ExpenseItems.Add(item);
                                     }
                                 }
@@ -490,9 +492,9 @@ namespace EasyBudget.Business
                                 var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(this.Category);
                                 if (_resultsIncomeItems.Successful)
                                 {
-                                    this.IncomeItems = new ObservableCollection<IncomeItem>();
                                     foreach(var item in _resultsIncomeItems.Results)
                                     {
+                                        item.ItemType = BudgetItemType.Income;
                                         this.IncomeItems.Add(item);
                                     }
                                 }
@@ -554,14 +556,15 @@ namespace EasyBudget.Business
 
         public DateTime LoadTransactionsToDate { get; set; }
 
-        public ObservableCollection<CheckingWithdrawal> Withdrawals { get; set; }
+        public ICollection<CheckingWithdrawal> Withdrawals { get; set; }
 
-        public ObservableCollection<CheckingDeposit> Deposits { get; set; }
+        public ICollection<CheckingDeposit> Deposits { get; set; }
 
         public CheckingAccountVM(string dbFilePath)
             : base(dbFilePath)
         {
-            
+            this.Withdrawals = new List<CheckingWithdrawal>();
+            this.Deposits = new List<CheckingDeposit>();
         }
 
         public async Task LoadCheckingAccountDetailsAsync(Guid accountId)
@@ -577,6 +580,20 @@ namespace EasyBudget.Business
                     this.BankName = this.CheckingAccount?.bankName ?? string.Empty;
                     this.AccountNickname = this.CheckingAccount?.accountNickname ?? string.Empty;
                     this.CurrentBalance = this.CheckingAccount?.currentBalance ?? 0;
+                    if (this.CheckingAccount.withdrawals != null)
+                    {
+                        foreach(CheckingWithdrawal item in this.CheckingAccount.withdrawals)
+                        {
+                            this.Withdrawals.Add(item);
+                        }
+                    }
+                    if (this.CheckingAccount.deposits != null)
+                    {
+                        foreach(CheckingDeposit item in this.CheckingAccount.deposits)
+                        {
+                            this.Deposits.Add(item);
+                        }
+                    }
                 }
                 else
                 {
@@ -612,10 +629,15 @@ namespace EasyBudget.Business
 
         public decimal CurrentBalance { get; set; }
 
+        public ICollection<SavingsWithdrawal> Withdrawals { get; set; }
+
+        public ICollection<SavingsDeposit> Deposits { get; set; }
+
         public SavingsAccountVM(string dbFilePath)
             : base(dbFilePath)
         {
-
+            this.Withdrawals = new List<SavingsWithdrawal>();
+            this.Deposits = new List<SavingsDeposit>();
         }
 
         public async Task LoadSavingsAccountDetailsAsync(Guid accountId)
@@ -631,6 +653,20 @@ namespace EasyBudget.Business
                     this.BankName = this.SavingsAccount?.bankName ?? string.Empty;
                     this.AccountNickname = this.SavingsAccount?.accountNickname ?? string.Empty;
                     this.CurrentBalance = this.SavingsAccount?.currentBalance ?? 0;
+                    if (this.SavingsAccount.withdrawals != null)
+                    {
+                        foreach (SavingsWithdrawal item in this.SavingsAccount.withdrawals)
+                        {
+                            this.Withdrawals.Add(item);
+                        }
+                    }
+                    if (this.SavingsAccount.deposits != null)
+                    {
+                        foreach (SavingsDeposit item in this.SavingsAccount.deposits)
+                        {
+                            this.Deposits.Add(item);
+                        }
+                    }
                 }
                 else
                 {
