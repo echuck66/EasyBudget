@@ -195,11 +195,13 @@ namespace EasyBudget.iOS
 
             if (account.accountType == BankAccountType.Checking)
             {
+                //cell.ImageView.Image = UIImage.FromFile("icons8-check-book-50.png");
                 titleText = account.bankName;
                 currentBalance = account.currentBalance;
             }
             else
             {
+                //cell.ImageView.Image = UIImage.FromFile("icons8-coins-50.png");
                 titleText = account.bankName;
                 currentBalance = account.currentBalance;
             }

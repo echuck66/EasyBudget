@@ -274,11 +274,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\icons8-bus-50.png" />
-    <BundleResource Include="Resources\icons8-grid-3-50.png" />
-    <BundleResource Include="Resources\icons8-museum-50.png" />
-    <BundleResource Include="Resources\icons8-administrative-tools-50.png" />
     <BundleResource Include="Resources\EasyBudget_IconLarge.png" />
+    <BundleResource Include="Resources\administrative-tools-22.png" />
+    <BundleResource Include="Resources\cash-in-hand-22.png" />
+    <BundleResource Include="Resources\check-book-22.png" />
+    <BundleResource Include="Resources\coins-22.png" />
+    <BundleResource Include="Resources\compact-camera-22.png" />
+    <BundleResource Include="Resources\exchange-22.png" />
+    <BundleResource Include="Resources\grid-3-22.png" />
+    <BundleResource Include="Resources\initiate-money-transfer-22.png" />
+    <BundleResource Include="Resources\merchant-account-22.png" />
+    <BundleResource Include="Resources\museum-22.png" />
+    <BundleResource Include="Resources\refund-22.png" />
+    <BundleResource Include="Resources\request-money-22.png" />
+    <BundleResource Include="Resources\slider-22.png" />
+    <BundleResource Include="Resources\test-22.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
