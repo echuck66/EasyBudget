@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyBudget.Models;
 using EasyBudget.Models.DataModels;
+using SQLite;
 
 namespace EasyBudget.Data
 {
@@ -26,9 +27,13 @@ namespace EasyBudget.Data
     {
         private EasyBudgetContext context;
 
+        //private SQLiteConnection connection;
+
         public EasyBudgetRepository(string dbFilePath)
         {
             context = new EasyBudgetContext(dbFilePath);
+            //connection = new SQLiteConnection(dbFilePath);
+
         }
 
         public EasyBudgetRepository(EasyBudgetContext testContext)
@@ -40,8 +45,6 @@ namespace EasyBudget.Data
         {
             if (!context.BudgetCategory.Any(c => c.id == category.id && c.categoryName == category.categoryName))
             {
-                //context.BudgetCategory.Add(category);
-                //int catCount = context.BudgetCategory.Count();
                 await Task.Run(() => context.BudgetCategory.Add(category));
             }
             else if (context.BudgetCategory.Any(c => c.categoryName == category.categoryName))
@@ -300,27 +303,27 @@ namespace EasyBudget.Data
             return accounts;
         }
 
-        public async Task<BudgetCategory> GetBudgetCategoryAsync(Guid id)
+        public async Task<BudgetCategory> GetBudgetCategoryAsync(int id)
         {
             return await context.BudgetCategory.FindAsync(id);
         }
 
-        public async Task<CheckingAccount> GetCheckingAccountAsync(Guid id)
+        public async Task<CheckingAccount> GetCheckingAccountAsync(int id)
         {
             return await context.CheckingAccount.FindAsync(id);
         }
 
-        public async Task<CheckingDeposit> GetCheckingDepositAsync(Guid id)
+        public async Task<CheckingDeposit> GetCheckingDepositAsync(int id)
         {
             return await context.CheckingDeposit.FindAsync(id);
         }
 
-        public async Task<CheckingWithdrawal> GetCheckingWithdrawalAsync(Guid id)
+        public async Task<CheckingWithdrawal> GetCheckingWithdrawalAsync(int id)
         {
             return await context.CheckingWithdrawal.FindAsync(id);
         }
 
-        public async Task<ICollection<CheckingDeposit>> GetCheckingDepositsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate)
+        public async Task<ICollection<CheckingDeposit>> GetCheckingDepositsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate)
         {
             List<CheckingDeposit> deposits = new List<CheckingDeposit>();
 
@@ -341,7 +344,7 @@ namespace EasyBudget.Data
             return deposits;
         }
 
-        public async Task<ICollection<CheckingWithdrawal>> GetCheckingWithdrawalsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate)
+        public async Task<ICollection<CheckingWithdrawal>> GetCheckingWithdrawalsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate)
         {
             List<CheckingWithdrawal> withdrawals = new List<CheckingWithdrawal>();
 
@@ -362,7 +365,7 @@ namespace EasyBudget.Data
             return withdrawals;
         }
 
-        public async Task<ExpenseItem> GetExpenseItemAsync(Guid id)
+        public async Task<ExpenseItem> GetExpenseItemAsync(int id)
         {
             var itm = await context.ExpenseItem.FindAsync(id);
             if (itm != null)
@@ -372,7 +375,7 @@ namespace EasyBudget.Data
             return itm;
         }
         
-        public async Task<ICollection<ExpenseItem>> GetExpenseItemsForBudgetCategoryAsync(Guid categoryId)
+        public async Task<ICollection<ExpenseItem>> GetExpenseItemsForBudgetCategoryAsync(int categoryId)
         {
             List<ExpenseItem> expenseItems = new List<ExpenseItem>();
 
@@ -396,7 +399,7 @@ namespace EasyBudget.Data
             return expenseItems;
         }
 
-        public async Task<IncomeItem> GetIncomeItemAsync(Guid id)
+        public async Task<IncomeItem> GetIncomeItemAsync(int id)
         {
             var itm = await context.IncomeItem.FindAsync(id);
             if (itm != null)
@@ -406,7 +409,7 @@ namespace EasyBudget.Data
             return itm;
         }
 
-        public async Task<ICollection<IncomeItem>> GetIncomeItemsForBudgetCategoryAsync(Guid categoryId)
+        public async Task<ICollection<IncomeItem>> GetIncomeItemsForBudgetCategoryAsync(int categoryId)
         {
             List<IncomeItem> incomeItems = new List<IncomeItem>();
 
@@ -450,17 +453,17 @@ namespace EasyBudget.Data
             return categories;
         }
 
-        public async Task<SavingsAccount> GetSavingsAccountAsync(Guid id)
+        public async Task<SavingsAccount> GetSavingsAccountAsync(int id)
         {
             return await context.SavingsAccount.FindAsync(id);
         }
 
-        public async Task<SavingsDeposit> GetSavingsDepositAsync(Guid id)
+        public async Task<SavingsDeposit> GetSavingsDepositAsync(int id)
         {
             return await context.SavingsDeposit.FindAsync(id);
         }
 
-        public async Task<ICollection<SavingsDeposit>> GetSavingsDepositsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate)
+        public async Task<ICollection<SavingsDeposit>> GetSavingsDepositsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate)
         {
             List<SavingsDeposit> deposits = new List<SavingsDeposit>();
 
@@ -481,12 +484,12 @@ namespace EasyBudget.Data
             return deposits;
         }
 
-        public async Task<SavingsWithdrawal> GetSavingsWithdrawalAsync(Guid id)
+        public async Task<SavingsWithdrawal> GetSavingsWithdrawalAsync(int id)
         {
             return await context.SavingsWithdrawal.FindAsync(id);
         }
 
-        public async Task<ICollection<SavingsWithdrawal>> GetSavingsWithdrawalsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate)
+        public async Task<ICollection<SavingsWithdrawal>> GetSavingsWithdrawalsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate)
         {
             List<SavingsWithdrawal> withdrawals = new List<SavingsWithdrawal>();
 
@@ -609,7 +612,7 @@ namespace EasyBudget.Data
             }
         }
 
-        public async Task<BankAccountFundsTransfer> GetBankAccountFundsTransfer(Guid transferId)
+        public async Task<BankAccountFundsTransfer> GetBankAccountFundsTransfer(int transferId)
         {
             BankAccountFundsTransfer transfer = await context.BankAccountFundsTransfer.FindAsync(transferId);
 
@@ -685,6 +688,14 @@ namespace EasyBudget.Data
 
         public void Dispose()
         {
+            //try
+            //{
+            //    connection.Close();
+            //}
+            //catch (Exception ex)
+            //{
+            //    string err = ex.Message;
+            //}
             this.context?.Dispose();
         }
     }

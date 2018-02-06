@@ -14,7 +14,9 @@
 //    limitations under the License.
 
 using EasyBudget.Models.DataModels;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace EasyBudget.Data
 {
@@ -45,13 +47,35 @@ namespace EasyBudget.Data
         public EasyBudgetContext(string dbFilePath)
         {
             _dbFilePath = dbFilePath;
+            this.EnsureDatabaseIsCreated();
             Database.EnsureCreated();
+            //Database.Migrate();
         }
 
+        private void EnsureDatabaseIsCreated()
+        {
+            if (!string.IsNullOrEmpty(_dbFilePath))
+            {
+                using (SQLite.SQLiteConnection conn = new SQLite.SQLiteConnection(_dbFilePath))
+                {
+                    conn.CreateTable<BudgetCategory>();
+                    conn.CreateTable<CheckingAccount>();
+                    conn.CreateTable<CheckingDeposit>();
+                    conn.CreateTable<CheckingWithdrawal>();
+                    conn.CreateTable<ExpenseItem>();
+                    conn.CreateTable<IncomeItem>();
+                    conn.CreateTable<SavingsAccount>();
+                    conn.CreateTable<SavingsDeposit>();
+                    conn.CreateTable<SavingsWithdrawal>();
+                    conn.CreateTable<BankAccountFundsTransfer>();
+                }
+            }
+        }
         // Used for Unit Testing
         public EasyBudgetContext(DbContextOptions<EasyBudgetContext> options)
             : base(options)
         { 
+            
             Database.EnsureCreated();
         }
 
@@ -59,7 +83,20 @@ namespace EasyBudget.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Filename ={_dbFilePath}");
+                
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    DataSource = _dbFilePath
+                };
+
+                var connectionString = connectionStringBuilder.ToString();
+                var connection = new SqliteConnection(connectionString);
+
+                optionsBuilder.UseSqlite(connection);
+
+                //var connection = new SQLite.SQLiteConnection(_dbFilePath);
+                //optionsBuilder.UseSqlite(
+                //optionsBuilder.UseSqlite("Filename ={" + _dbFilePath + "}");
             }
         }
 

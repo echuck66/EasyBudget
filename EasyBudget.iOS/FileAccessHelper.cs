@@ -28,8 +28,14 @@ namespace EasyBudget.iOS
             {
                 System.IO.Directory.CreateDirectory(libFolder);
             }
+            string dbFilePath = System.IO.Path.Combine(libFolder, filename);
 
-            return System.IO.Path.Combine(libFolder, filename);
+            if (!System.IO.File.Exists(dbFilePath))
+            {
+                System.IO.File.Copy("dbEasyBudget.sqlite", dbFilePath);
+            }
+
+            return dbFilePath;
         }
     }
 }

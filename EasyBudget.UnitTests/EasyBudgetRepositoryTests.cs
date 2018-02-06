@@ -2357,8 +2357,8 @@ namespace EasyBudget.UnitTests
         public async Task GetBankAccountFundsTransferTests()
         {
             BankAccountFundsTransfer transfer = new BankAccountFundsTransfer();
-            transfer.sourceAccountId = Guid.NewGuid();
-            transfer.destinationAccountId = Guid.NewGuid();
+            transfer.sourceAccountId = 0;
+            transfer.destinationAccountId = 0;
             transfer.sourceAccountBeginningBalance = 100;
             transfer.sourceAccountEndingBalance = 200;
             transfer.destinationAccountBeginningBalance = 200;
@@ -2388,8 +2388,8 @@ namespace EasyBudget.UnitTests
         {
 
             BankAccountFundsTransfer transfer = new BankAccountFundsTransfer();
-            transfer.sourceAccountId = Guid.NewGuid();
-            transfer.destinationAccountId = Guid.NewGuid();
+            transfer.sourceAccountId = 0;
+            transfer.destinationAccountId = 0;
             transfer.sourceAccountBeginningBalance = 100;
             transfer.sourceAccountEndingBalance = 200;
             transfer.destinationAccountBeginningBalance = 200;
@@ -2418,8 +2418,8 @@ namespace EasyBudget.UnitTests
         public async Task UpdateBankAccountFundsTransferTests()
         {
             BankAccountFundsTransfer transfer = new BankAccountFundsTransfer();
-            transfer.sourceAccountId = Guid.NewGuid();
-            transfer.destinationAccountId = Guid.NewGuid();
+            transfer.sourceAccountId = 0;
+            transfer.destinationAccountId = 0;
             transfer.sourceAccountBeginningBalance = 100;
             transfer.sourceAccountEndingBalance = 200;
             transfer.destinationAccountBeginningBalance = 200;

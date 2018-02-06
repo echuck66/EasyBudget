@@ -20,11 +20,11 @@ namespace EasyBudget.Business.UoWResults
 {
     public class DeleteIncomeItemResults : UnitOfWorkResults<bool>
     {
-        public Guid IncomeItemId { get; set; }
+        public int IncomeItemId { get; set; }
 
         public IncomeItem IncomeItem { get; set; }
 
-        public Guid BudgetCategoryId { get; set; }
+        public int BudgetCategoryId { get; set; }
 
         public BudgetCategory BudgetCategory { get; set; }
 

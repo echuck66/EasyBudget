@@ -31,9 +31,11 @@ namespace EasyBudget.Models.DataModels
         public string accountNickname { get; set; }
 
         [NotMapped]
+        [SQLite.Ignore]
         public ICollection<SavingsDeposit> deposits { get; set; }
 
         [NotMapped]
+        [SQLite.Ignore]
         public ICollection<SavingsWithdrawal> withdrawals { get; set; }
 
         public SavingsAccount()

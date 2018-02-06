@@ -21,7 +21,7 @@ namespace EasyBudget.Business.UoWResults
 {
     public class DeleteSavingsAccountResults : UnitOfWorkResults<bool>
     {
-        public Guid AccountId { get; set; }
+        public int AccountId { get; set; }
 
         public SavingsAccount Account { get; set; }
 

@@ -30,7 +30,8 @@ namespace EasyBudget.Business
 
         public UnitOfWork(string dbFilePath)
         {
-            repository = new EasyBudgetRepository(dbFilePath);
+            //repository = new EasyBudgetRepository(dbFilePath);
+            repository = new SQLiteRepository(dbFilePath);
         }
 
         public UnitOfWork(IEasyBudgetRepository repo)
@@ -43,6 +44,8 @@ namespace EasyBudget.Business
             this.repository?.Dispose();
         }
 
+        #region System Data
+
         public async Task<SystemDataInitializationResults> EnsureSystemDataItemsAsync()
         {
             SystemDataInitializationResults _results = new SystemDataInitializationResults();
@@ -50,7 +53,7 @@ namespace EasyBudget.Business
 
             try
             {
-                
+
                 ICollection<BudgetCategory> _budgetCategories = await repository.GetAllCategoriesAsync();
 
                 int _categoryCount = _budgetCategories.Count;
@@ -64,7 +67,7 @@ namespace EasyBudget.Business
                     BudgetCategory _defaultIncomeCategory = new BudgetCategory();
                     _defaultIncomeCategory.CanEdit = true;
                     _defaultIncomeCategory.CanDelete = false;
-                    _defaultIncomeCategory.categoryName = "Default Category";
+                    _defaultIncomeCategory.categoryName = "Default Income Category";
                     _defaultIncomeCategory.categoryType = BudgetCategoryType.Income;
                     _defaultIncomeCategory.dateCreated = DateTime.Now;
                     _defaultIncomeCategory.dateModified = DateTime.Now;
@@ -93,7 +96,7 @@ namespace EasyBudget.Business
                 }
                 else
                 {
-                    foreach(BudgetCategory _category in _budgetCategories.Where(c => c.categoryType == BudgetCategoryType.Income))
+                    foreach (BudgetCategory _category in _budgetCategories.Where(c => c.categoryType == BudgetCategoryType.Income))
                     {
                         ICollection<IncomeItem> _incomeItems = await repository.GetIncomeItemsForBudgetCategoryAsync(_category.id);
                         if (_incomeItems.Count == 0)
@@ -122,7 +125,7 @@ namespace EasyBudget.Business
                     BudgetCategory _defaultExpenseCategory = new BudgetCategory();
                     _defaultExpenseCategory.CanEdit = true;
                     _defaultExpenseCategory.CanDelete = false;
-                    _defaultExpenseCategory.categoryName = "Default Category";
+                    _defaultExpenseCategory.categoryName = "Default Expense Category";
                     _defaultExpenseCategory.categoryType = BudgetCategoryType.Expense;
                     _defaultExpenseCategory.dateCreated = DateTime.Now;
                     _defaultExpenseCategory.dateModified = DateTime.Now;
@@ -226,7 +229,7 @@ namespace EasyBudget.Business
 
                 if (dataChanged)
                 {
-                    
+
                 }
                 _results.BudgetCategoriesCount = _categoryCount;
                 _results.BudgetCategoriesExist = _categoryCount > 0;
@@ -252,7 +255,11 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<BudgetCategoryResults> GetBudgetCategoryAsync(Guid id)
+        #endregion
+
+        #region Budget Categories and Items
+
+        public async Task<BudgetCategoryResults> GetBudgetCategoryAsync(int id)
         {
             BudgetCategoryResults _results = new BudgetCategoryResults();
 
@@ -303,11 +310,11 @@ namespace EasyBudget.Business
             {
                 if (category == null)
                 {
-                    throw new NullReferenceException("category cannot be NULL");    
+                    throw new NullReferenceException("category cannot be NULL");
                 }
                 await repository.AddBudgetCategoryAsync(category);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = category; 
+                _results.Results = category;
                 _results.Successful = objectsAdded == 1;
             }
             catch (Exception ex)
@@ -376,7 +383,7 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<ExpenseItemResults> GetExpenseItemAsync(Guid id)
+        public async Task<ExpenseItemResults> GetExpenseItemAsync(int id)
         {
             ExpenseItemResults _results = new ExpenseItemResults();
 
@@ -387,7 +394,7 @@ namespace EasyBudget.Business
                 _results.Successful = expItm != null;
                 if (expItm == null)
                 {
-                    _results.Message = "No matching ExpenseItem found";    
+                    _results.Message = "No matching ExpenseItem found";
                 }
                 _results.WorkException = null;
             }
@@ -401,7 +408,7 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<IncomeItemResults> GetIncomeItemAsync(Guid id)
+        public async Task<IncomeItemResults> GetIncomeItemAsync(int id)
         {
             IncomeItemResults _results = new IncomeItemResults();
 
@@ -449,58 +456,6 @@ namespace EasyBudget.Business
             }
 
             return _results;
-        }
-
-        public async Task<CheckingAccountsResults> GetAllCheckingAccountsAsync()
-        {
-            CheckingAccountsResults _results = new CheckingAccountsResults();
-
-            try
-            {
-                var accounts = await repository.GetAllCheckingAccountsAsync();
-
-                _results.Results = accounts;
-                _results.Successful = true;
-
-                if (accounts.Count == 0)
-                {
-                    _results.Message = "No Checking Accounts found";
-                }
-            }
-            catch (Exception ex)
-            {
-                _results.Successful = false;
-                _results.WorkException = ex;
-            }
-
-            return _results;
-
-        }
-
-        public async Task<SavingsAccountsResults> GetAllSavingsAccountsAsync()
-        {
-            SavingsAccountsResults _results = new SavingsAccountsResults();
-
-            try
-            {
-                var accounts = await repository.GetAllSavingsAccountsAsync();
-
-                _results.Results = accounts;
-                _results.Successful = true;
-
-                if (accounts.Count == 0)
-                {
-                    _results.Message = "No Savings Accounts found";
-                }
-            }
-            catch (Exception ex)
-            {
-                _results.Successful = false;
-                _results.WorkException = ex;
-            }
-
-            return _results;
-
         }
 
         public async Task<ExpenseItemsResults> GetCategoryExpenseItemsAsync(BudgetCategory category)
@@ -784,7 +739,37 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<CheckingAccountResults> GetCheckingAccountAsync(Guid accountId)
+        #endregion
+
+        #region Checking Accounts and Withdrawals / Deposits
+
+        public async Task<CheckingAccountsResults> GetAllCheckingAccountsAsync()
+        {
+            CheckingAccountsResults _results = new CheckingAccountsResults();
+
+            try
+            {
+                var accounts = await repository.GetAllCheckingAccountsAsync();
+
+                _results.Results = accounts;
+                _results.Successful = true;
+
+                if (accounts.Count == 0)
+                {
+                    _results.Message = "No Checking Accounts found";
+                }
+            }
+            catch (Exception ex)
+            {
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+
+        }
+
+        public async Task<CheckingAccountResults> GetCheckingAccountAsync(int accountId)
         {
             CheckingAccountResults _results = new CheckingAccountResults();
 
@@ -809,18 +794,33 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<SavingsAccountResults> GetSavingsAccountAsync(Guid accountId)
+        public async Task<CheckingAccountResults> GetLoadedCheckingAccountAsync(int accountId, DateTime fromDate, DateTime toDate)
         {
-            SavingsAccountResults _results = new SavingsAccountResults();
+            CheckingAccountResults _results = new CheckingAccountResults();
 
             try
             {
-                SavingsAccount account = await repository.GetSavingsAccountAsync(accountId);
+                CheckingAccount account = await repository.GetCheckingAccountAsync(accountId);
                 _results.Results = account;
                 _results.Successful = account != null;
                 if (account == null)
                 {
-                    _results.Message = "No matching Savings Account found";
+                    _results.Message = "No matching Checking Account found";
+                }
+                else
+                {
+                    // Load the deposits and withdrawals for the provided date range
+                    var _withdrawals = await repository.GetCheckingWithdrawalsByDateRangeAsync(accountId, fromDate, toDate);
+                    if (_withdrawals != null)
+                    {
+                        _results.Results.withdrawals = _withdrawals;
+                    }
+                    var _deposits = await repository.GetCheckingDepositsByDateRangeAsync(accountId, fromDate, toDate);
+                    if (_deposits != null) 
+                    {
+                        _results.Results.deposits = _deposits;
+                    }
+
                 }
                 _results.WorkException = null;
             }
@@ -845,31 +845,6 @@ namespace EasyBudget.Business
                     throw new NullReferenceException("Checking Account cannot be NULL");
                 }
                 await repository.AddCheckingAccountAsync(account);
-                int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Successful = objectsAdded == 1;
-                _results.Results = account;
-            }
-            catch (Exception ex)
-            {
-                _results.Results = null;
-                _results.Successful = false;
-                _results.WorkException = ex;
-            }
-
-            return _results;
-        }
-
-        public async Task<SavingsAccountResults> AddSavingsAccountAsync(SavingsAccount account)
-        {
-            SavingsAccountResults _results = new SavingsAccountResults();
-
-            try
-            {
-                if (account == null)
-                {
-                    throw new NullReferenceException("Savings Account cannot be NULL");
-                }
-                await repository.AddSavingsAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
                 _results.Successful = objectsAdded == 1;
                 _results.Results = account;
@@ -909,31 +884,6 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<SavingsAccountResults> UpdateSavingsAccountAsync(SavingsAccount account)
-        {
-            SavingsAccountResults _results = new SavingsAccountResults();
-
-            try
-            {
-                if (account == null)
-                {
-                    throw new NullReferenceException("Savings Account cannot be NULL");
-                }
-                await repository.UpdateSavingsAccountAsync(account);
-                int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Successful = objectsAdded == 1;
-                _results.Results = account;
-            }
-            catch (Exception ex)
-            {
-                _results.Results = null;
-                _results.Successful = false;
-                _results.WorkException = ex;
-            }
-
-            return _results;
-        }
-
         public async Task<DeleteCheckingAccountResults> DeleteCheckingAccountAsync(CheckingAccount account)
         {
             DeleteCheckingAccountResults _results = new DeleteCheckingAccountResults();
@@ -959,38 +909,13 @@ namespace EasyBudget.Business
             return _results;
         }
 
-        public async Task<DeleteSavingsAccountResults> DeleteSavingsAccountAsync(SavingsAccount account)
-        {
-            DeleteSavingsAccountResults _results = new DeleteSavingsAccountResults();
-
-            try
-            {
-                if (account == null)
-                {
-                    throw new NullReferenceException("Savings Account cannot be NULL");
-                }
-                await repository.DeleteSavingsAccountAsync(account);
-                int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = objectsAdded == 1;
-                _results.Successful = true;
-            }
-            catch (Exception ex)
-            {
-                _results.Results = false;
-                _results.Successful = false;
-                _results.WorkException = ex;
-            }
-
-            return _results;
-        }
-
         public async Task<CheckingAccountWithdrawalResults> SpendMoneyCheckingAsync(CheckingWithdrawal withdrawal)
         {
             CheckingAccountWithdrawalResults _results = new CheckingAccountWithdrawalResults();
 
             try
             {
-                if (withdrawal.checkingAccountId == Guid.Empty)
+                if (withdrawal.checkingAccountId == 0)
                 {
                     throw new Exception("The Checking Account ID is required with all transactions.");
                 }
@@ -1029,7 +954,7 @@ namespace EasyBudget.Business
 
             try
             {
-                if (deposit.checkingAccountId == Guid.Empty)
+                if (deposit.checkingAccountId == 0)
                 {
                     throw new Exception("The Checking Account ID is required with all transactions.");
                 }
@@ -1062,13 +987,181 @@ namespace EasyBudget.Business
             return _results;
         }
 
+        #endregion
+
+        #region Savings Accounts and Withdrawals / Deposits
+
+        public async Task<SavingsAccountsResults> GetAllSavingsAccountsAsync()
+        {
+            SavingsAccountsResults _results = new SavingsAccountsResults();
+
+            try
+            {
+                var accounts = await repository.GetAllSavingsAccountsAsync();
+
+                _results.Results = accounts;
+                _results.Successful = true;
+
+                if (accounts.Count == 0)
+                {
+                    _results.Message = "No Savings Accounts found";
+                }
+            }
+            catch (Exception ex)
+            {
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+
+        }
+
+        public async Task<SavingsAccountResults> GetSavingsAccountAsync(int accountId)
+        {
+            SavingsAccountResults _results = new SavingsAccountResults();
+
+            try
+            {
+                SavingsAccount account = await repository.GetSavingsAccountAsync(accountId);
+                _results.Results = account;
+                _results.Successful = account != null;
+                if (account == null)
+                {
+                    _results.Message = "No matching Savings Account found";
+                }
+                _results.WorkException = null;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<SavingsAccountResults> GetLoadingSavingsAccountAsync(int accountId, DateTime fromDate, DateTime toDate)
+        {
+            SavingsAccountResults _results = new SavingsAccountResults();
+
+            try
+            {
+                SavingsAccount account = await repository.GetSavingsAccountAsync(accountId);
+                _results.Results = account;
+                _results.Successful = account != null;
+                if (account == null)
+                {
+                    _results.Message = "No matching Savings Account found";
+                }
+                else
+                {// Load the deposits and withdrawals for the provided date range
+                    var _withdrawals = await repository.GetSavingsWithdrawalsByDateRangeAsync(accountId, fromDate, toDate);
+                    if (_withdrawals != null)
+                    {
+                        _results.Results.withdrawals = _withdrawals;
+                    }
+                    var _deposits = await repository.GetSavingsDepositsByDateRangeAsync(accountId, fromDate, toDate);
+                    if (_deposits != null)
+                    {
+                        _results.Results.deposits = _deposits;
+                    }
+                }
+                _results.WorkException = null;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<SavingsAccountResults> AddSavingsAccountAsync(SavingsAccount account)
+        {
+            SavingsAccountResults _results = new SavingsAccountResults();
+
+            try
+            {
+                if (account == null)
+                {
+                    throw new NullReferenceException("Savings Account cannot be NULL");
+                }
+                await repository.AddSavingsAccountAsync(account);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = objectsAdded == 1;
+                _results.Results = account;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<SavingsAccountResults> UpdateSavingsAccountAsync(SavingsAccount account)
+        {
+            SavingsAccountResults _results = new SavingsAccountResults();
+
+            try
+            {
+                if (account == null)
+                {
+                    throw new NullReferenceException("Savings Account cannot be NULL");
+                }
+                await repository.UpdateSavingsAccountAsync(account);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = objectsAdded == 1;
+                _results.Results = account;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<DeleteSavingsAccountResults> DeleteSavingsAccountAsync(SavingsAccount account)
+        {
+            DeleteSavingsAccountResults _results = new DeleteSavingsAccountResults();
+
+            try
+            {
+                if (account == null)
+                {
+                    throw new NullReferenceException("Savings Account cannot be NULL");
+                }
+                await repository.DeleteSavingsAccountAsync(account);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Results = objectsAdded == 1;
+                _results.Successful = true;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = false;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
         public async Task<SavingsAccountWithdrawalResults> SpendMoneySavingsAsync(SavingsWithdrawal withdrawal)
         {
             SavingsAccountWithdrawalResults _results = new SavingsAccountWithdrawalResults();
 
             try
             {
-                if (withdrawal.savingsAccountId == Guid.Empty)
+                if (withdrawal.savingsAccountId == 0)
                 {
                     throw new Exception("The Savings Account ID is required with all transactions.");
                 }
@@ -1105,7 +1198,7 @@ namespace EasyBudget.Business
 
             try
             {
-                if (deposit.savingsAccountId == Guid.Empty)
+                if (deposit.savingsAccountId == 0)
                 {
                     throw new Exception("The Savings Account ID is required with all transactions.");
                 }
@@ -1136,6 +1229,10 @@ namespace EasyBudget.Business
             return _results;
         }
 
+        #endregion
+
+        #region Money Transfers
+
         public async Task<FundsTransferResults> TransferMoneyAsync(BankAccountFundsTransfer fundsTransfer)
         {
             FundsTransferResults _results = new FundsTransferResults();
@@ -1143,11 +1240,11 @@ namespace EasyBudget.Business
             try
             {
                 // Validate the Funds Transfer object:
-                if (fundsTransfer.sourceAccountId == Guid.Empty)
+                if (fundsTransfer.sourceAccountId == 0)
                 {
                     throw new Exception("The Source Account must be correctly identified");
                 }
-                if (fundsTransfer.destinationAccountId == Guid.Empty)
+                if (fundsTransfer.destinationAccountId == 0)
                 {
                     throw new Exception("The Destination Account must be correctly identified");
                 }
@@ -1178,7 +1275,7 @@ namespace EasyBudget.Business
                         break;
                     case BankAccountType.Savings:
                         sourceSavings = await repository.GetSavingsAccountAsync(fundsTransfer.sourceAccountId);
-                        if (sourceSavings == null) 
+                        if (sourceSavings == null)
                         {
                             throw new Exception("Unable to locate the Source Savings Account");
                         }
@@ -1206,7 +1303,7 @@ namespace EasyBudget.Business
                         break;
                     case BankAccountType.Savings:
                         destinationSavings = await repository.GetSavingsAccountAsync(fundsTransfer.destinationAccountId);
-                        if (destinationSavings == null) 
+                        if (destinationSavings == null)
                         {
                             throw new Exception("Unable to locate the Destination Savings Account");
                         }
@@ -1251,11 +1348,11 @@ namespace EasyBudget.Business
             try
             {
                 // Validate the Funds Transfer object:
-                if (fundsTransfer.sourceAccountId == Guid.Empty)
+                if (fundsTransfer.sourceAccountId == 0)
                 {
                     throw new Exception("The Source Account must be correctly identified");
                 }
-                if (fundsTransfer.destinationAccountId == Guid.Empty)
+                if (fundsTransfer.destinationAccountId == 0)
                 {
                     throw new Exception("The Destination Account must be correctly identified");
                 }
@@ -1351,5 +1448,9 @@ namespace EasyBudget.Business
 
             return _results;
         }
+
+        #endregion
+
+
     }
 }

@@ -289,6 +289,7 @@
     <BundleResource Include="Resources\request-money-22.png" />
     <BundleResource Include="Resources\slider-22.png" />
     <BundleResource Include="Resources\test-22.png" />
+    <BundleResource Include="Resources\dbEasyBudget.sqlite" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

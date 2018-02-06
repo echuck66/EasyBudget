@@ -33,7 +33,7 @@ namespace EasyBudget.Business
             this.dbFilePath = dbFilePath;
         }
 
-        public async Task EnsureSystemItemsExistAsync()
+        private async Task EnsureSystemItemsExistAsync()
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -52,62 +52,69 @@ namespace EasyBudget.Business
         public async Task<BankAccountsVM> GetBankAccountsViewModelAsync()
         {
             BankAccountsVM vm = new BankAccountsVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadBankAccountsAsync();
-
             return vm;
         }
 
         public async Task<BudgetCategoriesVM> GetBudgetCategoriesViewModelAsync()
         {
             BudgetCategoriesVM vm = new BudgetCategoriesVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadBudgetCategoriesAsync();
 
             return vm;
         }
 
-        public async Task<BudgetCategoryVM> GetBudgetCategoryVM(Guid categoryId)
+        public async Task<BudgetCategoryVM> GetBudgetCategoryVM(int categoryId)
         {
             BudgetCategoryVM vm = new BudgetCategoryVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadBudgetCategoryDetails(categoryId);
 
             return vm;
         }
 
-        public async Task<BudgetItemsVM> GetBudgetItemsVM(Guid categoryId)
+        public async Task<BudgetItemsVM> GetBudgetItemsVM(int categoryId)
         {
             BudgetItemsVM vm = new BudgetItemsVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadBudgetItemsAsync(categoryId);
 
             return vm;
         }
 
-        public async Task<CheckingAccountVM> GetCheckingAccountVMAsync(Guid accountId)
+        public async Task<CheckingAccountVM> GetCheckingAccountVMAsync(int accountId)
         {
             CheckingAccountVM vm = new CheckingAccountVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadCheckingAccountDetailsAsync(accountId);
 
             return vm;
         }
 
-        public async Task<SavingsAccountVM> GetSavingsAccountVMAsync(Guid accountId)
+        public async Task<SavingsAccountVM> GetSavingsAccountVMAsync(int accountId)
         {
             SavingsAccountVM vm = new SavingsAccountVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadSavingsAccountDetailsAsync(accountId);
 
             return vm;
         }
 
-        public async Task<IncomeItemVM> GetIncomeItemVMAsync(Guid itemId)
+        public async Task<IncomeItemVM> GetIncomeItemVMAsync(int itemId)
         {
             IncomeItemVM vm = new IncomeItemVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadIncomeItemAsync(itemId);
 
             return vm;
         }
 
-        public async Task<ExpenseItemVM> GetExpenseItemVMAsync(Guid itemId)
+        public async Task<ExpenseItemVM> GetExpenseItemVMAsync(int itemId)
         {
             ExpenseItemVM vm = new ExpenseItemVM(this.dbFilePath);
+            //await this.EnsureSystemItemsExistAsync();
             await vm.LoadExpenseItemAsync(itemId);
 
             return vm;
@@ -154,7 +161,7 @@ namespace EasyBudget.Business
             this.dbFilePath = dbFilePath;
         }
 
-        public void WriteErrorCondition(string error)
+        internal void WriteErrorCondition(string error)
         {
             if (string.IsNullOrEmpty(this.ErrorCondition))
                 this.ErrorCondition = error;
@@ -179,7 +186,7 @@ namespace EasyBudget.Business
             BankAccounts = new List<BankAccount>();
         }
 
-        public async Task LoadBankAccountsAsync()
+        internal async Task LoadBankAccountsAsync()
         {
             await LoadCheckingAccountsAsync();
             await LoadSavingsAccountsAsync();
@@ -259,13 +266,13 @@ namespace EasyBudget.Business
             BudgetItems = new List<BudgetItem>();
         }
 
-        public async Task LoadBudgetItemsAsync(Guid categoryId)
+        internal async Task LoadBudgetItemsAsync(int categoryId)
         {
             await LoadIncomeItemsAsync(categoryId);
             await LoadExpenseItemsAsync(categoryId);
         }
 
-        private async Task LoadIncomeItemsAsync(Guid categoryId)
+        private async Task LoadIncomeItemsAsync(int categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -316,7 +323,7 @@ namespace EasyBudget.Business
             }
         }
 
-        private async Task LoadExpenseItemsAsync(Guid categoryId)
+        private async Task LoadExpenseItemsAsync(int categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -379,7 +386,7 @@ namespace EasyBudget.Business
             
         }
 
-        public async Task LoadBudgetCategoriesAsync()
+        internal async Task LoadBudgetCategoriesAsync()
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -441,7 +448,7 @@ namespace EasyBudget.Business
             this.ExpenseItems = new List<ExpenseItem>();
         }
 
-        public async Task LoadBudgetCategoryDetails(Guid categoryId)
+        internal async Task LoadBudgetCategoryDetails(int categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -567,7 +574,7 @@ namespace EasyBudget.Business
             this.Deposits = new List<CheckingDeposit>();
         }
 
-        public async Task LoadCheckingAccountDetailsAsync(Guid accountId)
+        internal async Task LoadCheckingAccountDetailsAsync(int accountId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -640,7 +647,7 @@ namespace EasyBudget.Business
             this.Deposits = new List<SavingsDeposit>();
         }
 
-        public async Task LoadSavingsAccountDetailsAsync(Guid accountId)
+        internal async Task LoadSavingsAccountDetailsAsync(int accountId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -706,7 +713,7 @@ namespace EasyBudget.Business
             
         }
 
-        public async Task LoadExpenseItemAsync(Guid itemId)
+        internal async Task LoadExpenseItemAsync(int itemId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -759,7 +766,7 @@ namespace EasyBudget.Business
 
         }
 
-        public async Task LoadIncomeItemAsync(Guid itemId)
+        internal async Task LoadIncomeItemAsync(int itemId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {

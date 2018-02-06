@@ -20,8 +20,8 @@ namespace EasyBudget.Models.DataModels
 {
     public class BaseObject
     {
-        [PrimaryKey]
-        public Guid id { get; set; }
+        [PrimaryKey, AutoIncrement]
+        public int id { get; set; }
 
         public DateTime dateCreated { get; set; }
 
@@ -33,7 +33,7 @@ namespace EasyBudget.Models.DataModels
 
         public BaseObject()
         {
-            this.id = Guid.NewGuid();
+            
         }
     }
 }

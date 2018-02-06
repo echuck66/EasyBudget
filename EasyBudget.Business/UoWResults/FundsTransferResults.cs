@@ -32,13 +32,13 @@ namespace EasyBudget.Business.UoWResults
 
         public BankAccount sourceAccount { get; set; }
 
-        public Guid sourceAccountId { get; set; }
+        public int sourceAccountId { get; set; }
 
         public BankAccountType sourceAccountType { get; set; }
 
         public BankAccount destinationAccount { get; set; }
 
-        public Guid destinationAccountId { get; set; }
+        public int destinationAccountId { get; set; }
 
         public BankAccountType destinationAccountType { get; set; }
 

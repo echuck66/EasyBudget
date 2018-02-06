@@ -47,11 +47,11 @@ namespace EasyBudget.iOS
         EasyBudgetDataService ds;
         BudgetItemsViewSource vs;
 
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
         
         public BudgetItemsTableViewController (IntPtr handle) : base (handle)
         {
-            string dbFileName = "dbEasyBudget";
+            string dbFileName = "dbEasyBudget.sqlite";
             string dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
             ds = new EasyBudgetDataService(dbFilePath);
 
@@ -125,7 +125,7 @@ namespace EasyBudget.iOS
 
         public IGrouping<string, BudgetItem>[] grouping { get; set; }
 
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         static string CELL_ID = "BudgetItemCellId";
 
@@ -143,12 +143,12 @@ namespace EasyBudget.iOS
         /// <returns>The async.</returns>
         /// <param name="controller">Controller.</param>
         /// <param name="dataService">Data service.</param>
-        public static async Task<BudgetItemsViewSource> CreateAsync(UITableViewController controller, EasyBudgetDataService dataService, Guid CategoryId)
+        public static async Task<BudgetItemsViewSource> CreateAsync(UITableViewController controller, EasyBudgetDataService dataService, int CategoryId)
         {
             var tableViewSource = new BudgetItemsViewSource(controller);
             tableViewSource.ds = dataService;
             tableViewSource.CategoryId = CategoryId;
-            await dataService.EnsureSystemItemsExistAsync();
+            //await dataService.EnsureSystemItemsExistAsync();
             await tableViewSource.GetViewModelAsync(dataService);
             return tableViewSource;
         }

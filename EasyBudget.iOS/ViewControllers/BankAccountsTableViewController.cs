@@ -35,7 +35,7 @@ namespace EasyBudget.iOS
 
         public BankAccountsTableViewController (IntPtr handle) : base (handle)
         {
-            string dbFileName = "dbEasyBudget";
+            string dbFileName = "dbEasyBudget.sqlite";
             string dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
             ds = new EasyBudgetDataService(dbFilePath);
         }
@@ -148,7 +148,7 @@ namespace EasyBudget.iOS
         {
             var tableViewSource = new BankAccountsViewSource(controller);
             tableViewSource.ds = dataService;
-            await dataService.EnsureSystemItemsExistAsync();
+            //await dataService.EnsureSystemItemsExistAsync();
             await tableViewSource.GetViewModelAsync(dataService);
             return tableViewSource;
         }
