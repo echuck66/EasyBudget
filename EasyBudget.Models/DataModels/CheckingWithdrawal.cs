@@ -22,8 +22,9 @@ namespace EasyBudget.Models.DataModels
     [SQLite.Table("CheckingWithdrawal")]
     public class CheckingWithdrawal : BaseObject
     {
-        public Guid checkingAccountId { get; set; }
+        public int checkingAccountId { get; set; }
 
+        [SQLite.Ignore]
         public virtual CheckingAccount checkingAccount { get; set; }
 
         public DateTime transactionDate { get; set; }
@@ -38,8 +39,9 @@ namespace EasyBudget.Models.DataModels
         [MaxLength(250)]
         public string memo { get; set; }
 
-        public Guid? budgetExpenseId { get; set; }
+        public int? budgetExpenseId { get; set; }
 
+        [SQLite.Ignore]
         public virtual ExpenseItem budgetExpense { get; set; }
 
         public bool reconciled { get; set; }

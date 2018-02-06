@@ -47,7 +47,7 @@ namespace EasyBudget.UnitTests
         public async Task GetBudgetCategoryTests()
         {
 
-            Guid id = Guid.NewGuid();
+            int id = 1;
 
             // Set up test data
             BudgetCategory category = new BudgetCategory();
@@ -57,7 +57,7 @@ namespace EasyBudget.UnitTests
             category.description = "Budget Category for Unit Testing";
             
             // Happy Path test
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 UnitOfWorkResults<BudgetCategory> uowResults = await uow.GetBudgetCategoryAsync(id);
@@ -65,10 +65,10 @@ namespace EasyBudget.UnitTests
                 Assert.IsTrue(uowResults.Successful);
             }
 
-            // Empty Guid Test
-            id = Guid.Empty;
+            // Empty int Test
+            id = 0;
             category = null;
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 UnitOfWorkResults<BudgetCategory> uowResults = await uow.GetBudgetCategoryAsync(id);
@@ -78,10 +78,10 @@ namespace EasyBudget.UnitTests
             }
 
             // Exception Test
-            id = Guid.NewGuid();
+            id = 0;
             category = null;
             Exception ex = new Exception();
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 UnitOfWorkResults<BudgetCategory> uowResults = await uow.GetBudgetCategoryAsync(id);
@@ -291,8 +291,8 @@ namespace EasyBudget.UnitTests
             ICollection<IncomeItem> incItems = new List<IncomeItem>();
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(incItems);
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(expItems);
+            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(incItems);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(expItems);
             repositoryMock.Setup(r => r.DeleteBudgetCategoryAsync(It.IsAny<BudgetCategory>())).Returns(Task.CompletedTask);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
@@ -307,8 +307,8 @@ namespace EasyBudget.UnitTests
             expItems.Clear();
             incItems.Add(incItm);
             Exception exExistingIncomeItems = new Exception("You must first remove all Income and Expense Items from this Category before deleting it.");
-            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(incItems);
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(expItems);
+            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(incItems);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(expItems);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 DeleteBudgetCategoryResults _results = await uow.DeleteBudgetCategoryAsync(expCategory);
@@ -323,9 +323,9 @@ namespace EasyBudget.UnitTests
             expItems.Add(expItm);
             incItems.Add(incItm);
             Exception exExistingExpenseItems = new Exception("You must first remove all Income and Expense Items from this Category before deleting it.");
-            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(incItems);
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(expItems);
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(expItems);
+            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(incItems);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(expItems);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(expItems);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 DeleteBudgetCategoryResults _results = await uow.DeleteBudgetCategoryAsync(expCategory);
@@ -339,8 +339,8 @@ namespace EasyBudget.UnitTests
             incItems.Clear();
             expItems.Clear();
             Exception ex = new Exception();
-            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(incItems);
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(expItems);
+            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(incItems);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(expItems);
             repositoryMock.Setup(r => r.DeleteBudgetCategoryAsync(It.IsAny<BudgetCategory>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -373,7 +373,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<Guid>())).ReturnsAsync(expenseItem);
+            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<int>())).ReturnsAsync(expenseItem);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 ExpenseItemResults uowResults = await uow.GetExpenseItemAsync(expenseItem.id);
@@ -384,7 +384,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Not Found test
-            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<Guid>())).ReturnsAsync((ExpenseItem)null);
+            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<int>())).ReturnsAsync((ExpenseItem)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 ExpenseItemResults uowResults = await uow.GetExpenseItemAsync(expenseItem.id);
@@ -395,7 +395,7 @@ namespace EasyBudget.UnitTests
 
             // Excaption Handling test
             Exception ex = new Exception("dummy exception");
-            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<int>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 ExpenseItemResults uowResults = await uow.GetExpenseItemAsync(expenseItem.id);
@@ -427,7 +427,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<Guid>())).ReturnsAsync(incomeItem);
+            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<int>())).ReturnsAsync(incomeItem);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 IncomeItemResults uowResults = await uow.GetIncomeItemAsync(incomeItem.id);
@@ -438,7 +438,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Not Found test
-            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<Guid>())).ReturnsAsync((IncomeItem)null);
+            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<int>())).ReturnsAsync((IncomeItem)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 IncomeItemResults uowResults = await uow.GetIncomeItemAsync(incomeItem.id);
@@ -449,7 +449,7 @@ namespace EasyBudget.UnitTests
 
             // Excaption Handling test
             Exception ex = new Exception("dummy exception");
-            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<int>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 IncomeItemResults uowResults = await uow.GetIncomeItemAsync(incomeItem.id);
@@ -491,7 +491,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(items);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(items);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 ExpenseItemsResults uowResults = await uow.GetCategoryExpenseItemsAsync(category);
@@ -507,7 +507,7 @@ namespace EasyBudget.UnitTests
 
             // No Items Found test
             items = new List<ExpenseItem>();
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(items);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(items);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 ExpenseItemsResults uowResults = await uow.GetCategoryExpenseItemsAsync(category);
@@ -520,7 +520,7 @@ namespace EasyBudget.UnitTests
 
             // Exception Handling test
             Exception ex = new Exception();
-            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            repositoryMock.Setup(r => r.GetExpenseItemsForBudgetCategoryAsync(It.IsAny<int>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 ExpenseItemsResults uowResults = await uow.GetCategoryExpenseItemsAsync(category);
@@ -562,7 +562,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(items);
+            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(items);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 IncomeItemsResults uowResults = await uow.GetCategoryIncomeItemsAsync(category);
@@ -578,7 +578,7 @@ namespace EasyBudget.UnitTests
 
             // No Items Found test
             items = new List<IncomeItem>();
-            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(items);
+            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(items);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 IncomeItemsResults uowResults = await uow.GetCategoryIncomeItemsAsync(category);
@@ -591,7 +591,7 @@ namespace EasyBudget.UnitTests
 
             // Exception Handling test
             Exception ex = new Exception();
-            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            repositoryMock.Setup(r => r.GetIncomeItemsForBudgetCategoryAsync(It.IsAny<int>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 IncomeItemsResults uowResults = await uow.GetCategoryIncomeItemsAsync(category);
@@ -624,7 +624,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
             decimal expectedNewCategoryBudgetAmount = category.budgetAmount + expenseItem.budgetedAmount;
             repositoryMock.Setup(r => r.AddExpenseItemAsync(It.IsAny<ExpenseItem>())).Returns(Task.CompletedTask);
@@ -686,7 +686,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             repositoryMock.Setup(r => r.AddIncomeItemAsync(It.IsAny<IncomeItem>())).Returns(Task.CompletedTask);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             decimal expectedCategoryBudgetAmount = category.budgetAmount + incomeItem.budgetedAmount;
@@ -755,11 +755,11 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
             decimal expectedNewCategoryBudgetAmount = category.budgetAmount - existingExpenseItem.budgetedAmount + expenseItem.budgetedAmount;
 
-            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<Guid>())).ReturnsAsync(existingExpenseItem);
+            repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<int>())).ReturnsAsync(existingExpenseItem);
             repositoryMock.Setup(r => r.UpdateExpenseItemAsync(It.IsAny<ExpenseItem>())).Returns(Task.CompletedTask);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
@@ -828,11 +828,11 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
             decimal expectedNewCategoryBudgetAmount = category.budgetAmount - existingExpenseItem.budgetedAmount + incomeItem.budgetedAmount;
 
-            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<Guid>())).ReturnsAsync(existingExpenseItem);
+            repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<int>())).ReturnsAsync(existingExpenseItem);
             repositoryMock.Setup(r => r.UpdateIncomeItemAsync(It.IsAny<IncomeItem>())).Returns(Task.CompletedTask);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
@@ -891,7 +891,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
             decimal expectedNewCategoryBudgetAmount = category.budgetAmount - expenseItem.budgetedAmount;
             repositoryMock.Setup(r => r.DeleteExpenseItemAsync(It.IsAny<ExpenseItem>())).Returns(Task.CompletedTask);
@@ -950,7 +950,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<Guid>())).ReturnsAsync(category);
+            repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
             decimal expectedNewCategoryBudgetAmount = category.budgetAmount - incomeItem.budgetedAmount;
             repositoryMock.Setup(r => r.DeleteIncomeItemAsync(It.IsAny<IncomeItem>())).Returns(Task.CompletedTask);
@@ -1004,7 +1004,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync(account);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 UnitOfWorkResults<CheckingAccount> uowResults = await uow.GetCheckingAccountAsync(account.id);
@@ -1013,7 +1013,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Not Found test
-            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<Guid>())).ReturnsAsync((CheckingAccount)null);
+            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync((CheckingAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 CheckingAccountResults uowResults = await uow.GetCheckingAccountAsync(account.id);
@@ -1024,7 +1024,7 @@ namespace EasyBudget.UnitTests
 
             // Excaption Handling test
             Exception ex = new Exception("dummy exception");
-            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 CheckingAccountResults uowResults = await uow.GetCheckingAccountAsync(account.id);
@@ -1209,7 +1209,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync(account);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 SavingsAccountResults uowResults = await uow.GetSavingsAccountAsync(account.id);
@@ -1218,7 +1218,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Not Found test
-            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<Guid>())).ReturnsAsync((SavingsAccount)null);
+            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync((SavingsAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 SavingsAccountResults uowResults = await uow.GetSavingsAccountAsync(account.id);
@@ -1229,7 +1229,7 @@ namespace EasyBudget.UnitTests
 
             // Excaption Handling test
             Exception ex = new Exception("dummy exception");
-            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<Guid>())).ThrowsAsync(ex);
+            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ThrowsAsync(ex);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 SavingsAccountResults uowResults = await uow.GetSavingsAccountAsync(account.id);
@@ -1432,7 +1432,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync(account);
             decimal expectedBalance = account.currentBalance - withdrawal.transactionAmount;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1444,9 +1444,9 @@ namespace EasyBudget.UnitTests
                 Assert.AreEqual(_results.AccountId, account.id);
             }
 
-            // checkingAccountId == Guid.Empty test
+            // checkingAccountId == 0 test
             withdrawal.checkingAccount = null;
-            withdrawal.checkingAccountId = Guid.Empty;
+            withdrawal.checkingAccountId = 0;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 CheckingAccountWithdrawalResults _results = await uow.SpendMoneyCheckingAsync(withdrawal);
@@ -1456,8 +1456,8 @@ namespace EasyBudget.UnitTests
             }
 
             // Checking Account NOT FOUND test
-            withdrawal.checkingAccountId = Guid.NewGuid();
-            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<Guid>())).ReturnsAsync((CheckingAccount)null);
+            withdrawal.checkingAccountId = 0;
+            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync((CheckingAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 CheckingAccountWithdrawalResults _results = await uow.SpendMoneyCheckingAsync(withdrawal);
@@ -1494,7 +1494,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync(account);
             decimal expectedBalance = account.currentBalance + deposit.transactionAmount;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1506,9 +1506,9 @@ namespace EasyBudget.UnitTests
                 Assert.AreEqual(_results.AccountId, account.id);
             }
 
-            // checkingAccountId == Guid.Empty test
+            // checkingAccountId == 0 test
             deposit.checkingAccount = null;
-            deposit.checkingAccountId = Guid.Empty;
+            deposit.checkingAccountId = 0;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 CheckingAccountDepositResults _results = await uow.DepositMoneyCheckingAsync(deposit);
@@ -1518,8 +1518,8 @@ namespace EasyBudget.UnitTests
             }
 
             // Checking Account NOT FOUND test
-            deposit.checkingAccountId = Guid.NewGuid();
-            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<Guid>())).ReturnsAsync((CheckingAccount)null);
+            deposit.checkingAccountId = 0;
+            repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync((CheckingAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 CheckingAccountDepositResults _results = await uow.DepositMoneyCheckingAsync(deposit);
@@ -1556,7 +1556,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync(account);
             decimal expectedBalance = account.currentBalance - withdrawal.transactionAmount;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1568,9 +1568,9 @@ namespace EasyBudget.UnitTests
                 Assert.AreEqual(_results.AccountId, account.id);
             }
 
-            // savingsAccountId == Guid.Empty test
+            // savingsAccountId == 0 test
             withdrawal.savingsAccount = null;
-            withdrawal.savingsAccountId = Guid.Empty;
+            withdrawal.savingsAccountId = 0;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 SavingsAccountWithdrawalResults _results = await uow.SpendMoneySavingsAsync(withdrawal);
@@ -1580,8 +1580,8 @@ namespace EasyBudget.UnitTests
             }
 
             // Savings Account NOT FOUND test
-            withdrawal.savingsAccountId = Guid.NewGuid();
-            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<Guid>())).ReturnsAsync((SavingsAccount)null);
+            withdrawal.savingsAccountId = 0;
+            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync((SavingsAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 SavingsAccountWithdrawalResults _results = await uow.SpendMoneySavingsAsync(withdrawal);
@@ -1617,7 +1617,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<Guid>())).ReturnsAsync(account);
+            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync(account);
             decimal expectedBalance = account.currentBalance + deposit.transactionAmount;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1629,9 +1629,9 @@ namespace EasyBudget.UnitTests
                 Assert.AreEqual(_results.AccountId, account.id);
             }
 
-            // savingsAccountId == Guid.Empty test
+            // savingsAccountId == 0 test
             deposit.savingsAccount = null;
-            deposit.savingsAccountId = Guid.Empty;
+            deposit.savingsAccountId = 0;
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 SavingsAccountDepositResults _results = await uow.DepositMoneySavingsAsync(deposit);
@@ -1641,8 +1641,8 @@ namespace EasyBudget.UnitTests
             }
 
             // Savings Account NOT FOUND test
-            deposit.savingsAccountId = Guid.NewGuid();
-            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<Guid>())).ReturnsAsync((SavingsAccount)null);
+            deposit.savingsAccountId = 0;
+            repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync((SavingsAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
                 SavingsAccountDepositResults _results = await uow.DepositMoneySavingsAsync(deposit);

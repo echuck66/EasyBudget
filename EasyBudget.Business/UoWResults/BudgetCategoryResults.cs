@@ -20,7 +20,7 @@ namespace EasyBudget.Business.UoWResults
 {
     public class BudgetCategoryResults : UnitOfWorkResults<BudgetCategory>
     {
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         public BudgetCategory Category { get; set; }
 

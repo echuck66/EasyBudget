@@ -23,8 +23,9 @@ namespace EasyBudget.Models.DataModels
     [SQLite.Table("IncomeItem")]
     public class IncomeItem : BudgetItem
     {
-        public Guid budgetCategoryId { get; set; }
+        public int budgetCategoryId { get; set; }
 
+        [SQLite.Ignore]
         public virtual BudgetCategory budgetCategory { get; set; }
 
         [MaxLength(250)]

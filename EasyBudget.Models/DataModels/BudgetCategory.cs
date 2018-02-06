@@ -27,7 +27,7 @@ namespace EasyBudget.Models.DataModels
         {
         }
 
-        [MaxLength(250), Unique]
+        [MaxLength(250)]
         public string categoryName { get; set; }
 
         public string description { get; set; }

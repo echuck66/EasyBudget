@@ -22,8 +22,9 @@ namespace EasyBudget.Models.DataModels
     [SQLite.Table("SavingsDeposit")]
     public class SavingsDeposit : BaseObject
     {
-        public Guid savingsAccountId { get; set; }
+        public int savingsAccountId { get; set; }
 
+        [SQLite.Ignore]
         public virtual SavingsAccount savingsAccount { get; set; }
 
         public DateTime transactionDate { get; set; }
@@ -38,8 +39,9 @@ namespace EasyBudget.Models.DataModels
 
         public bool recurring { get; set; }
 
-        public Guid? budgetIncomeId { get; set; }
+        public int? budgetIncomeId { get; set; }
 
+        [SQLite.Ignore]
         public virtual IncomeItem budgetIncome { get; set; }
 
         public bool reconciled { get; set; }

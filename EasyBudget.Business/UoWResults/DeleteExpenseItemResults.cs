@@ -20,11 +20,11 @@ namespace EasyBudget.Business.UoWResults
 {
     public class DeleteExpenseItemResults : UnitOfWorkResults<bool>
     {
-        public Guid ExpenseItemId { get; set; }
+        public int ExpenseItemId { get; set; }
 
         public ExpenseItem ExpenseItem { get; set; }
 
-        public Guid BudgetCategoryId { get; set; }
+        public int BudgetCategoryId { get; set; }
 
         public BudgetCategory BudgetCategory { get; set; }
 

@@ -20,7 +20,7 @@ namespace EasyBudget.Business.UoWResults
 {
     public class CheckingAccountWithdrawalResults : UnitOfWorkResults<CheckingWithdrawal>
     {
-        public Guid AccountId { get; set; }
+        public int AccountId { get; set; }
 
         public CheckingAccount Account { get; set; }
 

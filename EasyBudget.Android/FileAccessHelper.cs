@@ -14,6 +14,7 @@
 //    limitations under the License.
 
 using System;
+using Android.Content.Res;
 
 namespace EasyBudget.Android
 {
@@ -21,8 +22,21 @@ namespace EasyBudget.Android
     {
         public static string GetLocalFilePath(string filename)
         {
-            string path = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            return System.IO.Path.Combine(path, filename);
+            //string path = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            //string 
+            string path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), filename);
+            //if (!System.IO.Directory.Exists(path))
+            //{
+            //    System.IO.Directory.CreateDirectory(path);
+            //}
+
+            if (!System.IO.File.Exists(path))
+            {
+                System.IO.File.Copy("dbEasyBudget.sqlite", path);
+            }
+
+            //return System.IO.Path.Combine(path, filename);
+            return path;
         }
     }
 }

@@ -16,6 +16,7 @@
 using Android.App;
 using Android.Widget;
 using Android.OS;
+using EasyBudget.Business;
 
 namespace EasyBudget.Android
 {
@@ -35,7 +36,19 @@ namespace EasyBudget.Android
             // and attach an event to it
             Button button = FindViewById<Button>(Resource.Id.myButton);
 
-            button.Click += delegate { button.Text = $"{count++} clicks!"; };
+            button.Click += delegate { button.Text = $"{count++} clicks!"; LoadDataTest(); };
+        }
+
+        protected void LoadDataTest()
+        {
+            EasyBudgetDataService ds = new EasyBudgetDataService(FileAccessHelper.GetLocalFilePath("dbEasyBudget.sqlite"));
+
+            if (ds != null)
+            {
+                var categoriesVM = ds.GetBudgetCategoriesViewModelAsync().Result;
+
+                int categoryCount = categoriesVM.BudgetCategories.Count;
+            }
         }
     }
 }

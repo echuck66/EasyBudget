@@ -35,7 +35,7 @@ namespace EasyBudget.iOS
         public BudgetCategoriesTableViewController(IntPtr handle) : base(handle)
         {
 
-            string dbFileName = "dbEasyBudget";
+            string dbFileName = "dbEasyBudget.sqlite";
             string dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
             ds = new EasyBudgetDataService(dbFilePath);
             this.NavigationItem.RightBarButtonItem = new UIBarButtonItem("New", UIBarButtonItemStyle.Plain, OnNewCategoryClicked);
@@ -141,7 +141,7 @@ namespace EasyBudget.iOS
         {
             var tableViewSource = new BudgetCategoriesViewSource(controller);
             tableViewSource.ds = dataService;
-            await dataService.EnsureSystemItemsExistAsync();
+            //await dataService.EnsureSystemItemsExistAsync();
             await tableViewSource.GetViewModelAsync(dataService);
             return tableViewSource;
         }

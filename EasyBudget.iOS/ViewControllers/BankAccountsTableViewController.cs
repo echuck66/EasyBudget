@@ -35,7 +35,7 @@ namespace EasyBudget.iOS
 
         public BankAccountsTableViewController (IntPtr handle) : base (handle)
         {
-            string dbFileName = "dbEasyBudget";
+            string dbFileName = "dbEasyBudget.sqlite";
             string dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
             ds = new EasyBudgetDataService(dbFilePath);
         }
@@ -148,7 +148,7 @@ namespace EasyBudget.iOS
         {
             var tableViewSource = new BankAccountsViewSource(controller);
             tableViewSource.ds = dataService;
-            await dataService.EnsureSystemItemsExistAsync();
+            //await dataService.EnsureSystemItemsExistAsync();
             await tableViewSource.GetViewModelAsync(dataService);
             return tableViewSource;
         }
@@ -195,13 +195,13 @@ namespace EasyBudget.iOS
 
             if (account.accountType == BankAccountType.Checking)
             {
-                //cell.ImageView.Image = UIImage.FromFile("icons8-check-book-50.png");
+                cell.ImageView.Image = UIImage.FromFile("check-book-22.png");
                 titleText = account.bankName;
                 currentBalance = account.currentBalance;
             }
             else
             {
-                //cell.ImageView.Image = UIImage.FromFile("icons8-coins-50.png");
+                cell.ImageView.Image = UIImage.FromFile("coins-22.png");
                 titleText = account.bankName;
                 currentBalance = account.currentBalance;
             }

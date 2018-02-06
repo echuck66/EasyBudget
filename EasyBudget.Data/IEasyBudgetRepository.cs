@@ -22,43 +22,44 @@ namespace EasyBudget.Data
 {
     public interface IEasyBudgetRepository : IDisposable
     {
-        Task<BudgetCategory> GetBudgetCategoryAsync(Guid id);
+        
+        Task<BudgetCategory> GetBudgetCategoryAsync(int id);
 
         Task<ICollection<BudgetCategory>> GetAllCategoriesAsync();
 
         Task<ICollection<BudgetCategory>> GetMatchingCategoriesAsync(string searchText);
 
-        Task<CheckingAccount> GetCheckingAccountAsync(Guid id);
+        Task<CheckingAccount> GetCheckingAccountAsync(int id);
 
         Task<ICollection<CheckingAccount>> GetAllCheckingAccountsAsync();
 
-        Task<CheckingDeposit> GetCheckingDepositAsync(Guid id);
+        Task<CheckingDeposit> GetCheckingDepositAsync(int id);
 
-        Task<CheckingWithdrawal> GetCheckingWithdrawalAsync(Guid id);
+        Task<CheckingWithdrawal> GetCheckingWithdrawalAsync(int id);
 
-        Task<ICollection<CheckingDeposit>> GetCheckingDepositsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate);
+        Task<ICollection<CheckingDeposit>> GetCheckingDepositsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate);
 
-        Task<ICollection<CheckingWithdrawal>> GetCheckingWithdrawalsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate);
+        Task<ICollection<CheckingWithdrawal>> GetCheckingWithdrawalsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate);
 
-        Task<SavingsAccount> GetSavingsAccountAsync(Guid id);
+        Task<SavingsAccount> GetSavingsAccountAsync(int id);
 
         Task<ICollection<SavingsAccount>> GetAllSavingsAccountsAsync();
 
-        Task<SavingsDeposit> GetSavingsDepositAsync(Guid id);
+        Task<SavingsDeposit> GetSavingsDepositAsync(int id);
 
-        Task<SavingsWithdrawal> GetSavingsWithdrawalAsync(Guid id);
+        Task<SavingsWithdrawal> GetSavingsWithdrawalAsync(int id);
 
-        Task<ICollection<SavingsDeposit>> GetSavingsDepositsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate);
+        Task<ICollection<SavingsDeposit>> GetSavingsDepositsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate);
 
-        Task<ICollection<SavingsWithdrawal>> GetSavingsWithdrawalsByDateRangeAsync(Guid accountId, DateTime fromDate, DateTime toDate);
+        Task<ICollection<SavingsWithdrawal>> GetSavingsWithdrawalsByDateRangeAsync(int accountId, DateTime fromDate, DateTime toDate);
 
-        Task<ExpenseItem> GetExpenseItemAsync(Guid id);
+        Task<ExpenseItem> GetExpenseItemAsync(int id);
 
-        Task<ICollection<IncomeItem>> GetIncomeItemsForBudgetCategoryAsync(Guid categoryId);
+        Task<ICollection<IncomeItem>> GetIncomeItemsForBudgetCategoryAsync(int categoryId);
 
-        Task<IncomeItem> GetIncomeItemAsync(Guid id);
+        Task<IncomeItem> GetIncomeItemAsync(int id);
 
-        Task<ICollection<ExpenseItem>> GetExpenseItemsForBudgetCategoryAsync(Guid categoryId);
+        Task<ICollection<ExpenseItem>> GetExpenseItemsForBudgetCategoryAsync(int categoryId);
 
         Task AddCheckingAccountAsync(CheckingAccount account);
 
@@ -110,7 +111,7 @@ namespace EasyBudget.Data
 
         Task UpdateIncomeItemAsync(IncomeItem income);
 
-        Task<BankAccountFundsTransfer> GetBankAccountFundsTransfer(Guid transferId);
+        Task<BankAccountFundsTransfer> GetBankAccountFundsTransfer(int transferId);
 
         Task AddBankAccountFundsTransferAsync(BankAccountFundsTransfer fundsTransfer);
 
