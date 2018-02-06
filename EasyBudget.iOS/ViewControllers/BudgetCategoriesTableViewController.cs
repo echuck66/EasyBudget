@@ -43,15 +43,12 @@ namespace EasyBudget.iOS
         }
 
         /// <summary>
-        /// Called once the view is loaded.
-        /// This method is called asynchronously after the controller is loaded. The TableViewSource is set
-        /// via Factory Pattern. [Call to static async method BudgetCategoriesViewSource.CreateAsync(...) ]
-        /// Following assignment of the TableViewSource property, the selected and edit events are registered
-        /// for the TableViewSource instance.
+        /// Load the view data and assign the even handlers
         /// </summary>
-        public async override void ViewDidLoad()
+        /// <param name="animated">If set to <c>true</c> animated.</param>
+        public async override void ViewWillAppear(bool animated)
         {
-            base.ViewDidLoad();
+            base.ViewWillAppear(animated);
             this.vs = await BudgetCategoriesViewSource.CreateAsync(this, ds);
             this.TableView.Source = this.vs;
             if (this.TableView.Source != null)
@@ -61,6 +58,45 @@ namespace EasyBudget.iOS
             }
             this.TableView.ReloadData();
         }
+
+        /// <summary>
+        /// Release the event handlers assigned in ViewWillAppear and break the references to ds and vs
+        /// so the GC cleans everything up correctly
+        /// </summary>
+        /// <param name="animated">If set to <c>true</c> animated.</param>
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+            (this.TableView.Source as BudgetCategoriesViewSource).CategorySelected -= OnCategorySelected;
+            (this.TableView.Source as BudgetCategoriesViewSource).CategoryEdit -= OnCategoryEdit;
+
+            // Ask about this:
+            //this.NavigationItem.RightBarButtonItem.Clicked -= OnNewCategoryClicked;
+
+            ds = null;
+            vs.Dispose();
+        }
+
+        /// <summary>
+        /// Called once the view is loaded.
+        /// This method is called asynchronously after the controller is loaded. The TableViewSource is set
+        /// via Factory Pattern. [Call to static async method BudgetCategoriesViewSource.CreateAsync(...) ]
+        /// Following assignment of the TableViewSource property, the selected and edit events are registered
+        /// for the TableViewSource instance.
+        /// </summary>
+        //public async override void ViewDidLoad()
+        //{
+        //    base.ViewDidLoad();
+        //    this.vs = await BudgetCategoriesViewSource.CreateAsync(this, ds);
+        //    this.TableView.Source = this.vs;
+        //    if (this.TableView.Source != null)
+        //    {
+        //        (this.TableView.Source as BudgetCategoriesViewSource).CategorySelected += OnCategorySelected;
+        //        (this.TableView.Source as BudgetCategoriesViewSource).CategoryEdit += OnCategoryEdit;
+        //    }
+        //    this.TableView.ReloadData();
+        //}
+
 
         #region Event Handlers 
 
@@ -126,6 +162,17 @@ namespace EasyBudget.iOS
         private BudgetCategoriesViewSource(UITableViewController controller)
         {
             this.controller = controller;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                ds = null;
+                vmodel = null;
+                grouping = null;
+            }
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -315,6 +362,7 @@ namespace EasyBudget.iOS
         }
 
         #region Category Selection Event Handling
+
         /// <summary>
         /// Category selected event handler.
         /// </summary>
@@ -335,9 +383,11 @@ namespace EasyBudget.iOS
                 handler(this, e);
             }
         }
+
         #endregion
 
         #region Category Edit Event Handling
+
         /// <summary>
         /// Category edit event handler.
         /// </summary>
@@ -358,6 +408,7 @@ namespace EasyBudget.iOS
                 handler(this, e);
             }
         }
+
         #endregion
 
     }
