@@ -52,7 +52,7 @@ namespace EasyBudget.Business
         public async Task<BankAccountsVM> GetBankAccountsViewModelAsync()
         {
             BankAccountsVM vm = new BankAccountsVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadBankAccountsAsync();
             return vm;
         }
@@ -60,7 +60,7 @@ namespace EasyBudget.Business
         public async Task<BudgetCategoriesVM> GetBudgetCategoriesViewModelAsync()
         {
             BudgetCategoriesVM vm = new BudgetCategoriesVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadBudgetCategoriesAsync();
 
             return vm;
@@ -69,7 +69,7 @@ namespace EasyBudget.Business
         public async Task<BudgetCategoryVM> GetBudgetCategoryVM(int categoryId)
         {
             BudgetCategoryVM vm = new BudgetCategoryVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadBudgetCategoryDetails(categoryId);
 
             return vm;
@@ -78,7 +78,7 @@ namespace EasyBudget.Business
         public async Task<BudgetItemsVM> GetBudgetItemsVM(int categoryId)
         {
             BudgetItemsVM vm = new BudgetItemsVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadBudgetItemsAsync(categoryId);
 
             return vm;
@@ -87,7 +87,7 @@ namespace EasyBudget.Business
         public async Task<CheckingAccountVM> GetCheckingAccountVMAsync(int accountId)
         {
             CheckingAccountVM vm = new CheckingAccountVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadCheckingAccountDetailsAsync(accountId);
 
             return vm;
@@ -96,7 +96,7 @@ namespace EasyBudget.Business
         public async Task<SavingsAccountVM> GetSavingsAccountVMAsync(int accountId)
         {
             SavingsAccountVM vm = new SavingsAccountVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadSavingsAccountDetailsAsync(accountId);
 
             return vm;
@@ -105,7 +105,7 @@ namespace EasyBudget.Business
         public async Task<IncomeItemVM> GetIncomeItemVMAsync(int itemId)
         {
             IncomeItemVM vm = new IncomeItemVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadIncomeItemAsync(itemId);
 
             return vm;
@@ -114,7 +114,7 @@ namespace EasyBudget.Business
         public async Task<ExpenseItemVM> GetExpenseItemVMAsync(int itemId)
         {
             ExpenseItemVM vm = new ExpenseItemVM(this.dbFilePath);
-            //await this.EnsureSystemItemsExistAsync();
+            await this.EnsureSystemItemsExistAsync();
             await vm.LoadExpenseItemAsync(itemId);
 
             return vm;
