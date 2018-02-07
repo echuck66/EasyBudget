@@ -26,7 +26,6 @@ namespace EasyBudget.Data
         SQLite.SQLiteAsyncConnection connection;
         //object asyncLock;
 
-
         public SQLiteRepository(string dbFilePath)
         {
             InitializeTables(dbFilePath);
@@ -42,9 +41,6 @@ namespace EasyBudget.Data
         {
             using (SQLite.SQLiteConnection conn = new SQLiteConnection(dbfilePath))
             {
-                // Cleanup tables (comment out after initial run)
-                //if (TableExists<BudgetCategory>(conn))
-                    //conn.DropTable<BudgetCategory>();
                 
                 if (!TableExists<BankAccountFundsTransfer>(conn))
                     conn.CreateTable<BankAccountFundsTransfer>();
@@ -66,6 +62,7 @@ namespace EasyBudget.Data
                     conn.CreateTable<IncomeItem>();
                 if (!TableExists<ExpenseItem>(conn))
                     conn.CreateTable<ExpenseItem>();
+                
             }
         }
 
