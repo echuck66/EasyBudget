@@ -21,6 +21,7 @@ namespace EasyBudget.iOS
             base.ViewWillAppear(animated);
             var pickerModel = new CategoryTypePickerModel();
             int typeSelection = Category.categoryType == EasyBudget.Models.BudgetCategoryType.Income ? 0 : 1;
+            bool enableTypePicker = Category == null;
             if (this.Category != null)
             {
                 txtCategoryName.Text = Category.categoryName;
@@ -29,6 +30,7 @@ namespace EasyBudget.iOS
             }
             categoryTypePicker.Model = pickerModel;
             categoryTypePicker.Select(typeSelection, 0, true);
+
         }
 
         public override void ViewWillDisappear(bool animated)
