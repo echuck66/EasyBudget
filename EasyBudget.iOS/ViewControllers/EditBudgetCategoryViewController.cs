@@ -20,17 +20,18 @@ namespace EasyBudget.iOS
         {
             base.ViewWillAppear(animated);
             var pickerModel = new CategoryTypePickerModel();
-            int typeSelection = Category.categoryType == EasyBudget.Models.BudgetCategoryType.Income ? 0 : 1;
+            int typeSelection; // = Category.categoryType == EasyBudget.Models.BudgetCategoryType.Income ? 0 : 1;
             bool enableTypePicker = Category == null;
             if (this.Category != null)
             {
+                typeSelection = Category.categoryType == EasyBudget.Models.BudgetCategoryType.Income ? 0 : 1;
                 txtCategoryName.Text = Category.categoryName;
                 txtCategoryDescription.Text = Category.description;
                 pickerModel.SelectedType = Category.categoryType;
+                categoryTypePicker.Select(typeSelection, 0, true);
             }
+            
             categoryTypePicker.Model = pickerModel;
-            categoryTypePicker.Select(typeSelection, 0, true);
-
         }
 
         public override void ViewWillDisappear(bool animated)
