@@ -94,8 +94,6 @@ namespace EasyBudget.Data
 
                 optionsBuilder.UseSqlite(connection);
 
-                //var connection = new SQLite.SQLiteConnection(_dbFilePath);
-                //optionsBuilder.UseSqlite(
                 //optionsBuilder.UseSqlite("Filename ={" + _dbFilePath + "}");
             }
         }

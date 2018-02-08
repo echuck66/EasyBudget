@@ -14,8 +14,9 @@ namespace EasyBudget.iOS
             
         }
 
-        public override void ViewDidLoad()
+        public override void ViewWillAppear(bool animated)
         {
+            base.ViewWillAppear(animated);
             if (this.Category != null)
             {
                 UIViewController[] controllers = this.ViewControllers;
@@ -40,7 +41,22 @@ namespace EasyBudget.iOS
             this.NavigationItem.RightBarButtonItem.Enabled = false;
             this.ViewControllerSelected += OnTabSelected;
         }
-    
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+            this.ViewControllerSelected -= OnTabSelected;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                this.Category = null;
+            }
+        }
+
         /// <summary>
         /// Event handler for New button in Navigation Bar. Used to notify
         /// the ViewController via the controlling UITabBarController

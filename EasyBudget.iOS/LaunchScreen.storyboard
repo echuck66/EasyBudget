@@ -41,10 +41,22 @@
         </scene>
     </scenes>
     <resources>
-        <image name="icons8-bus-50.png" width="50" height="50"/>
-        <image name="icons8-grid-3-50.png" width="50" height="50"/>
         <image name="icons8-museum-50.png" width="50" height="50"/>
         <image name="icons8-administrative-tools-50.png" width="50" height="50"/>
         <image name="EasyBudget_IconLarge.png" width="246" height="201"/>
+        <image name="administrative-tools-22.png" width="22" height="22"/>
+        <image name="cash-in-hand-22.png" width="22" height="22"/>
+        <image name="check-book-22.png" width="22" height="22"/>
+        <image name="coins-22.png" width="22" height="22"/>
+        <image name="compact-camera-22.png" width="22" height="22"/>
+        <image name="exchange-22.png" width="22" height="22"/>
+        <image name="grid-3-22.png" width="22" height="22"/>
+        <image name="initiate-money-transfer-22.png" width="22" height="22"/>
+        <image name="merchant-account-22.png" width="22" height="22"/>
+        <image name="museum-22.png" width="22" height="22"/>
+        <image name="refund-22.png" width="22" height="22"/>
+        <image name="request-money-22.png" width="22" height="22"/>
+        <image name="slider-22.png" width="22" height="22"/>
+        <image name="test-22.png" width="22" height="22"/>
     </resources>
 </document>

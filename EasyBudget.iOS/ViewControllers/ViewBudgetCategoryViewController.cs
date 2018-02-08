@@ -18,12 +18,28 @@ namespace EasyBudget.iOS
         {
         }
 
-        public override void ViewDidLoad()
+        public override void ViewWillAppear(bool animated)
         {
+            base.ViewWillAppear(animated);
+
             if (this.Category != null)
             {
                 this.lblCategoryName.Text = Category?.categoryName;
                 lblCategoryDescription.Text = Category?.description;
+            }
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                this.Category = null;
             }
         }
     }

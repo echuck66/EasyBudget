@@ -164,6 +164,7 @@
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="ViewControllers\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -258,6 +259,7 @@
     <Compile Include="ViewControllers\ViewCheckingTabBarController.designer.cs">
       <DependentUpon>ViewCheckingTabBarController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\CategoryTypePickerModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyBudget.Business\EasyBudget.Business.csproj">

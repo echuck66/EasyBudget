@@ -31,14 +31,15 @@ namespace EasyBudget.iOS
     {
         EasyBudgetDataService ds;
         BudgetCategoriesViewSource vs;
+        string dbFilePath;
 
         public BudgetCategoriesTableViewController(IntPtr handle) : base(handle)
         {
 
             string dbFileName = "dbEasyBudget.sqlite";
-            string dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
-            ds = new EasyBudgetDataService(dbFilePath);
-            this.NavigationItem.RightBarButtonItem = new UIBarButtonItem("New", UIBarButtonItemStyle.Plain, OnNewCategoryClicked);
+            dbFilePath = FileAccessHelper.GetLocalFilePath(dbFileName);
+            //ds = new EasyBudgetDataService(dbFilePath);
+            //this.NavigationItem.RightBarButtonItem = new UIBarButtonItem("New", UIBarButtonItemStyle.Plain, OnNewCategoryClicked);
 
         }
 
@@ -49,6 +50,9 @@ namespace EasyBudget.iOS
         public async override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
+            ds = new EasyBudgetDataService(dbFilePath);
+            this.NavigationItem.RightBarButtonItem = new UIBarButtonItem("New", UIBarButtonItemStyle.Plain, OnNewCategoryClicked);
+
             this.vs = await BudgetCategoriesViewSource.CreateAsync(this, ds);
             this.TableView.Source = this.vs;
             if (this.TableView.Source != null)
@@ -69,12 +73,14 @@ namespace EasyBudget.iOS
             base.ViewWillDisappear(animated);
             (this.TableView.Source as BudgetCategoriesViewSource).CategorySelected -= OnCategorySelected;
             (this.TableView.Source as BudgetCategoriesViewSource).CategoryEdit -= OnCategoryEdit;
+            this.NavigationItem.RightBarButtonItem.Dispose();
 
             // Ask about this:
             //this.NavigationItem.RightBarButtonItem.Clicked -= OnNewCategoryClicked;
 
-            ds = null;
-            vs.Dispose();
+            //ds = null;
+            this.ds = null;
+            this.vs = null;
         }
 
         /// <summary>
