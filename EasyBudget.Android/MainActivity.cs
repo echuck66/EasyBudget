@@ -17,6 +17,7 @@ using Android.App;
 using Android.Widget;
 using Android.OS;
 using EasyBudget.Business;
+using System.IO;
 
 namespace EasyBudget.Android
 {
@@ -39,8 +40,25 @@ namespace EasyBudget.Android
             button.Click += delegate { button.Text = $"{count++} clicks!"; LoadDataTest(); };
         }
 
+        public override void OnCreate(Bundle savedInstanceState, PersistableBundle persistentState)
+        {
+            base.OnCreate(savedInstanceState, persistentState);
+
+            var assetMgr = this.Assets;
+
+            string destinationDBFile = FileAccessHelper.GetLocalFilePath("dbEasyBudget.sqlite");
+
+            using (var asset = assetMgr.Open("dbEasyBudget.sqlite"))
+            {
+                using (var dest = File.Create(destinationDBFile))
+                {
+                    asset.CopyTo(dest);
+                }
+            }
+        }
         protected void LoadDataTest()
         {
+            
             EasyBudgetDataService ds = new EasyBudgetDataService(FileAccessHelper.GetLocalFilePath("dbEasyBudget.sqlite"));
 
             if (ds != null)
@@ -50,6 +68,8 @@ namespace EasyBudget.Android
                 int categoryCount = categoriesVM.BudgetCategories.Count;
             }
         }
+
+
     }
 }
 

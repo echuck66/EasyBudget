@@ -24,6 +24,10 @@ namespace EasyBudget.iOS
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIPickerView categoryTypePicker { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UITextField txtCategoryDescription { get; set; }
 
         [Outlet]
@@ -40,6 +44,11 @@ namespace EasyBudget.iOS
             if (btnSave != null) {
                 btnSave.Dispose ();
                 btnSave = null;
+            }
+
+            if (categoryTypePicker != null) {
+                categoryTypePicker.Dispose ();
+                categoryTypePicker = null;
             }
 
             if (txtCategoryDescription != null) {

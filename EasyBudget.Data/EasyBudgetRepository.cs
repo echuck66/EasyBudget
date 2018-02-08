@@ -27,13 +27,9 @@ namespace EasyBudget.Data
     {
         private EasyBudgetContext context;
 
-        //private SQLiteConnection connection;
-
         public EasyBudgetRepository(string dbFilePath)
         {
             context = new EasyBudgetContext(dbFilePath);
-            //connection = new SQLiteConnection(dbFilePath);
-
         }
 
         public EasyBudgetRepository(EasyBudgetContext testContext)

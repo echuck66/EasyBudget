@@ -14,7 +14,8 @@
 //    limitations under the License.
 
 using System;
-using Android.Content.Res;
+using System.IO;
+using Android.Content;
 
 namespace EasyBudget.Android
 {
@@ -32,7 +33,12 @@ namespace EasyBudget.Android
 
             if (!System.IO.File.Exists(path))
             {
-                System.IO.File.Copy("dbEasyBudget.sqlite", path);
+                //using (var asset = Assets.Open("dbEasyBudget.sqlite"))
+                //using (var dest = File.Create(path))
+                    //asset.CopyTo(dest);
+                
+                //string source = System.IO.Path.Combine(System.Environment.CurrentDirectory, "dbEasyBudget.sqlite");
+                //System.IO.File.Copy(source, path);
             }
 
             //return System.IO.Path.Combine(path, filename);

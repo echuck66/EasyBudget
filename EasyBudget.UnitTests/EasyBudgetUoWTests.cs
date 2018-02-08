@@ -1416,6 +1416,7 @@ namespace EasyBudget.UnitTests
             // Set up test data
             CheckingAccount account = new CheckingAccount()
             {
+                id = 101,
                 accountNumber = "111111",
                 routingNumber = "222222",
                 currentBalance = 1000
@@ -1456,7 +1457,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Checking Account NOT FOUND test
-            withdrawal.checkingAccountId = 0;
+            withdrawal.checkingAccountId = 10;
             repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync((CheckingAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1474,6 +1475,7 @@ namespace EasyBudget.UnitTests
             // Set up test data
             CheckingAccount account = new CheckingAccount()
             {
+                id = 102,
                 routingNumber = "111111111",
                 accountNumber = "222222",
                 bankName = "National Bank of Nowhere",
@@ -1518,7 +1520,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Checking Account NOT FOUND test
-            deposit.checkingAccountId = 0;
+            deposit.checkingAccountId = 101;
             repositoryMock.Setup(r => r.GetCheckingAccountAsync(It.IsAny<int>())).ReturnsAsync((CheckingAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1536,6 +1538,7 @@ namespace EasyBudget.UnitTests
             // Set up test data
             SavingsAccount account = new SavingsAccount()
             {
+                id = 101,
                 routingNumber = "111111111",
                 accountNumber = "222222",
                 bankName = "National Bank of Nowhere",
@@ -1580,7 +1583,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Savings Account NOT FOUND test
-            withdrawal.savingsAccountId = 0;
+            withdrawal.savingsAccountId = 10;
             repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync((SavingsAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1597,6 +1600,7 @@ namespace EasyBudget.UnitTests
             // Set up test data
             SavingsAccount account = new SavingsAccount()
             {
+                id = 101,
                 routingNumber = "111111111",
                 accountNumber = "222222",
                 bankName = "National Bank of Nowhere",
@@ -1641,7 +1645,7 @@ namespace EasyBudget.UnitTests
             }
 
             // Savings Account NOT FOUND test
-            deposit.savingsAccountId = 0;
+            deposit.savingsAccountId = 10;
             repositoryMock.Setup(r => r.GetSavingsAccountAsync(It.IsAny<int>())).ReturnsAsync((SavingsAccount)null);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
