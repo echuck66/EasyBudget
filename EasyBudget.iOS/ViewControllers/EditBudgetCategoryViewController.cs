@@ -19,13 +19,16 @@ namespace EasyBudget.iOS
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
+            var pickerModel = new CategoryTypePickerModel();
+            int typeSelection = Category.categoryType == EasyBudget.Models.BudgetCategoryType.Income ? 0 : 1;
             if (this.Category != null)
             {
                 txtCategoryName.Text = Category.categoryName;
                 txtCategoryDescription.Text = Category.description;
+                pickerModel.SelectedType = Category.categoryType;
             }
-            categoryTypePicker.Model = new CategoryTypePickerModel();
-
+            categoryTypePicker.Model = pickerModel;
+            categoryTypePicker.Select(typeSelection, 0, true);
         }
 
         public override void ViewWillDisappear(bool animated)
