@@ -101,12 +101,12 @@ namespace EasyBudget.UnitTests
             };
 
 
-            await repository.AddCheckingAccountAsync(account);
+            CheckingAccount savedAccount = await repository.AddCheckingAccountAsync(account);
             await repository.SaveChangesAsync();
 
             CheckingAccount testAccount = await validationRepository.GetCheckingAccountAsync(account.id);
 
-            Assert.AreEqual(account.id, testAccount.id);
+            Assert.AreEqual(savedAccount.id, testAccount.id);
             Assert.AreEqual(account.accountNumber, testAccount.accountNumber);
             Assert.AreEqual(account.routingNumber, testAccount.routingNumber);
 
@@ -135,17 +135,19 @@ namespace EasyBudget.UnitTests
 
 
             // Write account to db and test:
-            await repository.AddCheckingAccountAsync(account);
+            CheckingAccount savedAccount = await repository.AddCheckingAccountAsync(account);
             await repository.SaveChangesAsync();
 
+
             CheckingAccount testAccount = await validationRepository.GetCheckingAccountAsync(account.id);
+            Assert.AreEqual(savedAccount.id, testAccount.id);
             Assert.AreEqual(testAccount.currentBalance, account.currentBalance);
 
             // Adjust the balance on the account by the transaction amount on the deposit
             decimal newBalance = account.currentBalance + deposit.transactionAmount;
             deposit.checkingAccount.currentBalance = deposit.checkingAccount.currentBalance + deposit.transactionAmount;
 
-            await repository.AddCheckingDepositAsync(deposit);
+            CheckingDeposit savedDeposit = await repository.AddCheckingDepositAsync(deposit);
             await repository.SaveChangesAsync();
 
 
@@ -154,7 +156,7 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testAccount.currentBalance, newBalance);
 
             CheckingDeposit testDeposit = await validationRepository.GetCheckingDepositAsync(deposit.id);
-            Assert.AreEqual(deposit.id, testDeposit.id);
+            Assert.AreEqual(savedDeposit.id, testDeposit.id);
 
 
         }
@@ -182,17 +184,18 @@ namespace EasyBudget.UnitTests
 
 
             // Write account to db and test:
-            await repository.AddCheckingAccountAsync(account);
+            CheckingAccount savedAccount = await repository.AddCheckingAccountAsync(account);
             await repository.SaveChangesAsync();
 
             CheckingAccount testAccount = await validationRepository.GetCheckingAccountAsync(account.id);
             Assert.AreEqual(testAccount.currentBalance, account.currentBalance);
+            Assert.AreEqual(savedAccount.id, testAccount.id);
 
             // Adjust the balance on the account by the transaction amount on the withdrawal
             decimal newBalance = account.currentBalance - withdrawal.transactionAmount;
             withdrawal.checkingAccount.currentBalance = withdrawal.checkingAccount.currentBalance - withdrawal.transactionAmount;
 
-            await repository.AddCheckingWithdrawalAsync(withdrawal);
+            CheckingWithdrawal savedWithdrawal = await repository.AddCheckingWithdrawalAsync(withdrawal);
             await repository.SaveChangesAsync();
 
             // test the changes
@@ -200,7 +203,7 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testAccount.currentBalance, newBalance);
 
             CheckingWithdrawal testWithdrawal = await validationRepository.GetCheckingWithdrawalAsync(withdrawal.id);
-            Assert.AreEqual(withdrawal.id, testWithdrawal.id);
+            Assert.AreEqual(savedWithdrawal.id, testWithdrawal.id);
 
 
         }
