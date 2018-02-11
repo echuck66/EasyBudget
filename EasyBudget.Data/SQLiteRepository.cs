@@ -78,49 +78,58 @@ namespace EasyBudget.Data
             var inserted = await connection.InsertAsync(fundsTransfer);
         }
 
-        public async Task AddBudgetCategoryAsync(BudgetCategory category)
+        public async Task<BudgetCategory> AddBudgetCategoryAsync(BudgetCategory category)
         {
             var inserted = await connection.InsertAsync(category);
+            return category;
         }
 
-        public async Task AddCheckingAccountAsync(CheckingAccount account)
+        public async Task<CheckingAccount> AddCheckingAccountAsync(CheckingAccount account)
         {
             var inserted = await connection.InsertAsync(account);
+            return account;
         }
 
-        public async Task AddCheckingDepositAsync(CheckingDeposit deposit)
+        public async Task<CheckingDeposit> AddCheckingDepositAsync(CheckingDeposit deposit)
         {
             var inserted = await connection.InsertAsync(deposit);
+            return deposit;
         }
 
-        public async Task AddCheckingWithdrawalAsync(CheckingWithdrawal withdrawal)
+        public async Task<CheckingWithdrawal> AddCheckingWithdrawalAsync(CheckingWithdrawal withdrawal)
         {
             var inserted = await connection.InsertAsync(withdrawal);
+            return withdrawal;
         }
 
-        public async Task AddExpenseItemAsync(ExpenseItem expense)
+        public async Task<ExpenseItem> AddExpenseItemAsync(ExpenseItem expense)
         {
             var inserted = await connection.InsertAsync(expense);
+            return expense;
         }
 
-        public async Task AddIncomeItemAsync(IncomeItem income)
+        public async Task<IncomeItem> AddIncomeItemAsync(IncomeItem income)
         {
             var inserted = await connection.InsertAsync(income);
+            return income;
         }
 
-        public async Task AddSavingsAccountAsync(SavingsAccount account)
+        public async Task<SavingsAccount> AddSavingsAccountAsync(SavingsAccount account)
         {
             var inserted = await connection.InsertAsync(account);
+            return account;
         }
 
-        public async Task AddSavingsDepositAsync(SavingsDeposit deposit)
+        public async Task<SavingsDeposit> AddSavingsDepositAsync(SavingsDeposit deposit)
         {
             var inserted = await connection.InsertAsync(deposit);
+            return deposit;
         }
 
-        public async Task AddSavingsWithdrawalAsync(SavingsWithdrawal withdrawal)
+        public async Task<SavingsWithdrawal> AddSavingsWithdrawalAsync(SavingsWithdrawal withdrawal)
         {
             var inserted = await connection.InsertAsync(withdrawal);
+            return withdrawal;
         }
 
         public async Task DeleteBudgetCategoryAsync(BudgetCategory category)

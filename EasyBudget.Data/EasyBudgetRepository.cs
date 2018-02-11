@@ -37,7 +37,7 @@ namespace EasyBudget.Data
             context = testContext;
         }
 
-        public async Task AddBudgetCategoryAsync(BudgetCategory category)
+        public async Task<BudgetCategory> AddBudgetCategoryAsync(BudgetCategory category)
         {
             if (!context.BudgetCategory.Any(c => c.id == category.id && c.categoryName == category.categoryName))
             {
@@ -51,9 +51,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("A category already exists with the same Primary Key value");
             }
+            return category;
         }
 
-        public async Task AddCheckingAccountAsync(CheckingAccount account)
+        public async Task<CheckingAccount> AddCheckingAccountAsync(CheckingAccount account)
         {
             if (!context.CheckingAccount.Any(c => c.id == account.id))
             {
@@ -64,9 +65,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("A Checking Account already exists with the same Primary Key value");
             }
+            return account;
         }
 
-        public async Task AddCheckingDepositAsync(CheckingDeposit deposit)
+        public async Task<CheckingDeposit> AddCheckingDepositAsync(CheckingDeposit deposit)
         {
             if (!context.CheckingDeposit.Any(d => d.id == deposit.id))
             {
@@ -80,9 +82,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("A deposit record already exists with the same Primary Key value");
             }
+            return deposit;
         }
 
-        public async Task AddCheckingWithdrawalAsync(CheckingWithdrawal withdrawal)
+        public async Task<CheckingWithdrawal> AddCheckingWithdrawalAsync(CheckingWithdrawal withdrawal)
         {
             if (!context.CheckingWithdrawal.Any(w => w.id == withdrawal.id))
             {
@@ -95,9 +98,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("A withdrawal record already exists with the same Primary Key value");
             }
+            return withdrawal;
         }
 
-        public async Task AddExpenseItemAsync(ExpenseItem expense)
+        public async Task<ExpenseItem> AddExpenseItemAsync(ExpenseItem expense)
         {
             if (!context.ExpenseItem.Any(x => x.id == expense.id))
             {
@@ -110,9 +114,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("An expense item record already exists with the same Primary Key value");
             }
+            return expense;
         }
 
-        public async Task AddIncomeItemAsync(IncomeItem income)
+        public async Task<IncomeItem> AddIncomeItemAsync(IncomeItem income)
         {
             if (!context.IncomeItem.Any(i => i.id == income.id))
             {
@@ -125,9 +130,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("An income item record already exists with the same Primary Key value");
             }
+            return income;
         }
 
-        public async Task AddSavingsAccountAsync(SavingsAccount account)
+        public async Task<SavingsAccount> AddSavingsAccountAsync(SavingsAccount account)
         {
             if (!context.SavingsAccount.Any(s => s.id == account.id))
             {
@@ -138,9 +144,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("An Savings Account already exists with the same Primary Key value");
             }
+            return account;
         }
 
-        public async Task AddSavingsWithdrawalAsync(SavingsWithdrawal withdrawal)
+        public async Task<SavingsWithdrawal> AddSavingsWithdrawalAsync(SavingsWithdrawal withdrawal)
         {
             if (!context.SavingsWithdrawal.Any(w => w.id == withdrawal.id))
             {
@@ -151,9 +158,10 @@ namespace EasyBudget.Data
             {
                 throw new Exception("A withdrawal record already exists with the same Primary Key value");
             }
+            return withdrawal;
         }
 
-        public async Task AddSavingsDepositAsync(SavingsDeposit deposit)
+        public async Task<SavingsDeposit> AddSavingsDepositAsync(SavingsDeposit deposit)
         {
             if (!context.SavingsDeposit.Any(d => d.id == deposit.id))
             {
@@ -163,6 +171,7 @@ namespace EasyBudget.Data
             {
                 throw new Exception("A deposit record already exists with the same Primary Key value");
             }
+            return deposit;
         }
 
         public async Task DeleteBudgetCategoryAsync(BudgetCategory category)

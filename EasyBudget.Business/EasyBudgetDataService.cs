@@ -417,6 +417,16 @@ namespace EasyBudget.Business
             }
         }
 
+        public async Task<BudgetCategory> CreateNewCategory()
+        {
+            BudgetCategory category = new BudgetCategory();
+            category.budgetAmount = 0;
+            category.CanDelete = true;
+            category.CanEdit = true;
+
+            return category;
+        }
+
     }
 
     public class BudgetCategoryVM : BaseViewModel

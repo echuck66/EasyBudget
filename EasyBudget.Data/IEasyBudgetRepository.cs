@@ -61,23 +61,23 @@ namespace EasyBudget.Data
 
         Task<ICollection<ExpenseItem>> GetExpenseItemsForBudgetCategoryAsync(int categoryId);
 
-        Task AddCheckingAccountAsync(CheckingAccount account);
+        Task<CheckingAccount> AddCheckingAccountAsync(CheckingAccount account);
 
-        Task AddSavingsAccountAsync(SavingsAccount account);
+        Task<SavingsAccount> AddSavingsAccountAsync(SavingsAccount account);
 
-        Task AddBudgetCategoryAsync(BudgetCategory category);
+        Task<BudgetCategory> AddBudgetCategoryAsync(BudgetCategory category);
 
-        Task AddCheckingDepositAsync(CheckingDeposit deposit);
+        Task<CheckingDeposit> AddCheckingDepositAsync(CheckingDeposit deposit);
 
-        Task AddCheckingWithdrawalAsync(CheckingWithdrawal withdrawal);
+        Task<CheckingWithdrawal> AddCheckingWithdrawalAsync(CheckingWithdrawal withdrawal);
 
-        Task AddSavingsWithdrawalAsync(SavingsWithdrawal withdrawal);
+        Task<SavingsWithdrawal> AddSavingsWithdrawalAsync(SavingsWithdrawal withdrawal);
 
-        Task AddSavingsDepositAsync(SavingsDeposit deposit);
+        Task<SavingsDeposit> AddSavingsDepositAsync(SavingsDeposit deposit);
 
-        Task AddExpenseItemAsync(ExpenseItem expense);
+        Task<ExpenseItem> AddExpenseItemAsync(ExpenseItem expense);
 
-        Task AddIncomeItemAsync(IncomeItem income);
+        Task<IncomeItem> AddIncomeItemAsync(IncomeItem income);
 
         Task DeleteCheckingAccountAsync(CheckingAccount account);
 

@@ -165,7 +165,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.AddBudgetCategoryAsync(It.IsAny<BudgetCategory>())).Returns(Task.CompletedTask);
+            repositoryMock.Setup(r => r.AddBudgetCategoryAsync(It.IsAny<BudgetCategory>())).ReturnsAsync(category);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -627,7 +627,7 @@ namespace EasyBudget.UnitTests
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
             decimal expectedNewCategoryBudgetAmount = category.budgetAmount + expenseItem.budgetedAmount;
-            repositoryMock.Setup(r => r.AddExpenseItemAsync(It.IsAny<ExpenseItem>())).Returns(Task.CompletedTask);
+            repositoryMock.Setup(r => r.AddExpenseItemAsync(It.IsAny<ExpenseItem>())).ReturnsAsync(expenseItem);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -687,7 +687,7 @@ namespace EasyBudget.UnitTests
 
             // Happy Path test
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
-            repositoryMock.Setup(r => r.AddIncomeItemAsync(It.IsAny<IncomeItem>())).Returns(Task.CompletedTask);
+            repositoryMock.Setup(r => r.AddIncomeItemAsync(It.IsAny<IncomeItem>())).ReturnsAsync(incomeItem);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             decimal expectedCategoryBudgetAmount = category.budgetAmount + incomeItem.budgetedAmount;
 
@@ -1050,7 +1050,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.AddCheckingAccountAsync(It.IsAny<CheckingAccount>())).Returns(Task.CompletedTask);
+            repositoryMock.Setup(r => r.AddCheckingAccountAsync(It.IsAny<CheckingAccount>())).ReturnsAsync(account);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -1255,7 +1255,7 @@ namespace EasyBudget.UnitTests
             };
 
             // Happy Path test
-            repositoryMock.Setup(r => r.AddSavingsAccountAsync(It.IsAny<SavingsAccount>())).Returns(Task.CompletedTask);
+            repositoryMock.Setup(r => r.AddSavingsAccountAsync(It.IsAny<SavingsAccount>())).ReturnsAsync(account);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
