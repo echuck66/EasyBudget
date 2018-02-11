@@ -661,6 +661,21 @@ namespace EasyBudget.Data
             }
         }
 
+        public async Task UpdateSavingsWithdrawalAsync(SavingsWithdrawal withdrawal)
+        {
+            if (context.SavingsWithdrawal.Any(c => c.id == withdrawal.id))
+            {
+                await Task.Run(() => context.SavingsWithdrawal.Attach(withdrawal));
+                await Task.Run(() => context.Entry(withdrawal).State = Microsoft.EntityFrameworkCore.EntityState.Modified);
+                if (withdrawal.savingsAccount != null)
+                    await Task.Run(() => context.Entry(withdrawal.savingsAccount).State = Microsoft.EntityFrameworkCore.EntityState.Modified);
+            }
+            else
+            {
+                throw new Exception("Unable to locate existing Savings Withdrawal record with provided Primary Key value");
+            }
+        }
+
         public async Task AddBankAccountFundsTransferAsync(BankAccountFundsTransfer fundsTransfer)
         {
             if (!context.BankAccountFundsTransfer.Any(t => t.id == fundsTransfer.id))

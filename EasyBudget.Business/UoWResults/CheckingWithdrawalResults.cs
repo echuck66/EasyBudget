@@ -12,33 +12,15 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using SQLite;
+using EasyBudget.Models.DataModels;
 
-namespace EasyBudget.Models.DataModels
+namespace EasyBudget.Business.UoWResults
 {
-    public class BaseObject
+    public class CheckingWithdrawalResults : UnitOfWorkResults<CheckingWithdrawal>
     {
-        [PrimaryKey, AutoIncrement]
-        public int id { get; set; }
-
-        public DateTime dateCreated { get; set; }
-
-        public DateTime dateModified { get; set; }
-
-        public bool CanEdit { get; set; }
-
-        public bool CanDelete { get; set; }
-
-        [NotMapped]
-        [SQLite.Ignore]
-        public bool IsNew { get; set; }
-
-        public BaseObject()
+        public CheckingWithdrawalResults()
         {
-            
         }
     }
 }
