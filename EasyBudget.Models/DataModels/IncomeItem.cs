@@ -23,20 +23,20 @@ namespace EasyBudget.Models.DataModels
     [SQLite.Table("IncomeItem")]
     public class IncomeItem : BudgetItem
     {
-        public int budgetCategoryId { get; set; }
+        //public int budgetCategoryId { get; set; }
 
-        [SQLite.Ignore]
-        public virtual BudgetCategory budgetCategory { get; set; }
+        //[SQLite.Ignore]
+        //public virtual BudgetCategory budgetCategory { get; set; }
 
-        [MaxLength(250)]
-        public string description { get; set; }
+        //[MaxLength(250)]
+        //public string description { get; set; }
 
-        [MaxLength(250)]
-        public string notation { get; set; }
+        //[MaxLength(250)]
+        //public string notation { get; set; }
 
-        public bool recurring { get; set; }
+        //public bool recurring { get; set; }
 
-        public Frequency frequency { get; set; }
+        //public Frequency frequency { get; set; }
 
         public IncomeItem()
         {

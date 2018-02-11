@@ -263,7 +263,7 @@ namespace EasyBudget.UnitTests
             {
                 budgetCategoryId = expCategory.id,
                 budgetCategory = expCategory,
-                budgetedAmount = 250,
+                BudgetedAmount = 250,
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now,
                 description = "Dummy Expense Item"
@@ -281,7 +281,7 @@ namespace EasyBudget.UnitTests
             {
                 budgetCategory = incCategory,
                 budgetCategoryId = incCategory.id,
-                budgetedAmount = 1250,
+                BudgetedAmount = 1250,
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now,
                 description = "Dummy Income Item"
@@ -618,7 +618,7 @@ namespace EasyBudget.UnitTests
                 budgetCategory = category,
                 budgetCategoryId = category.id,
                 notation = "Test item",
-                budgetedAmount = 200,
+                BudgetedAmount = 200,
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now
             };
@@ -626,7 +626,7 @@ namespace EasyBudget.UnitTests
             // Happy Path test
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
-            decimal expectedNewCategoryBudgetAmount = category.budgetAmount + expenseItem.budgetedAmount;
+            decimal expectedNewCategoryBudgetAmount = category.budgetAmount + expenseItem.BudgetedAmount;
             repositoryMock.Setup(r => r.AddExpenseItemAsync(It.IsAny<ExpenseItem>())).ReturnsAsync(expenseItem);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
@@ -682,14 +682,14 @@ namespace EasyBudget.UnitTests
                 notation = "Test item",
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now,
-                budgetedAmount = 200
+                BudgetedAmount = 200
             };
 
             // Happy Path test
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             repositoryMock.Setup(r => r.AddIncomeItemAsync(It.IsAny<IncomeItem>())).ReturnsAsync(incomeItem);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
-            decimal expectedCategoryBudgetAmount = category.budgetAmount + incomeItem.budgetedAmount;
+            decimal expectedCategoryBudgetAmount = category.budgetAmount + incomeItem.BudgetedAmount;
 
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
             {
@@ -741,7 +741,7 @@ namespace EasyBudget.UnitTests
                 notation = "Test item",
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             ExpenseItem existingExpenseItem = new ExpenseItem()
@@ -751,13 +751,13 @@ namespace EasyBudget.UnitTests
                 notation = "Test item",
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now,
-                budgetedAmount = 200
+                BudgetedAmount = 200
             };
 
             // Happy Path test
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
-            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - existingExpenseItem.budgetedAmount + expenseItem.budgetedAmount;
+            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - existingExpenseItem.BudgetedAmount + expenseItem.BudgetedAmount;
 
             repositoryMock.Setup(r => r.GetExpenseItemAsync(It.IsAny<int>())).ReturnsAsync(existingExpenseItem);
             repositoryMock.Setup(r => r.UpdateExpenseItemAsync(It.IsAny<ExpenseItem>())).Returns(Task.CompletedTask);
@@ -814,7 +814,7 @@ namespace EasyBudget.UnitTests
                 notation = "Test item",
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             IncomeItem existingExpenseItem = new IncomeItem()
@@ -824,13 +824,13 @@ namespace EasyBudget.UnitTests
                 notation = "Test item",
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now,
-                budgetedAmount = 200
+                BudgetedAmount = 200
             };
 
             // Happy Path test
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
-            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - existingExpenseItem.budgetedAmount + incomeItem.budgetedAmount;
+            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - existingExpenseItem.BudgetedAmount + incomeItem.BudgetedAmount;
 
             repositoryMock.Setup(r => r.GetIncomeItemAsync(It.IsAny<int>())).ReturnsAsync(existingExpenseItem);
             repositoryMock.Setup(r => r.UpdateIncomeItemAsync(It.IsAny<IncomeItem>())).Returns(Task.CompletedTask);
@@ -887,13 +887,13 @@ namespace EasyBudget.UnitTests
                 notation = "Test item",
                 dateCreated = DateTime.Now,
                 dateModified = DateTime.Now, 
-                budgetedAmount = 200
+                BudgetedAmount = 200
             };
 
             // Happy Path test
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
-            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - expenseItem.budgetedAmount;
+            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - expenseItem.BudgetedAmount;
             repositoryMock.Setup(r => r.DeleteExpenseItemAsync(It.IsAny<ExpenseItem>())).Returns(Task.CompletedTask);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))
@@ -952,7 +952,7 @@ namespace EasyBudget.UnitTests
             // Happy Path test
             repositoryMock.Setup(r => r.GetBudgetCategoryAsync(It.IsAny<int>())).ReturnsAsync(category);
             decimal expectedPreviousCategoryBudgetAmount = category.budgetAmount;
-            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - incomeItem.budgetedAmount;
+            decimal expectedNewCategoryBudgetAmount = category.budgetAmount - incomeItem.BudgetedAmount;
             repositoryMock.Setup(r => r.DeleteIncomeItemAsync(It.IsAny<IncomeItem>())).Returns(Task.CompletedTask);
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             using (UnitOfWork uow = new UnitOfWork(repositoryMock.Object))

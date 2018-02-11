@@ -22,6 +22,16 @@ using System.Threading.Tasks;
 using EasyBudget.Models;
 using EasyBudget.Models.DataModels;
 
+// TODO Convert VMs to only expose VM and ICollection<VM> object types instead of the actual
+//      underlying data models.
+//      e.g. 
+//      BudgetCategoriesVM should expose 
+//          ICollection<BudgetCategoryVM> 
+//              NOT
+//          ICollection<BudgetCategory>
+//
+// TODO Change iOS project's ViewControllers to reflect this change
+//
 namespace EasyBudget.Business
 {
     public sealed class EasyBudgetDataService
@@ -120,34 +130,32 @@ namespace EasyBudget.Business
             return vm;
         }
     
-        public async Task<bool> DeleteBudgetCategoryAsync(BudgetCategory category)
-        {
-            bool _success = false;  
-
-            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
-            {
-                var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(category);
-                if (_resultsIncomeItems.Successful)
-                {
-                    foreach(IncomeItem itm in _resultsIncomeItems.Results)
-                    {
-                        var _resDel = await uow.DeleteIncomeItemAsync(itm);
-                    }
-                }
-                var _resultsExpenseItems = await uow.GetCategoryExpenseItemsAsync(category);
-                if (_resultsExpenseItems.Successful)
-                {
-                    foreach(ExpenseItem itm in _resultsExpenseItems.Results)
-                    {
-                        var _resDel = await uow.DeleteExpenseItemAsync(itm);
-                    }
-                }
-                var _resultsDeleteCategory = await uow.DeleteBudgetCategoryAsync(category);
-                _success = _resultsDeleteCategory.Successful;
-            }
-
-            return _success;
-        }
+        //public async Task<bool> DeleteBudgetCategoryAsync(BudgetCategory category)
+        //{
+        //    bool _success = false;  
+        //    using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+        //    {
+        //        var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(category);
+        //        if (_resultsIncomeItems.Successful)
+        //        {
+        //            foreach(IncomeItem itm in _resultsIncomeItems.Results)
+        //            {
+        //                var _resDel = await uow.DeleteIncomeItemAsync(itm);
+        //            }
+        //        }
+        //        var _resultsExpenseItems = await uow.GetCategoryExpenseItemsAsync(category);
+        //        if (_resultsExpenseItems.Successful)
+        //        {
+        //            foreach(ExpenseItem itm in _resultsExpenseItems.Results)
+        //            {
+        //                var _resDel = await uow.DeleteExpenseItemAsync(itm);
+        //            }
+        //        }
+        //        var _resultsDeleteCategory = await uow.DeleteBudgetCategoryAsync(category);
+        //        _success = _resultsDeleteCategory.Successful;
+        //    }
+        //    return _success;
+        //}
     
         public BudgetCategoryVM CreateBudgetCategoryVM()
         {
@@ -293,16 +301,43 @@ namespace EasyBudget.Business
         }
 
     }
-    
+
+    public class BankAccountVM : BaseViewModel
+    {
+        BankAccount Account { get; set; }
+
+        public string BankName { get; set; }
+
+        public BankAccountType AccountType { get; set; }
+
+        public decimal CurrentBalance { get; set; }
+
+        public string RoutingNumber { get; set; }
+
+        public string AccountNumber { get; set; }
+
+        public string Nickname { get; set; }
+
+
+        public BankAccountVM(string dbFilePath)
+            :base(dbFilePath)
+        {
+            
+        }
+    }
+
     public class BudgetItemsVM : BaseViewModel
     {
 
-        public List<BudgetItem> BudgetItems { get; set; }
+        List<BudgetItem> BudgetItems { get; set; }
+
+        ICollection<BudgetItemVM> BudgetItemVMs { get; set; }
 
         public BudgetItemsVM(string dbFilePath)
             : base(dbFilePath)
         {
             BudgetItems = new List<BudgetItem>();
+            BudgetItemVMs = new List<BudgetItemVM>();
         }
 
         internal async Task LoadBudgetItemsAsync(int categoryId)
@@ -414,10 +449,69 @@ namespace EasyBudget.Business
         }
     }
 
+    public class BudgetItemVM : BaseViewModel
+    {
+        BudgetItem source { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public int BudgetItemId { get; set; }
+
+        public string CategoryName { get; set; }
+        
+        public BudgetItemType ItemType { get; set; }
+
+        public decimal BudgetedAmount { get; set; }
+
+        public string ItemDescription { get; set; }
+
+        public string ItemNotation { get; set; }
+
+        public bool IsRecurring { get; set; }
+
+        public Frequency ItemFrequency { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public BudgetItemVM(string dbFilePath)
+            :base(dbFilePath)
+        {
+            
+        }
+
+        public BudgetItemVM(string dbFilePath, BudgetItem budgetItem)
+            :base(dbFilePath)
+        {
+            PopulateVM(budgetItem);
+        }
+
+        internal void PopulateVM(BudgetItem budgetItem)
+        {
+            this.source = budgetItem;
+            this.CategoryId = budgetItem.budgetCategoryId;
+            this.BudgetItemId = budgetItem.id;
+            this.CategoryName = budgetItem.budgetCategory.categoryName;
+            this.ItemType = budgetItem.ItemType;
+            this.BudgetedAmount = budgetItem.BudgetedAmount;
+            this.ItemDescription = budgetItem.description;
+            this.ItemNotation = budgetItem.notation;
+            this.IsRecurring = budgetItem.recurring;
+            this.ItemFrequency = budgetItem.frequency;
+            this.StartDate = budgetItem.StartDate;
+            this.EndDate = budgetItem.EndDate;
+
+        }
+
+
+    }
     public class BudgetCategoriesVM : BaseViewModel
     {
 
         public ICollection<BudgetCategory> BudgetCategories { get; set; }
+
+        public ICollection<BudgetCategoryVM> BudgetCategoryVMs { get; set; }
 
         public BudgetCategoriesVM(string dbFilePath)
             : base(dbFilePath)
@@ -433,10 +527,10 @@ namespace EasyBudget.Business
                 if (_results.Successful)
                 {
                     this.BudgetCategories = _results.Results;
-                    //foreach (var category in _results.Results)
-                    //{
-                    //    this.BudgetCategories.Add(category);
-                    //}
+                    foreach (var category in _results.Results)
+                    {
+                        this.BudgetCategoryVMs.Add(new BudgetCategoryVM(this.dbFilePath, category));
+                    }
                 }
                 else
                 {
@@ -456,13 +550,13 @@ namespace EasyBudget.Business
             }
         }
 
-
-
     }
 
     public class BudgetCategoryVM : BaseViewModel
     {
         BudgetCategory Category { get; set; }
+
+        public int CategoryId { get; set; }
 
         public string Name { get; set; }
 
@@ -478,15 +572,36 @@ namespace EasyBudget.Business
 
         public BudgetCategoryType CategoryType { get; set; }
 
-        public ICollection<IncomeItem> IncomeItems { get; set; }
+        public ICollection<BudgetItemVM> BudgetItems { get; set; }
 
-        public ICollection<ExpenseItem> ExpenseItems { get; set; }
+        public bool IsNew { get; set; }
 
         public BudgetCategoryVM(string dbFilePath)
             : base(dbFilePath)
         {
-            this.IncomeItems = new List<IncomeItem>();
-            this.ExpenseItems = new List<ExpenseItem>();
+            //this.IncomeItems = new List<IncomeItem>();
+            //this.ExpenseItems = new List<ExpenseItem>();
+        }
+
+        public BudgetCategoryVM(string dbFilePath, BudgetCategory category)
+            :base(dbFilePath)
+        {
+            PopulateVM(category);
+        }
+
+        private void PopulateVM(BudgetCategory category)
+        {
+            this.Category = category;
+            this.CategoryId = this.Category.id;
+            this.Name = this.Category.categoryName;
+            this.Description = this.Category.description;
+            this.Amount = this.Category.budgetAmount;
+            this.IsSystemCategory = this.Category.systemCategory;
+            this.IsUserSelected = this.Category.userSelected;
+            this.CategoryIcon = this.Category.categoryIcon;
+            this.CategoryType = this.Category.categoryType;
+            this.IsNew = this.Category.IsNew;
+
         }
 
         internal async Task LoadBudgetCategoryDetails(int categoryId)
@@ -496,14 +611,7 @@ namespace EasyBudget.Business
                 var _results = await uow.GetBudgetCategoryAsync(categoryId);
                 if (_results.Successful)
                 {
-                    this.Category = _results.Results;
-                    this.Name = this.Category?.categoryName ?? string.Empty;
-                    this.Description = this.Category?.description ?? string.Empty;
-                    this.Amount = this.Category?.budgetAmount ?? 0;
-                    this.IsSystemCategory = this.Category?.systemCategory ?? false;
-                    this.IsUserSelected = this.Category?.userSelected ?? false;
-                    this.CategoryIcon = this.Category?.categoryIcon ?? AppIcon.None;
-                    this.CategoryType = this.Category?.categoryType ?? BudgetCategoryType.Expense;
+                    PopulateVM(_results.Results);
 
                     if (this.Category != null) 
                     {
@@ -516,7 +624,9 @@ namespace EasyBudget.Business
                                     foreach(var item in _resultsExpenseItems.Results)
                                     {
                                         item.ItemType = BudgetItemType.Expense;
-                                        this.ExpenseItems.Add(item);
+                                        item.budgetCategory = this.Category;
+                                        this.BudgetItems.Add(new BudgetItemVM(this.dbFilePath, item));
+                                        //this.ExpenseItems.Add(item);
                                     }
                                 }
                                 else
@@ -542,7 +652,9 @@ namespace EasyBudget.Business
                                     foreach(var item in _resultsIncomeItems.Results)
                                     {
                                         item.ItemType = BudgetItemType.Income;
-                                        this.IncomeItems.Add(item);
+                                        item.budgetCategory = this.Category;
+                                        this.BudgetItems.Add(new BudgetItemVM(this.dbFilePath, item));
+                                        //this.IncomeItems.Add(item);
                                     }
                                 }
                                 else
@@ -587,6 +699,7 @@ namespace EasyBudget.Business
         {
             this.Category = new BudgetCategory();
             this.Category.IsNew = true;
+
         }
 
         public async Task SaveChangesAsync()
@@ -646,108 +759,108 @@ namespace EasyBudget.Business
                 }
                 if (_saveOk)
                 {
-                    foreach (IncomeItem itm in this.IncomeItems)
-                    {
-                        if (itm.IsNew)
-                        {
-                            var _resultsAddItem = await uow.AddIncomeItemAsync(itm);
-                            if (_resultsAddItem.Successful)
-                            {
-                                _saveOk = _saveOk && true;
-                            }
-                            else
-                            {
-                                _saveOk = false;
-                                if (_resultsAddItem.WorkException != null)
-                                {
-                                    WriteErrorCondition(_resultsAddItem.WorkException);
-                                }
-                                else if (!string.IsNullOrEmpty(_resultsAddItem.Message))
-                                {
-                                    WriteErrorCondition(_resultsAddItem.Message);
-                                }
-                                else
-                                {
-                                    WriteErrorCondition("An unknown error has occurred");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var _resultsUpdateItem = await uow.UpdateIncomeItemAsync(itm);
-                            if (_resultsUpdateItem.Successful)
-                            {
-                                _saveOk = _saveOk && true;
-                            }
-                            else
-                            {
-                                _saveOk = false;
-                                if (_resultsUpdateItem.WorkException != null)
-                                {
-                                    WriteErrorCondition(_resultsUpdateItem.WorkException);
-                                }
-                                else if (!string.IsNullOrEmpty(_resultsUpdateItem.Message))
-                                {
-                                    WriteErrorCondition(_resultsUpdateItem.Message);
-                                }
-                                else
-                                {
-                                    WriteErrorCondition("An unknown error has occurred");
-                                }
-                            }
-                        }
-                    }
-                    foreach (ExpenseItem itm in this.ExpenseItems)
-                    {
-                        if (itm.IsNew)
-                        {
-                            var _resultsAddItem = await uow.AddExpenseItemAsync(itm);
-                            if (_resultsAddItem.Successful)
-                            {
-                                _saveOk = _saveOk && true;
-                            }
-                            else
-                            {
-                                _saveOk = false;
-                                if (_resultsAddItem.WorkException != null)
-                                {
-                                    WriteErrorCondition(_resultsAddItem.WorkException);
-                                }
-                                else if (!string.IsNullOrEmpty(_resultsAddItem.Message))
-                                {
-                                    WriteErrorCondition(_resultsAddItem.Message);
-                                }
-                                else
-                                {
-                                    WriteErrorCondition("An unknown error has occurred");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var _resultsUpdateItem = await uow.UpdateExpenseItemAsync(itm);
-                            if (_resultsUpdateItem.Successful)
-                            {
-                                _saveOk = _saveOk && true;
-                            }
-                            else
-                            {
-                                _saveOk = false;
-                                if (_resultsUpdateItem.WorkException != null)
-                                {
-                                    WriteErrorCondition(_resultsUpdateItem.WorkException);
-                                }
-                                else if (!string.IsNullOrEmpty(_resultsUpdateItem.Message))
-                                {
-                                    WriteErrorCondition(_resultsUpdateItem.Message);
-                                }
-                                else
-                                {
-                                    WriteErrorCondition("An unknown error has occurred");
-                                }
-                            }
-                        }
-                    }
+                    //foreach (IncomeItem itm in this.IncomeItems)
+                    //{
+                        //if (itm.IsNew)
+                        //{
+                        //    var _resultsAddItem = await uow.AddIncomeItemAsync(itm);
+                        //    if (_resultsAddItem.Successful)
+                        //    {
+                        //        _saveOk = _saveOk && true;
+                        //    }
+                        //    else
+                        //    {
+                        //        _saveOk = false;
+                        //        if (_resultsAddItem.WorkException != null)
+                        //        {
+                        //            WriteErrorCondition(_resultsAddItem.WorkException);
+                        //        }
+                        //        else if (!string.IsNullOrEmpty(_resultsAddItem.Message))
+                        //        {
+                        //            WriteErrorCondition(_resultsAddItem.Message);
+                        //        }
+                        //        else
+                        //        {
+                        //            WriteErrorCondition("An unknown error has occurred");
+                        //        }
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    var _resultsUpdateItem = await uow.UpdateIncomeItemAsync(itm);
+                        //    if (_resultsUpdateItem.Successful)
+                        //    {
+                        //        _saveOk = _saveOk && true;
+                        //    }
+                        //    else
+                        //    {
+                        //        _saveOk = false;
+                        //        if (_resultsUpdateItem.WorkException != null)
+                        //        {
+                        //            WriteErrorCondition(_resultsUpdateItem.WorkException);
+                        //        }
+                        //        else if (!string.IsNullOrEmpty(_resultsUpdateItem.Message))
+                        //        {
+                        //            WriteErrorCondition(_resultsUpdateItem.Message);
+                        //        }
+                        //        else
+                        //        {
+                        //            WriteErrorCondition("An unknown error has occurred");
+                        //        }
+                        //    }
+                        //}
+                    //}
+                    //foreach (ExpenseItem itm in this.ExpenseItems)
+                    //{
+                    //    if (itm.IsNew)
+                    //    {
+                    //        var _resultsAddItem = await uow.AddExpenseItemAsync(itm);
+                    //        if (_resultsAddItem.Successful)
+                    //        {
+                    //            _saveOk = _saveOk && true;
+                    //        }
+                    //        else
+                    //        {
+                    //            _saveOk = false;
+                    //            if (_resultsAddItem.WorkException != null)
+                    //            {
+                    //                WriteErrorCondition(_resultsAddItem.WorkException);
+                    //            }
+                    //            else if (!string.IsNullOrEmpty(_resultsAddItem.Message))
+                    //            {
+                    //                WriteErrorCondition(_resultsAddItem.Message);
+                    //            }
+                    //            else
+                    //            {
+                    //                WriteErrorCondition("An unknown error has occurred");
+                    //            }
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        var _resultsUpdateItem = await uow.UpdateExpenseItemAsync(itm);
+                    //        if (_resultsUpdateItem.Successful)
+                    //        {
+                    //            _saveOk = _saveOk && true;
+                    //        }
+                    //        else
+                    //        {
+                    //            _saveOk = false;
+                    //            if (_resultsUpdateItem.WorkException != null)
+                    //            {
+                    //                WriteErrorCondition(_resultsUpdateItem.WorkException);
+                    //            }
+                    //            else if (!string.IsNullOrEmpty(_resultsUpdateItem.Message))
+                    //            {
+                    //                WriteErrorCondition(_resultsUpdateItem.Message);
+                    //            }
+                    //            else
+                    //            {
+                    //                WriteErrorCondition("An unknown error has occurred");
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
             }
         }
@@ -758,7 +871,7 @@ namespace EasyBudget.Business
             item.budgetCategoryId = this.Category.id;
             item.IsNew = true;
 
-            this.ExpenseItems.Add(item);
+            //this.ExpenseItems.Add(item);
 
             return item;
         }
@@ -768,7 +881,7 @@ namespace EasyBudget.Business
             IncomeItem item = new IncomeItem();
             item.budgetCategoryId = this.Category.id;
             item.IsNew = true;
-            this.IncomeItems.Add(item);
+            //this.IncomeItems.Add(item);
 
             return item;
         }
@@ -1331,7 +1444,7 @@ namespace EasyBudget.Business
                     
                     this.ExpenseItem = _results.Results;
                     this.ExpenseItem.ItemType = BudgetItemType.Expense;
-                    this.BudgetedAmount = this.ExpenseItem?.budgetedAmount ?? 0;
+                    this.BudgetedAmount = this.ExpenseItem?.BudgetedAmount ?? 0;
                     this.Description = this.ExpenseItem?.description ?? string.Empty;
                     this.Notation = this.ExpenseItem?.notation ?? string.Empty;
                     this.Recurring = this.ExpenseItem?.recurring ?? false;
@@ -1390,7 +1503,7 @@ namespace EasyBudget.Business
                 {
                     this.IncomeItem = _results.Results;
                     this.IncomeItem.ItemType = BudgetItemType.Income;
-                    this.BudgetedAmount = this.IncomeItem?.budgetedAmount ?? 0;
+                    this.BudgetedAmount = this.IncomeItem?.BudgetedAmount ?? 0;
                     this.Description = this.IncomeItem?.description ?? string.Empty;
                     this.Notation = this.IncomeItem?.notation ?? string.Empty;
                     this.Recurring = this.IncomeItem?.recurring ?? false;

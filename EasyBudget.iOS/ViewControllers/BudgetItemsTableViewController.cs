@@ -196,12 +196,12 @@ namespace EasyBudget.iOS
             if (budgetItem.ItemType == BudgetItemType.Income)
             {
                 titleText = (budgetItem as IncomeItem).description;
-                budgetedAmount = (budgetItem as IncomeItem).budgetedAmount;
+                budgetedAmount = (budgetItem as IncomeItem).BudgetedAmount;
             }
             else
             {
                 titleText = (budgetItem as ExpenseItem).description;
-                budgetedAmount = (budgetItem as ExpenseItem).budgetedAmount;
+                budgetedAmount = (budgetItem as ExpenseItem).BudgetedAmount;
             }
             string subTitleText = string.Format("{0:C}", budgetedAmount);
 
@@ -231,7 +231,7 @@ namespace EasyBudget.iOS
         public override string TitleForFooter(UITableView tableView, nint section)
         {
             //return base.TitleForFooter(tableView, section);
-            var sumBudgetedAmounts = (from g in this.grouping[section] select g.budgetedAmount).Sum();
+            var sumBudgetedAmounts = (from g in this.grouping[section] select g.BudgetedAmount).Sum();
             string footerText = "Total Budgeted " + string.Format("{0:C}", sumBudgetedAmounts);
             return footerText;
         }

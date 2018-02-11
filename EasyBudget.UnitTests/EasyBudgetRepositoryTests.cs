@@ -228,7 +228,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
 
@@ -240,13 +240,13 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.budgetedAmount;
+            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.BudgetedAmount;
 
             await repository.AddExpenseItemAsync(expItm);
 
             ExpenseItem testExpItem = await validationRepository.GetExpenseItemAsync(expItm.id);
             Assert.AreEqual(testExpItem.id, expItm.id);
-            Assert.AreEqual(testExpItem.budgetedAmount, expItm.budgetedAmount);
+            Assert.AreEqual(testExpItem.BudgetedAmount, expItm.BudgetedAmount);
             Assert.AreEqual(testExpItem.budgetCategoryId, expItm.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -276,7 +276,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 2450
+                BudgetedAmount = 2450
             };
 
 
@@ -288,14 +288,14 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.budgetedAmount;
+            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.BudgetedAmount;
 
             await repository.AddIncomeItemAsync(incItem);
             await repository.SaveChangesAsync();
 
             IncomeItem testIncItem = await validationRepository.GetIncomeItemAsync(incItem.id);
             Assert.AreEqual(testIncItem.id, incItem.id);
-            Assert.AreEqual(testIncItem.budgetedAmount, incItem.budgetedAmount);
+            Assert.AreEqual(testIncItem.BudgetedAmount, incItem.BudgetedAmount);
             Assert.AreEqual(testIncItem.budgetCategoryId, incItem.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -629,7 +629,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
 
@@ -641,13 +641,13 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.budgetedAmount;
+            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.BudgetedAmount;
             await repository.AddExpenseItemAsync(expItm);
             await repository.SaveChangesAsync();
 
             ExpenseItem testExpItem = await validationRepository.GetExpenseItemAsync(expItm.id);
             Assert.AreEqual(testExpItem.id, expItm.id);
-            Assert.AreEqual(testExpItem.budgetedAmount, expItm.budgetedAmount);
+            Assert.AreEqual(testExpItem.BudgetedAmount, expItm.BudgetedAmount);
             Assert.AreEqual(testExpItem.budgetCategoryId, expItm.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -655,7 +655,7 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, expItm.budgetCategory.budgetAmount);
             Assert.AreEqual(testCategory.budgetAmount, 250);
 
-            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount - expItm.budgetedAmount;
+            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount - expItm.BudgetedAmount;
             await repository.DeleteExpenseItemAsync(expItm);
             await repository.SaveChangesAsync();
 
@@ -686,7 +686,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 2450
+                BudgetedAmount = 2450
             };
 
 
@@ -698,14 +698,14 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.budgetedAmount;
+            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.BudgetedAmount;
 
             await repository.AddIncomeItemAsync(incItem);
             await repository.SaveChangesAsync();
 
             IncomeItem testIncItem = await validationRepository.GetIncomeItemAsync(incItem.id);
             Assert.AreEqual(testIncItem.id, incItem.id);
-            Assert.AreEqual(testIncItem.budgetedAmount, incItem.budgetedAmount);
+            Assert.AreEqual(testIncItem.BudgetedAmount, incItem.BudgetedAmount);
             Assert.AreEqual(testIncItem.budgetCategoryId, incItem.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -713,7 +713,7 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, incItem.budgetCategory.budgetAmount);
             Assert.AreEqual(testCategory.budgetAmount, 2450);
 
-            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount - incItem.budgetedAmount;
+            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount - incItem.BudgetedAmount;
             await repository.DeleteIncomeItemAsync(incItem);
             await repository.SaveChangesAsync();
 
@@ -1315,7 +1315,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
 
@@ -1327,13 +1327,13 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.budgetedAmount;
+            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.BudgetedAmount;
 
             await repository.AddExpenseItemAsync(expItm);
 
             ExpenseItem testExpItem = await validationRepository.GetExpenseItemAsync(expItm.id);
             Assert.AreEqual(testExpItem.id, expItm.id);
-            Assert.AreEqual(testExpItem.budgetedAmount, expItm.budgetedAmount);
+            Assert.AreEqual(testExpItem.BudgetedAmount, expItm.BudgetedAmount);
             Assert.AreEqual(testExpItem.budgetCategoryId, expItm.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -1362,7 +1362,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             ExpenseItem expItm2 = new ExpenseItem()
@@ -1373,7 +1373,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             ExpenseItem expItm3 = new ExpenseItem()
@@ -1384,7 +1384,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             BudgetCategory category2 = new BudgetCategory()
@@ -1404,7 +1404,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             ExpenseItem expItm5 = new ExpenseItem()
@@ -1415,7 +1415,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             ExpenseItem expItm6 = new ExpenseItem()
@@ -1426,7 +1426,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             List<BudgetCategory> categories = new List<BudgetCategory>();
@@ -1485,7 +1485,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 2450
+                BudgetedAmount = 2450
             };
 
 
@@ -1497,13 +1497,13 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.budgetedAmount;
+            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.BudgetedAmount;
 
             await repository.AddIncomeItemAsync(incItem);
 
             IncomeItem testIncItem = await validationRepository.GetIncomeItemAsync(incItem.id);
             Assert.AreEqual(testIncItem.id, incItem.id);
-            Assert.AreEqual(testIncItem.budgetedAmount, incItem.budgetedAmount);
+            Assert.AreEqual(testIncItem.BudgetedAmount, incItem.BudgetedAmount);
             Assert.AreEqual(testIncItem.budgetCategoryId, incItem.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -1532,7 +1532,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             IncomeItem incomeItm2 = new IncomeItem()
@@ -1543,7 +1543,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             IncomeItem incomeItm3 = new IncomeItem()
@@ -1554,7 +1554,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             BudgetCategory category2 = new BudgetCategory()
@@ -1574,7 +1574,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             IncomeItem incomeItm5 = new IncomeItem()
@@ -1585,7 +1585,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             IncomeItem incomeItm6 = new IncomeItem()
@@ -1596,7 +1596,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             List<BudgetCategory> categories = new List<BudgetCategory>();
@@ -2149,7 +2149,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Expense Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 250
+                BudgetedAmount = 250
             };
 
             await repository.AddBudgetCategoryAsync(category);
@@ -2160,14 +2160,14 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.budgetedAmount;
+            expItm.budgetCategory.budgetAmount = expItm.budgetCategory.budgetAmount + expItm.BudgetedAmount;
 
             await repository.AddExpenseItemAsync(expItm);
             await repository.SaveChangesAsync();
 
             ExpenseItem testExpItem = await validationRepository.GetExpenseItemAsync(expItm.id);
             Assert.AreEqual(testExpItem.id, expItm.id);
-            Assert.AreEqual(testExpItem.budgetedAmount, expItm.budgetedAmount);
+            Assert.AreEqual(testExpItem.BudgetedAmount, expItm.BudgetedAmount);
             Assert.AreEqual(testExpItem.budgetCategoryId, expItm.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -2176,14 +2176,14 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, 250);
 
             expItm.budgetCategory.budgetAmount = 200;
-            expItm.budgetedAmount = 200;
+            expItm.BudgetedAmount = 200;
 
             await repository.UpdateExpenseItemAsync(expItm);
             await repository.SaveChangesAsync();
 
             testExpItem = await validationRepository.GetExpenseItemAsync(expItm.id);
             Assert.AreEqual(testExpItem.id, expItm.id);
-            Assert.AreEqual(testExpItem.budgetedAmount, expItm.budgetedAmount);
+            Assert.AreEqual(testExpItem.BudgetedAmount, expItm.BudgetedAmount);
             Assert.AreEqual(testExpItem.budgetCategoryId, expItm.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -2213,7 +2213,7 @@ namespace EasyBudget.UnitTests
                 description = "Dummy Income Item",
                 notation = "Used for testing purposes",
                 recurring = false,
-                budgetedAmount = 2450
+                BudgetedAmount = 2450
             };
 
 
@@ -2225,14 +2225,14 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, category.budgetAmount);
             Assert.IsTrue(testCategory.budgetAmount == 0);
 
-            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.budgetedAmount;
+            incItem.budgetCategory.budgetAmount = incItem.budgetCategory.budgetAmount + incItem.BudgetedAmount;
 
             await repository.AddIncomeItemAsync(incItem);
             await repository.SaveChangesAsync();
 
             IncomeItem testIncItem = await validationRepository.GetIncomeItemAsync(incItem.id);
             Assert.AreEqual(testIncItem.id, incItem.id);
-            Assert.AreEqual(testIncItem.budgetedAmount, incItem.budgetedAmount);
+            Assert.AreEqual(testIncItem.BudgetedAmount, incItem.BudgetedAmount);
             Assert.AreEqual(testIncItem.budgetCategoryId, incItem.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
@@ -2241,14 +2241,14 @@ namespace EasyBudget.UnitTests
             Assert.AreEqual(testCategory.budgetAmount, 2450);
 
             incItem.budgetCategory.budgetAmount = 200;
-            incItem.budgetedAmount = 200;
+            incItem.BudgetedAmount = 200;
 
             await repository.UpdateIncomeItemAsync(incItem);
             await repository.SaveChangesAsync();
 
             testIncItem = await validationRepository.GetIncomeItemAsync(incItem.id);
             Assert.AreEqual(testIncItem.id, incItem.id);
-            Assert.AreEqual(testIncItem.budgetedAmount, incItem.budgetedAmount);
+            Assert.AreEqual(testIncItem.BudgetedAmount, incItem.BudgetedAmount);
             Assert.AreEqual(testIncItem.budgetCategoryId, incItem.budgetCategoryId);
 
             testCategory = await validationRepository.GetBudgetCategoryAsync(category.id);
