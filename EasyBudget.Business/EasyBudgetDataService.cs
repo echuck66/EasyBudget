@@ -148,6 +148,30 @@ namespace EasyBudget.Business
 
             return _success;
         }
+    
+        public BudgetCategoryVM CreateBudgetCategoryVM()
+        {
+            var vm = new BudgetCategoryVM(this.dbFilePath);
+            vm.CreateBudgetCategory();
+
+            return vm;
+        }
+
+        public CheckingAccountVM CreateCheckingAccountVM()
+        {
+            var vm = new CheckingAccountVM(this.dbFilePath);
+            vm.CreateCheckingAccount();
+
+            return vm;
+        }
+
+        public SavingsAccountVM CreateSavingsAccountVM()
+        {
+            var vm = new SavingsAccountVM(this.dbFilePath);
+            vm.CreateSavingsAccount();
+
+            return vm;
+        }
     }
 
     public abstract class BaseViewModel
@@ -173,6 +197,21 @@ namespace EasyBudget.Business
             }
         }
 
+        internal void WriteErrorCondition(Exception ex)
+        {
+            if (string.IsNullOrEmpty(this.ErrorCondition))
+                this.ErrorCondition = ex.Message;
+            else
+            {
+                StringBuilder sb = new StringBuilder(this.ErrorCondition);
+                sb.AppendLine(ex.Message);
+                this.ErrorCondition = sb.ToString();
+            }
+            if (ex.InnerException != null)
+            {
+                WriteErrorCondition(ex.InnerException);
+            }
+        }
     }
 
     public class BankAccountsVM : BaseViewModel
@@ -209,7 +248,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -239,7 +278,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -293,7 +332,7 @@ namespace EasyBudget.Business
                     {
                         if (_resultsIncomeItems.WorkException != null)
                         {
-                            WriteErrorCondition(_resultsIncomeItems.WorkException.Message);
+                            WriteErrorCondition(_resultsIncomeItems.WorkException);
                         }
                         else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
                         {
@@ -309,7 +348,7 @@ namespace EasyBudget.Business
                 {
                     if (_resultsCategory.WorkException != null)
                     {
-                        WriteErrorCondition(_resultsCategory.WorkException.Message);
+                        WriteErrorCondition(_resultsCategory.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_resultsCategory.Message))
                     {
@@ -344,7 +383,7 @@ namespace EasyBudget.Business
                     {
                         if (_resultsIncomeItems.WorkException != null)
                         {
-                            WriteErrorCondition(_resultsIncomeItems.WorkException.Message);
+                            WriteErrorCondition(_resultsIncomeItems.WorkException);
                         }
                         else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
                         {
@@ -360,7 +399,7 @@ namespace EasyBudget.Business
                 {
                     if (_resultsCategory.WorkException != null)
                     {
-                        WriteErrorCondition(_resultsCategory.WorkException.Message);
+                        WriteErrorCondition(_resultsCategory.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_resultsCategory.Message))
                     {
@@ -403,7 +442,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -417,15 +456,7 @@ namespace EasyBudget.Business
             }
         }
 
-        public async Task<BudgetCategory> CreateNewCategory()
-        {
-            BudgetCategory category = new BudgetCategory();
-            category.budgetAmount = 0;
-            category.CanDelete = true;
-            category.CanEdit = true;
 
-            return category;
-        }
 
     }
 
@@ -482,7 +513,6 @@ namespace EasyBudget.Business
                                 var _resultsExpenseItems = await uow.GetCategoryExpenseItemsAsync(this.Category);
                                 if (_resultsExpenseItems.Successful)
                                 {
-
                                     foreach(var item in _resultsExpenseItems.Results)
                                     {
                                         item.ItemType = BudgetItemType.Expense;
@@ -493,7 +523,7 @@ namespace EasyBudget.Business
                                 {
                                     if (_resultsExpenseItems.WorkException != null)
                                     {
-                                        WriteErrorCondition(_resultsExpenseItems.WorkException.Message);
+                                        WriteErrorCondition(_resultsExpenseItems.WorkException);
                                     }
                                     else if (!string.IsNullOrEmpty(_resultsExpenseItems.Message))
                                     {
@@ -519,7 +549,7 @@ namespace EasyBudget.Business
                                 {
                                     if (_resultsIncomeItems.WorkException != null)
                                     {
-                                        WriteErrorCondition(_resultsIncomeItems.WorkException.Message);
+                                        WriteErrorCondition(_resultsIncomeItems.WorkException);
                                     }
                                     else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
                                     {
@@ -539,7 +569,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -553,6 +583,195 @@ namespace EasyBudget.Business
             }
         }
 
+        internal void CreateBudgetCategory()
+        {
+            this.Category = new BudgetCategory();
+            this.Category.IsNew = true;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            bool _saveOk = true;
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                if (this.Category.IsNew)
+                {
+                    var _resultsAddCategory = await uow.AddBudgetCategoryAsync(this.Category);
+                    if (_resultsAddCategory.Successful)
+                    {
+                        _saveOk = true;
+
+                    }
+                    else
+                    {
+                        _saveOk = false;
+                        if (_resultsAddCategory.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsAddCategory.WorkException);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsAddCategory.Message))
+                        {
+                            WriteErrorCondition(_resultsAddCategory.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+                    }
+                }
+                else
+                {
+                    var _resultsUpdateCategory = await uow.UpdateBudgetCategoryAsync(this.Category);
+                    if (_resultsUpdateCategory.Successful)
+                    {
+                        _saveOk = true;
+                    }
+                    else
+                    {
+                        _saveOk = false;
+                        if (_resultsUpdateCategory.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsUpdateCategory.WorkException);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsUpdateCategory.Message))
+                        {
+                            WriteErrorCondition(_resultsUpdateCategory.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+
+                    }
+                }
+                if (_saveOk)
+                {
+                    foreach (IncomeItem itm in this.IncomeItems)
+                    {
+                        if (itm.IsNew)
+                        {
+                            var _resultsAddItem = await uow.AddIncomeItemAsync(itm);
+                            if (_resultsAddItem.Successful)
+                            {
+                                _saveOk = _saveOk && true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsAddItem.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddItem.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddItem.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddItem.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var _resultsUpdateItem = await uow.UpdateIncomeItemAsync(itm);
+                            if (_resultsUpdateItem.Successful)
+                            {
+                                _saveOk = _saveOk && true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsUpdateItem.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsUpdateItem.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsUpdateItem.Message))
+                                {
+                                    WriteErrorCondition(_resultsUpdateItem.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                    }
+                    foreach (ExpenseItem itm in this.ExpenseItems)
+                    {
+                        if (itm.IsNew)
+                        {
+                            var _resultsAddItem = await uow.AddExpenseItemAsync(itm);
+                            if (_resultsAddItem.Successful)
+                            {
+                                _saveOk = _saveOk && true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsAddItem.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddItem.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddItem.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddItem.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var _resultsUpdateItem = await uow.UpdateExpenseItemAsync(itm);
+                            if (_resultsUpdateItem.Successful)
+                            {
+                                _saveOk = _saveOk && true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsUpdateItem.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsUpdateItem.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsUpdateItem.Message))
+                                {
+                                    WriteErrorCondition(_resultsUpdateItem.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public ExpenseItem AddExpenseItem()
+        {
+            ExpenseItem item = new ExpenseItem();
+            item.budgetCategoryId = this.Category.id;
+            item.IsNew = true;
+
+            this.ExpenseItems.Add(item);
+
+            return item;
+        }
+
+        public IncomeItem AddIncomeItem()
+        {
+            IncomeItem item = new IncomeItem();
+            item.budgetCategoryId = this.Category.id;
+            item.IsNew = true;
+            this.IncomeItems.Add(item);
+
+            return item;
+        }
     }
 
     public class CheckingAccountVM : BaseViewModel
@@ -616,7 +835,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -630,6 +849,195 @@ namespace EasyBudget.Business
             }
         }
     
+        public async Task SaveChangesAsync()
+        {
+            bool _saveOk = true;
+
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                if (this.CheckingAccount.IsNew)
+                {
+                    var _resultsAddAccont = await uow.AddCheckingAccountAsync(this.CheckingAccount);
+                    if (_resultsAddAccont.Successful)
+                    {
+                        _saveOk = true;
+                    }
+                    else
+                    {
+                        _saveOk = false;
+                        if (_resultsAddAccont.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsAddAccont.WorkException);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsAddAccont.Message))
+                        {
+                            WriteErrorCondition(_resultsAddAccont.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+                    }
+                }
+                else
+                {
+                    var _resultsUpdateAccont = await uow.UpdateCheckingAccountAsync(this.CheckingAccount);
+                    if (_resultsUpdateAccont.Successful)
+                    {
+                        _saveOk = true;
+                    }
+                    else
+                    {
+                        _saveOk = false;
+                        if (_resultsUpdateAccont.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsUpdateAccont.WorkException);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsUpdateAccont.Message))
+                        {
+                            WriteErrorCondition(_resultsUpdateAccont.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+                    }
+                }
+                if (_saveOk)
+                {
+                    foreach(CheckingDeposit deposit in this.Deposits)
+                    {
+                        if (deposit.IsNew)
+                        {
+                            var _resultsAddDeposit = await uow.AddCheckingDepositAsync(deposit);
+                            if (_resultsAddDeposit.Successful)
+                            {
+                                _saveOk = _saveOk && true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsAddDeposit.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddDeposit.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddDeposit.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddDeposit.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var _resultsUpdateDeposit = await uow.UpdateCheckingDepositAsync(deposit);
+                            if (_resultsUpdateDeposit.Successful)
+                            {
+                                _saveOk = true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsUpdateDeposit.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsUpdateDeposit.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsUpdateDeposit.Message))
+                                {
+                                    WriteErrorCondition(_resultsUpdateDeposit.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                    }
+                    foreach (CheckingWithdrawal withdrawal in this.Withdrawals)
+                    {
+                        if (withdrawal.IsNew)
+                        {
+                            var _resultsAddWithdrawal = await uow.AddCheckingWithdrawalAsync(withdrawal);
+                            if (_resultsAddWithdrawal.Successful)
+                            {
+                                _saveOk = true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsAddWithdrawal.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddWithdrawal.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddWithdrawal.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddWithdrawal.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                        else 
+                        {
+                            var _resultsUpdateWithdrawal = await uow.UpdateCheckingWithdrawalAsync(withdrawal);
+                            if (_resultsUpdateWithdrawal.Successful)
+                            {
+                                _saveOk = true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsUpdateWithdrawal.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsUpdateWithdrawal.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsUpdateWithdrawal.Message))
+                                {
+                                    WriteErrorCondition(_resultsUpdateWithdrawal.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        internal void CreateCheckingAccount()
+        {
+            this.CheckingAccount = new CheckingAccount();
+            this.CheckingAccount.IsNew = true;
+        }
+
+        public CheckingDeposit AddDeposit()
+        {
+            CheckingDeposit deposit = new CheckingDeposit();
+            deposit.checkingAccountId = this.CheckingAccount.id;
+            deposit.IsNew = true;
+
+            this.Deposits.Add(deposit);
+
+            return deposit;
+        }
+
+        public CheckingWithdrawal AddWithdrawal()
+        {
+            CheckingWithdrawal withdrawal = new CheckingWithdrawal();
+            withdrawal.checkingAccountId = this.CheckingAccount.id;
+            withdrawal.IsNew = true;
+
+            this.Withdrawals.Add(withdrawal);
+
+            return withdrawal;
+        }
     }
 
     public class SavingsAccountVM : BaseViewModel
@@ -689,7 +1097,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -701,6 +1109,196 @@ namespace EasyBudget.Business
                     }
                 }
             }
+        }
+    
+        internal void CreateSavingsAccount()
+        {
+            this.SavingsAccount = new SavingsAccount();
+            this.SavingsAccount.IsNew = true;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            bool _saveOk = true;
+
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                if (this.SavingsAccount.IsNew)
+                {
+                    var _resultsAddAccont = await uow.AddSavingsAccountAsync(this.SavingsAccount);
+                    if (_resultsAddAccont.Successful)
+                    {
+                        _saveOk = true;
+                    }
+                    else
+                    {
+                        _saveOk = false;
+                        if (_resultsAddAccont.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsAddAccont.WorkException);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsAddAccont.Message))
+                        {
+                            WriteErrorCondition(_resultsAddAccont.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+                    }
+                }
+                else
+                {
+                    var _resultsUpdateAccont = await uow.UpdateSavingsAccountAsync(this.SavingsAccount);
+                    if (_resultsUpdateAccont.Successful)
+                    {
+                        _saveOk = true;
+                    }
+                    else
+                    {
+                        _saveOk = false;
+                        if (_resultsUpdateAccont.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsUpdateAccont.WorkException);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsUpdateAccont.Message))
+                        {
+                            WriteErrorCondition(_resultsUpdateAccont.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+                    }
+                }
+                if (_saveOk)
+                {
+                    foreach (SavingsDeposit deposit in this.Deposits)
+                    {
+                        if (deposit.IsNew)
+                        {
+                            var _resultsAddDeposit = await uow.AddSavingsDepositAsync(deposit);
+                            if (_resultsAddDeposit.Successful)
+                            {
+                                _saveOk = _saveOk && true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsAddDeposit.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddDeposit.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddDeposit.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddDeposit.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var _resultsUpdateDeposit = await uow.UpdateSavingsDepositAsync(deposit);
+                            if (_resultsUpdateDeposit.Successful)
+                            {
+                                _saveOk = true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsUpdateDeposit.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsUpdateDeposit.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsUpdateDeposit.Message))
+                                {
+                                    WriteErrorCondition(_resultsUpdateDeposit.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                    }
+                    foreach (SavingsWithdrawal withdrawal in this.Withdrawals)
+                    {
+                        if (withdrawal.IsNew)
+                        {
+                            var _resultsAddWithdrawal = await uow.AddSavingsWithdrawalAsync(withdrawal);
+                            if (_resultsAddWithdrawal.Successful)
+                            {
+                                _saveOk = true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsAddWithdrawal.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddWithdrawal.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddWithdrawal.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddWithdrawal.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var _resultsUpdateWithdrawal = await uow.UpdateSavingsWithdrawalAsync(withdrawal);
+                            if (_resultsUpdateWithdrawal.Successful)
+                            {
+                                _saveOk = true;
+                            }
+                            else
+                            {
+                                _saveOk = false;
+                                if (_resultsUpdateWithdrawal.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsUpdateWithdrawal.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsUpdateWithdrawal.Message))
+                                {
+                                    WriteErrorCondition(_resultsUpdateWithdrawal.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public SavingsDeposit AddDeposit()
+        {
+            var deposit = new SavingsDeposit();
+            deposit.savingsAccountId = this.SavingsAccount.id;
+            deposit.IsNew = true;
+
+            this.Deposits.Add(deposit);
+
+            return deposit;
+        }
+
+        public SavingsWithdrawal AddWithdrawal()
+        {
+            var withdrawal = new SavingsWithdrawal();
+            withdrawal.savingsAccountId = this.SavingsAccount.id;
+            withdrawal.IsNew = true;
+
+            this.Withdrawals.Add(withdrawal);
+
+            return withdrawal;
         }
     }
 
@@ -743,7 +1341,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -755,6 +1353,13 @@ namespace EasyBudget.Business
                     }
                 }
             }
+        }
+
+        internal void CrateExpenseItem(int categoryId)
+        {
+            this.ExpenseItem = new ExpenseItem();
+            this.ExpenseItem.budgetCategoryId = categoryId;
+            this.ExpenseItem.IsNew = true;
         }
     }
 
@@ -795,7 +1400,7 @@ namespace EasyBudget.Business
                 {
                     if (_results.WorkException != null)
                     {
-                        WriteErrorCondition(_results.WorkException.Message);
+                        WriteErrorCondition(_results.WorkException);
                     }
                     else if (!string.IsNullOrEmpty(_results.Message))
                     {
@@ -807,6 +1412,13 @@ namespace EasyBudget.Business
                     }
                 }
             }
+        }
+    
+        internal void CreateIncomeItem(int categoryId)
+        {
+            this.IncomeItem = new IncomeItem();
+            this.IncomeItem.budgetCategoryId = categoryId;
+            this.IncomeItem.IsNew = true;
         }
     }
 

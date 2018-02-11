@@ -107,6 +107,8 @@ namespace EasyBudget.Data
 
         Task UpdateSavingsDepositAsync(SavingsDeposit deposit);
 
+        Task UpdateSavingsWithdrawalAsync(SavingsWithdrawal withdrawal);
+
         Task UpdateExpenseItemAsync(ExpenseItem expense);
 
         Task UpdateIncomeItemAsync(IncomeItem income);

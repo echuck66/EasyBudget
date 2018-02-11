@@ -847,7 +847,7 @@ namespace EasyBudget.Business
                 }
                 CheckingAccount _account = await repository.AddCheckingAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Successful = objectsAdded == 1;
+                _results.Successful = true;
                 _results.Results = _account;
             }
             catch (Exception ex)
@@ -859,6 +859,212 @@ namespace EasyBudget.Business
 
             return _results;
         }
+
+        public async Task<CheckingDepositResults> AddCheckingDepositAsync(CheckingDeposit deposit)
+        {
+            CheckingDepositResults _results = new CheckingDepositResults();
+
+            try
+            {
+                if (deposit == null)
+                {
+                    throw new NullReferenceException("Deposit cannot be NULL");
+                }
+                CheckingDeposit _deposit = await repository.AddCheckingDepositAsync(deposit);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = _deposit;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<CheckingWithdrawalResults> AddCheckingWithdrawalAsync(CheckingWithdrawal withdrawal)
+        {
+            CheckingWithdrawalResults _results = new CheckingWithdrawalResults();
+
+            try
+            {
+                if (withdrawal == null)
+                {
+                    throw new NullReferenceException("Withdrawal cannot be NULL");
+                }
+                CheckingWithdrawal _withdrawal = await repository.AddCheckingWithdrawalAsync(withdrawal);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = _withdrawal;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<SavingsDepositResults> AddSavingsDepositAsync(SavingsDeposit deposit)
+        {
+            SavingsDepositResults _results = new SavingsDepositResults();
+
+            try
+            {
+                if (deposit == null)
+                {
+                    throw new NullReferenceException("Deposit cannot be NULL");
+                }
+                SavingsDeposit _deposit = await repository.AddSavingsDepositAsync(deposit);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = _deposit;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<SavingsWithdrawalResults> AddSavingsWithdrawalAsync(SavingsWithdrawal withdrawal)
+        {
+            SavingsWithdrawalResults _results = new SavingsWithdrawalResults();
+
+            try
+            {
+                if (withdrawal == null)
+                {
+                    throw new NullReferenceException("Withdrawal cannot be NULL");
+                }
+                SavingsWithdrawal _withdrawal = await repository.AddSavingsWithdrawalAsync(withdrawal);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = _withdrawal;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        //***********
+
+
+        public async Task<CheckingDepositResults> UpdateCheckingDepositAsync(CheckingDeposit deposit)
+        {
+            CheckingDepositResults _results = new CheckingDepositResults();
+
+            try
+            {
+                if (deposit == null)
+                {
+                    throw new NullReferenceException("Deposit cannot be NULL");
+                }
+                await repository.UpdateCheckingDepositAsync(deposit);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = deposit;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<CheckingWithdrawalResults> UpdateCheckingWithdrawalAsync(CheckingWithdrawal withdrawal)
+        {
+            CheckingWithdrawalResults _results = new CheckingWithdrawalResults();
+
+            try
+            {
+                if (withdrawal == null)
+                {
+                    throw new NullReferenceException("Withdrawal cannot be NULL");
+                }
+                await repository.UpdateCheckingWithdrawalAsync(withdrawal);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = withdrawal;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<SavingsDepositResults> UpdateSavingsDepositAsync(SavingsDeposit deposit)
+        {
+            SavingsDepositResults _results = new SavingsDepositResults();
+
+            try
+            {
+                if (deposit == null)
+                {
+                    throw new NullReferenceException("Deposit cannot be NULL");
+                }
+                await repository.UpdateSavingsDepositAsync(deposit);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = deposit;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+        public async Task<SavingsWithdrawalResults> UpdateSavingsWithdrawalAsync(SavingsWithdrawal withdrawal)
+        {
+            SavingsWithdrawalResults _results = new SavingsWithdrawalResults();
+
+            try
+            {
+                if (withdrawal == null)
+                {
+                    throw new NullReferenceException("Withdrawal cannot be NULL");
+                }
+                await repository.UpdateSavingsWithdrawalAsync(withdrawal);
+                int objectsAdded = await this.repository.SaveChangesAsync();
+                _results.Successful = true;
+                _results.Results = withdrawal;
+            }
+            catch (Exception ex)
+            {
+                _results.Results = null;
+                _results.Successful = false;
+                _results.WorkException = ex;
+            }
+
+            return _results;
+        }
+
+
+        //***********
 
         public async Task<CheckingAccountResults> UpdateCheckingAccountAsync(CheckingAccount account)
         {
