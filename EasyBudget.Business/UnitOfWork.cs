@@ -312,9 +312,9 @@ namespace EasyBudget.Business
                 {
                     throw new NullReferenceException("category cannot be NULL");
                 }
-                await repository.AddBudgetCategoryAsync(category);
+                BudgetCategory _category = await repository.AddBudgetCategoryAsync(category);
                 int objectsAdded = await this.repository.SaveChangesAsync();
-                _results.Results = category;
+                _results.Results = _category;
                 _results.Successful = objectsAdded == 1;
             }
             catch (Exception ex)
@@ -523,10 +523,10 @@ namespace EasyBudget.Business
                 decimal newCategoryBudgetAmount = previousBudgetCategoryAmount + expItem.budgetedAmount;
                 expItem.budgetCategory.budgetAmount = newCategoryBudgetAmount;
 
-                await repository.AddExpenseItemAsync(expItem);
+                ExpenseItem _expItem = await repository.AddExpenseItemAsync(expItem);
                 int objectsAdded = await this.repository.SaveChangesAsync();
                 _results.Successful = true;
-                _results.Results = expItem;
+                _results.Results = _expItem;
                 _results.BudgetCategory = expItem.budgetCategory;
                 _results.BudgetCategoryId = expItem.budgetCategoryId;
                 _results.NewBudgetCategoryAmount = newCategoryBudgetAmount;
@@ -557,9 +557,10 @@ namespace EasyBudget.Business
                 _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
 
                 incItem.budgetCategory.budgetAmount += incItem.budgetedAmount;
-                await repository.AddIncomeItemAsync(incItem);
+                IncomeItem _incItem = await repository.AddIncomeItemAsync(incItem);
                 int objectsAdded = await this.repository.SaveChangesAsync();
 
+                _results.Results = _incItem;
                 _results.BudgetCategory = incItem.budgetCategory;
                 _results.BudgetCategoryId = incItem.budgetCategoryId;
                 _results.NewBudgetCategoryAmount = incItem.budgetCategory.budgetAmount;
@@ -844,10 +845,10 @@ namespace EasyBudget.Business
                 {
                     throw new NullReferenceException("Checking Account cannot be NULL");
                 }
-                await repository.AddCheckingAccountAsync(account);
+                CheckingAccount _account = await repository.AddCheckingAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
                 _results.Successful = objectsAdded == 1;
-                _results.Results = account;
+                _results.Results = _account;
             }
             catch (Exception ex)
             {
@@ -930,10 +931,10 @@ namespace EasyBudget.Business
                 // Get the most current values for the related account
                 withdrawal.checkingAccount = await repository.GetCheckingAccountAsync(withdrawal.checkingAccountId);
                 withdrawal.checkingAccount.currentBalance = withdrawal.checkingAccount.currentBalance - withdrawal.transactionAmount;
-                await repository.AddCheckingWithdrawalAsync(withdrawal);
+                CheckingWithdrawal _withdrawal = await repository.AddCheckingWithdrawalAsync(withdrawal);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
-                _results.Results = withdrawal;
+                _results.Results = _withdrawal;
                 _results.EndingAccountBalance = withdrawal.checkingAccount.currentBalance;
                 _results.AccountId = withdrawal.checkingAccount.id;
                 _results.Account = withdrawal.checkingAccount;
@@ -969,10 +970,10 @@ namespace EasyBudget.Business
                 // Get the most current values for the related account:
                 deposit.checkingAccount = await repository.GetCheckingAccountAsync(deposit.checkingAccountId);
                 deposit.checkingAccount.currentBalance = deposit.checkingAccount.currentBalance + deposit.transactionAmount;
-                await repository.AddCheckingDepositAsync(deposit);
+                CheckingDeposit _deposit = await repository.AddCheckingDepositAsync(deposit);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
-                _results.Results = deposit;
+                _results.Results = _deposit;
                 _results.EndingAccountBalance = deposit.checkingAccount.currentBalance;
                 _results.AccountId = deposit.checkingAccount.id;
                 _results.Account = deposit.checkingAccount;
@@ -1090,10 +1091,10 @@ namespace EasyBudget.Business
                 {
                     throw new NullReferenceException("Savings Account cannot be NULL");
                 }
-                await repository.AddSavingsAccountAsync(account);
+                SavingsAccount _account = await repository.AddSavingsAccountAsync(account);
                 int objectsAdded = await this.repository.SaveChangesAsync();
                 _results.Successful = objectsAdded == 1;
-                _results.Results = account;
+                _results.Results = _account;
             }
             catch (Exception ex)
             {
@@ -1174,10 +1175,10 @@ namespace EasyBudget.Business
                     }
                 }
                 withdrawal.savingsAccount.currentBalance = withdrawal.savingsAccount.currentBalance - withdrawal.transactionAmount;
-                await repository.AddSavingsWithdrawalAsync(withdrawal);
+                SavingsWithdrawal _withdrawal = await repository.AddSavingsWithdrawalAsync(withdrawal);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
-                _results.Results = withdrawal;
+                _results.Results = _withdrawal;
                 _results.EndingAccountBalance = withdrawal.savingsAccount.currentBalance;
                 _results.AccountId = withdrawal.savingsAccount.id;
                 _results.Account = withdrawal.savingsAccount;
@@ -1211,10 +1212,10 @@ namespace EasyBudget.Business
                     }
                 }
                 deposit.savingsAccount.currentBalance = deposit.savingsAccount.currentBalance + deposit.transactionAmount;
-                await repository.AddSavingsDepositAsync(deposit);
+                SavingsDeposit _deposit = await repository.AddSavingsDepositAsync(deposit);
                 await repository.SaveChangesAsync();
                 _results.Successful = true;
-                _results.Results = deposit;
+                _results.Results = _deposit;
                 _results.EndingAccountBalance = deposit.savingsAccount.currentBalance;
                 _results.AccountId = deposit.savingsAccount.id;
                 _results.Account = deposit.savingsAccount;
