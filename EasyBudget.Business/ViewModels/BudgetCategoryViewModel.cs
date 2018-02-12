@@ -14,6 +14,7 @@
 //    limitations under the License.
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using EasyBudget.Models;
 using EasyBudget.Models.DataModels;
@@ -21,7 +22,7 @@ using EasyBudget.Models.DataModels;
 namespace EasyBudget.Business.ViewModels
 {
 
-    public class BudgetCategoryViewModel : BaseViewModel
+    public class BudgetCategoryViewModel : BaseViewModel, INotifyCollectionChanged
     {
         BudgetCategory Category { get; set; }
 
@@ -54,6 +55,8 @@ namespace EasyBudget.Business.ViewModels
         {
             this.BudgetItemVMs = new List<BudgetItemViewModel>();
         }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         internal async Task PopulateVMAsync(BudgetCategory category)
         {
@@ -166,12 +169,41 @@ namespace EasyBudget.Business.ViewModels
             }
         }
 
-        internal void CreateBudgetCategory()
-        {
-            this.Category = new BudgetCategory();
-            this.Category.IsNew = true;
-            this.IsNew = true;
+        //internal void CreateBudgetCategory()
+        //{
+        //    this.Category = new BudgetCategory();
+        //    this.Category.IsNew = true;
+        //    this.IsNew = true;
 
+        //}
+
+        public async Task<bool> DeleteAsync()
+        {
+            bool deleted = false;
+
+            if (this.BudgetItemVMs.Count == 0)
+            {
+                using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+                {
+                    var _resultsCategory = await uow.GetBudgetCategoryAsync(this.CategoryId);
+                    if (_resultsCategory.Successful)
+                    {
+                        var _resultsDeleteCategory = await uow.DeleteBudgetCategoryAsync(_resultsCategory.Results);
+                        deleted = _resultsDeleteCategory.Successful;
+                        if (!_resultsDeleteCategory.Successful)
+                        {
+                            // TODO handle failure here
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // TODO make aware that BudgetItems must first be cleared
+
+            }
+
+            return deleted;
         }
 
         public async Task SaveChangesAsync()
@@ -350,25 +382,23 @@ namespace EasyBudget.Business.ViewModels
             }
         }
 
-        public ExpenseItem AddExpenseItem()
+        public BudgetItemViewModel AddBudgetItem()
         {
-            ExpenseItem item = new ExpenseItem();
-            item.budgetCategoryId = this.Category.id;
+            BudgetItemViewModel item = new BudgetItemViewModel(this.dbFilePath);
+            item.CategoryId = this.Category.id;
+            item.ItemType = this.CategoryType == BudgetCategoryType.Expense ? BudgetItemType.Expense : BudgetItemType.Income;
             item.IsNew = true;
-
-            //this.ExpenseItems.Add(item);
-
+            this.BudgetItemVMs.Add(item);
+            OnCollectionChanged(this.BudgetItemVMs, NotifyCollectionChangedAction.Add);
             return item;
         }
 
-        public IncomeItem AddIncomeItem()
+        public void OnCollectionChanged(object sender, NotifyCollectionChangedAction action)
         {
-            IncomeItem item = new IncomeItem();
-            item.budgetCategoryId = this.Category.id;
-            item.IsNew = true;
-            //this.IncomeItems.Add(item);
-
-            return item;
+            if (CollectionChanged != null)
+            {
+                CollectionChanged(sender, new NotifyCollectionChangedEventArgs(action));
+            }
         }
     }
 

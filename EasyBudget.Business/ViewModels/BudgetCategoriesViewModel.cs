@@ -71,7 +71,7 @@ namespace EasyBudget.Business.ViewModels
             BudgetCategoryViewModel vm = new BudgetCategoryViewModel(this.dbFilePath);
             vm.IsNew = true;
             this.BudgetCategoryVMs.Add(vm);
-            OnCollectionChanged(NotifyCollectionChangedAction.Add);
+            OnCollectionChanged(this.BudgetCategoryVMs, NotifyCollectionChangedAction.Add);
         }
 
         public async Task AddNewBudgetCategoryAsync()
@@ -79,7 +79,7 @@ namespace EasyBudget.Business.ViewModels
             BudgetCategoryViewModel vm = new BudgetCategoryViewModel(this.dbFilePath);
             vm.IsNew = true;
             await Task.Run(() => this.BudgetCategoryVMs.Add(vm));
-            OnCollectionChanged(NotifyCollectionChangedAction.Add);
+            OnCollectionChanged(this.BudgetCategoryVMs, NotifyCollectionChangedAction.Add);
         }
 
         public async Task<bool> DeleteBudgetCategoryAsync(BudgetCategoryViewModel vm)
@@ -87,34 +87,23 @@ namespace EasyBudget.Business.ViewModels
             bool deleted = false;
             if (vm.CanDelete && this.BudgetCategoryVMs.Contains(vm, new BudgetCategoryViewModelComparer()))
             {
-                this.BudgetCategoryVMs.Remove(vm);
+                deleted = await vm.DeleteAsync();
 
-                // TODO use the BudgetCategoryViewModel class to delete item
-                //using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
-                //{
-                //    var _resultsCategory = await uow.GetBudgetCategoryAsync(vm.CategoryId);
-                //    if (_resultsCategory.Successful)
-                //    {
-                //        var _resultsDeleteCategory = await uow.DeleteBudgetCategoryAsync(_resultsCategory.Results);
-                //        deleted = _resultsDeleteCategory.Successful;
-                //        if (!_resultsDeleteCategory.Successful)
-                //        {
-                //            // TODO handle failure here
-                //        }
-                //    }
-                //}
-
-                OnCollectionChanged(NotifyCollectionChangedAction.Remove);
+                if (deleted) 
+                {
+                    await Task.Run(() => this.BudgetCategoryVMs.Remove(vm));
+                    OnCollectionChanged(this.BudgetCategoryVMs, NotifyCollectionChangedAction.Remove);
+                }
             }
 
             return deleted;
         }
 
-        public void OnCollectionChanged(NotifyCollectionChangedAction action)
+        public void OnCollectionChanged(object sender, NotifyCollectionChangedAction action)
         {
             if (CollectionChanged != null)
             {
-                CollectionChanged(this, new NotifyCollectionChangedEventArgs(action));
+                CollectionChanged(sender, new NotifyCollectionChangedEventArgs(action));
             }
         }
     }
