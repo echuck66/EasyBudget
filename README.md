@@ -1,7 +1,7 @@
 # EasyBudget
 A budgeting application for mobile devices (Android and iOS) that will track Income and Expenses 
 
-# Object Model Diagram (basic)
+# Object Model Diagram (Work in Progress - Not Complete)
 ![Class Diagram](./EBClassDiagram1.png)
 
 
