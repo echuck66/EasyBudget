@@ -2,7 +2,7 @@
 A budgeting application for mobile devices (Android and iOS) that will track Income and Expenses 
 
 # Class Diagrams (Work in Progress - Not Complete)
-![Class Diagram](./EBClassDiagram1.png)
+![Class Diagram](./images/EBClassDiagram1.png)
 
 
 # License
