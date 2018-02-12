@@ -162,7 +162,7 @@ namespace EasyBudget.iOS
         {
             var vm = await dataService.GetBankAccountsViewModelAsync();
             this.vmodel = vm;
-            this.grouping = (from a in this.vmodel.BankAccounts
+            this.grouping = (from a in this.vmodel.BankAccountVMs
                              orderby a.accountType ascending
                              group a by a.accountType.ToString() into g
                              select g).ToArray();

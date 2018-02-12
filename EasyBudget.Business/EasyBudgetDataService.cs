@@ -188,7 +188,7 @@ namespace EasyBudget.Business
 
         public string ErrorCondition { get; set; }
         
-        public BaseViewModel(string dbFilePath)
+        internal BaseViewModel(string dbFilePath)
         {
             this.dbFilePath = dbFilePath;
         }
@@ -225,12 +225,12 @@ namespace EasyBudget.Business
     public class BankAccountsVM : BaseViewModel
     {
 
-        public ICollection<BankAccount> BankAccounts { get; set; }
+        public ICollection<BankAccountVM> BankAccountVMs { get; set; }
 
-        public BankAccountsVM(string dbFilePath)
+        internal BankAccountsVM(string dbFilePath)
             : base(dbFilePath)
         {
-            BankAccounts = new List<BankAccount>();
+            BankAccountVMs = new List<BankAccountVM>();
         }
 
         internal async Task LoadBankAccountsAsync()
@@ -249,7 +249,7 @@ namespace EasyBudget.Business
                 {
                     foreach (var account in _results.Results)
                     {
-                        this.BankAccounts.Add(account);
+                        //this.BankAccountVMs.Add(account);
                     }
                 }
                 else
@@ -279,7 +279,7 @@ namespace EasyBudget.Business
                 {
                     foreach (var account in _results.Results)
                     {
-                        this.BankAccounts.Add(account);
+                        //this.BankAccountVMs.Add(account);
                     }
                 }
                 else
@@ -318,12 +318,133 @@ namespace EasyBudget.Business
 
         public string Nickname { get; set; }
 
-
-        public BankAccountVM(string dbFilePath)
+        internal BankAccountVM(string dbFilePath)
             :base(dbFilePath)
         {
             
         }
+
+        internal async Task PopulateVMAsync(int id, BankAccountType accountType)
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                switch (accountType)
+                {
+                    case BankAccountType.Checking:
+                        var _resultsChecking = await uow.GetCheckingAccountAsync(id);
+                        if (_resultsChecking.Successful)
+                        {
+                            this.Account = _resultsChecking.Results;
+                        }
+                        else
+                        {
+                            if (_resultsChecking.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsChecking.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsChecking.Message))
+                            {
+                                WriteErrorCondition(_resultsChecking.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred");
+                            }
+                        }
+                        break;
+                    case BankAccountType.Savings:
+                        var _resultsSavings = await uow.GetSavingsAccountAsync(id);
+                        if (_resultsSavings.Successful)
+                        {
+                            this.Account = _resultsSavings.Results;
+                        }
+                        else
+                        {
+                            if (_resultsSavings.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsSavings.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsSavings.Message))
+                            {
+                                WriteErrorCondition(_resultsSavings.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred");
+                            }
+                        }
+                        break;
+                }
+            }
+            if (this.Account != null)
+            {
+                this.BankName = this.Account.bankName;
+                this.AccountNumber = this.Account.accountNumber;
+                this.RoutingNumber = this.Account.routingNumber;
+                this.AccountType = this.Account.accountType;
+                this.CurrentBalance = this.Account.currentBalance;
+
+            }
+        }
+    }
+
+    public class DepositVM : BaseViewModel
+    {
+        public int accountId { get; set; }
+
+        public BankAccountType accountType { get; set; }
+
+        public DateTime transactionDate { get; set; }
+
+        public decimal transactionAmount { get; set; }
+
+        public string description { get; set; }
+
+        public string notation { get; set; }
+
+        public int budgetItemId { get; set; }
+
+        public bool reconciled { get; set; }
+
+        internal DepositVM(string dbFilePath)
+            :base(dbFilePath)
+        {
+            
+        }
+
+        internal void PopulateVM(CheckingDeposit deposit)
+        {
+            this.accountId = deposit.checkingAccountId;
+            this.transactionDate = deposit.transactionDate;
+            this.transactionAmount = deposit.transactionAmount;
+            this.description = deposit.description;
+            this.notation = deposit.notation;
+            this.budgetItemId = deposit.budgetIncomeId != null ? (int)deposit.budgetIncomeId : 0;
+            this.reconciled = deposit.reconciled;
+            this.accountType = BankAccountType.Checking;
+        }
+
+        internal void PopulateVM(SavingsDeposit deposit)
+        {
+            this.accountId = deposit.savingsAccountId;
+            this.transactionDate = deposit.transactionDate;
+            this.transactionAmount = deposit.transactionAmount;
+            this.description = deposit.description;
+            this.notation = deposit.notation;
+            this.budgetItemId = deposit.budgetIncomeId != null ? (int)deposit.budgetIncomeId : 0;
+            this.reconciled = deposit.reconciled;
+            this.accountType = BankAccountType.Savings;
+        }
+    }
+
+    public class WithdrawalVM : BaseViewModel
+    {
+        internal WithdrawalVM(string dbFilePath) 
+            : base(dbFilePath)
+        {
+            
+        }
+
     }
 
     public class BudgetItemsVM : BaseViewModel
@@ -333,7 +454,7 @@ namespace EasyBudget.Business
 
         ICollection<BudgetItemVM> BudgetItemVMs { get; set; }
 
-        public BudgetItemsVM(string dbFilePath)
+        internal BudgetItemsVM(string dbFilePath)
             : base(dbFilePath)
         {
             BudgetItems = new List<BudgetItem>();
@@ -361,6 +482,9 @@ namespace EasyBudget.Business
                         {
                             item.ItemType = BudgetItemType.Income;
                             this.BudgetItems.Add(item);
+                            var vm = new BudgetItemVM(this.dbFilePath);
+                            await vm.PopulateVMAsync(item.id, item.ItemType);
+                            this.BudgetItemVMs.Add(vm);
                         }
                     }
                     else
@@ -412,6 +536,9 @@ namespace EasyBudget.Business
                         {
                             item.ItemType = BudgetItemType.Expense;
                             this.BudgetItems.Add(item);
+                            var vm = new BudgetItemVM(this.dbFilePath);
+                            await vm.PopulateVMAsync(item.id, item.ItemType);
+                            this.BudgetItemVMs.Add(vm);
                         }
                     }
                     else
@@ -447,6 +574,7 @@ namespace EasyBudget.Business
                 }
             }
         }
+    
     }
 
     public class BudgetItemVM : BaseViewModel
@@ -458,7 +586,7 @@ namespace EasyBudget.Business
         public int BudgetItemId { get; set; }
 
         public string CategoryName { get; set; }
-        
+
         public BudgetItemType ItemType { get; set; }
 
         public decimal BudgetedAmount { get; set; }
@@ -475,48 +603,111 @@ namespace EasyBudget.Business
 
         public DateTime EndDate { get; set; }
 
-        public BudgetItemVM(string dbFilePath)
-            :base(dbFilePath)
+        internal BudgetItemVM(string dbFilePath)
+            : base(dbFilePath)
         {
-            
-        }
-
-        public BudgetItemVM(string dbFilePath, BudgetItem budgetItem)
-            :base(dbFilePath)
-        {
-            PopulateVM(budgetItem);
-        }
-
-        internal void PopulateVM(BudgetItem budgetItem)
-        {
-            this.source = budgetItem;
-            this.CategoryId = budgetItem.budgetCategoryId;
-            this.BudgetItemId = budgetItem.id;
-            this.CategoryName = budgetItem.budgetCategory.categoryName;
-            this.ItemType = budgetItem.ItemType;
-            this.BudgetedAmount = budgetItem.BudgetedAmount;
-            this.ItemDescription = budgetItem.description;
-            this.ItemNotation = budgetItem.notation;
-            this.IsRecurring = budgetItem.recurring;
-            this.ItemFrequency = budgetItem.frequency;
-            this.StartDate = budgetItem.StartDate;
-            this.EndDate = budgetItem.EndDate;
 
         }
 
+        internal async Task PopulateVMAsync(int id, BudgetItemType itemType)
+        {
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                switch (itemType)
+                {
+                    case BudgetItemType.Expense:
+                        var _resultsExpenseItem = await uow.GetExpenseItemAsync(id);
+                        if (_resultsExpenseItem.Successful)
+                        {
+                            this.source = _resultsExpenseItem.Results;
+                        }
+                        else
+                        {
+                            if (_resultsExpenseItem.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsExpenseItem.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsExpenseItem.Message))
+                            {
+                                WriteErrorCondition(_resultsExpenseItem.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred");
+                            }
+                        }
+                        break;
+                    case BudgetItemType.Income:
+                        var _resultsIncomeItem = await uow.GetIncomeItemAsync(id);
+                        if (_resultsIncomeItem.Successful)
+                        {
+                            this.source = _resultsIncomeItem.Results;
+                        }
+                        else
+                        {
+                            if (_resultsIncomeItem.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsIncomeItem.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsIncomeItem.Message))
+                            {
+                                WriteErrorCondition(_resultsIncomeItem.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred");
+                            }
+                        }
+                        break;
+                }
 
+                if (this.source != null)
+                {
+                    var _resultsCategory = await uow.GetBudgetCategoryAsync(this.source.budgetCategoryId);
+                    if (_resultsCategory.Successful)
+                    {
+                        this.source.budgetCategory = _resultsCategory.Results;
+                        this.CategoryName = this.source.budgetCategory.categoryName;
+                        this.BudgetedAmount = this.source.BudgetedAmount;
+                        this.BudgetItemId = this.source.id;
+                        this.EndDate = this.source.EndDate;
+                        this.StartDate = this.source.StartDate;
+                        this.IsRecurring = this.source.recurring;
+                        this.ItemDescription = this.source.description;
+                        this.ItemFrequency = this.source.frequency;
+                        this.ItemNotation = this.source.notation;
+                        this.ItemType = this.source.ItemType;
+
+                    }
+                    else
+                    {
+                        if (_resultsCategory.WorkException != null)
+                        {
+                            WriteErrorCondition(_resultsCategory.WorkException);
+                        }
+                        else if (!string.IsNullOrEmpty(_resultsCategory.Message))
+                        {
+                            WriteErrorCondition(_resultsCategory.Message);
+                        }
+                        else
+                        {
+                            WriteErrorCondition("An unknown error has occurred");
+                        }
+                    }
+                }
+            }
+        }
     }
+
     public class BudgetCategoriesVM : BaseViewModel
     {
-
-        public ICollection<BudgetCategory> BudgetCategories { get; set; }
 
         public ICollection<BudgetCategoryVM> BudgetCategoryVMs { get; set; }
 
         public BudgetCategoriesVM(string dbFilePath)
             : base(dbFilePath)
         {
-            
+            this.BudgetCategoryVMs = new List<BudgetCategoryVM>();
         }
 
         internal async Task LoadBudgetCategoriesAsync()
@@ -526,10 +717,11 @@ namespace EasyBudget.Business
                 var _results = await uow.GetAllBudgetCategoriesAsync();
                 if (_results.Successful)
                 {
-                    this.BudgetCategories = _results.Results;
                     foreach (var category in _results.Results)
                     {
-                        this.BudgetCategoryVMs.Add(new BudgetCategoryVM(this.dbFilePath, category));
+                        var vm = new BudgetCategoryVM(this.dbFilePath);
+                        await vm.PopulateVMAsync(category);
+                        this.BudgetCategoryVMs.Add(vm);
                     }
                 }
                 else
@@ -572,37 +764,97 @@ namespace EasyBudget.Business
 
         public BudgetCategoryType CategoryType { get; set; }
 
-        public ICollection<BudgetItemVM> BudgetItems { get; set; }
+        public ICollection<BudgetItemVM> BudgetItemVMs { get; set; }
 
         public bool IsNew { get; set; }
 
         public BudgetCategoryVM(string dbFilePath)
             : base(dbFilePath)
         {
-            //this.IncomeItems = new List<IncomeItem>();
-            //this.ExpenseItems = new List<ExpenseItem>();
+            this.BudgetItemVMs = new List<BudgetItemVM>();
         }
 
-        public BudgetCategoryVM(string dbFilePath, BudgetCategory category)
-            :base(dbFilePath)
+        internal async  Task PopulateVMAsync(BudgetCategory category)
         {
-            PopulateVM(category);
-        }
-
-        private void PopulateVM(BudgetCategory category)
-        {
+            
             this.Category = category;
-            this.CategoryId = this.Category.id;
-            this.Name = this.Category.categoryName;
-            this.Description = this.Category.description;
-            this.Amount = this.Category.budgetAmount;
-            this.IsSystemCategory = this.Category.systemCategory;
-            this.IsUserSelected = this.Category.userSelected;
-            this.CategoryIcon = this.Category.categoryIcon;
-            this.CategoryType = this.Category.categoryType;
-            this.IsNew = this.Category.IsNew;
+            this.CategoryId = category.id;
+            this.Name = category.categoryName;
+            this.Description = category.description;
+            this.Amount = category.budgetAmount;
+            this.IsSystemCategory = category.systemCategory;
+            this.IsUserSelected = category.userSelected;
+            this.CategoryIcon = category.categoryIcon;
+            this.CategoryType = category.categoryType;
+            this.IsNew = category.IsNew;
+
+            using (UnitOfWork uow = new UnitOfWork(dbFilePath))
+            {
+                switch (category.categoryType)
+                {
+                    case BudgetCategoryType.Expense:
+                        var _resultsExpenseItems = await uow.GetCategoryExpenseItemsAsync(category);
+                        if (_resultsExpenseItems.Successful)
+                        {
+                            foreach (var item in _resultsExpenseItems.Results)
+                            {
+                                item.ItemType = BudgetItemType.Expense;
+                                item.budgetCategory = category;
+                                var vm = new BudgetItemVM(this.dbFilePath);
+                                await vm.PopulateVMAsync(item.id, item.ItemType);
+                                this.BudgetItemVMs.Add(vm);
+                            }
+                        }
+                        else
+                        {
+                            if (_resultsExpenseItems.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsExpenseItems.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsExpenseItems.Message))
+                            {
+                                WriteErrorCondition(_resultsExpenseItems.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred loading Expense Items");
+                            }
+                        }
+                        break;
+                    case BudgetCategoryType.Income:
+                        var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(category);
+                        if (_resultsIncomeItems.Successful)
+                        {
+                            foreach (var item in _resultsIncomeItems.Results)
+                            {
+                                item.ItemType = BudgetItemType.Income;
+                                item.budgetCategory = category;
+                                var vm = new BudgetItemVM(this.dbFilePath);
+                                await vm.PopulateVMAsync(item.id, item.ItemType);
+                                this.BudgetItemVMs.Add(vm);
+                            }
+                        }
+                        else
+                        {
+                            if (_resultsIncomeItems.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsIncomeItems.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
+                            {
+                                WriteErrorCondition(_resultsIncomeItems.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred loading Income Items");
+                            }
+                        }
+                        break;
+                }
+            }
 
         }
+
 
         internal async Task LoadBudgetCategoryDetails(int categoryId)
         {
@@ -611,71 +863,7 @@ namespace EasyBudget.Business
                 var _results = await uow.GetBudgetCategoryAsync(categoryId);
                 if (_results.Successful)
                 {
-                    PopulateVM(_results.Results);
-
-                    if (this.Category != null) 
-                    {
-                        switch(this.Category.categoryType)
-                        {
-                            case BudgetCategoryType.Expense:
-                                var _resultsExpenseItems = await uow.GetCategoryExpenseItemsAsync(this.Category);
-                                if (_resultsExpenseItems.Successful)
-                                {
-                                    foreach(var item in _resultsExpenseItems.Results)
-                                    {
-                                        item.ItemType = BudgetItemType.Expense;
-                                        item.budgetCategory = this.Category;
-                                        this.BudgetItems.Add(new BudgetItemVM(this.dbFilePath, item));
-                                        //this.ExpenseItems.Add(item);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_resultsExpenseItems.WorkException != null)
-                                    {
-                                        WriteErrorCondition(_resultsExpenseItems.WorkException);
-                                    }
-                                    else if (!string.IsNullOrEmpty(_resultsExpenseItems.Message))
-                                    {
-                                        WriteErrorCondition(_resultsExpenseItems.Message);
-                                    }
-                                    else
-                                    {
-                                        WriteErrorCondition("An unknown error has occurred loading Expense Items");
-                                    }
-                                }
-                                break;
-                            case BudgetCategoryType.Income:
-                                var _resultsIncomeItems = await uow.GetCategoryIncomeItemsAsync(this.Category);
-                                if (_resultsIncomeItems.Successful)
-                                {
-                                    foreach(var item in _resultsIncomeItems.Results)
-                                    {
-                                        item.ItemType = BudgetItemType.Income;
-                                        item.budgetCategory = this.Category;
-                                        this.BudgetItems.Add(new BudgetItemVM(this.dbFilePath, item));
-                                        //this.IncomeItems.Add(item);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_resultsIncomeItems.WorkException != null)
-                                    {
-                                        WriteErrorCondition(_resultsIncomeItems.WorkException);
-                                    }
-                                    else if (!string.IsNullOrEmpty(_resultsIncomeItems.Message))
-                                    {
-                                        WriteErrorCondition(_resultsIncomeItems.Message);
-                                    }
-                                    else
-                                    {
-                                        WriteErrorCondition("An unknown error has occurred loading Income Items");
-                                    }
-                                }
-                                break;
-                        }
-
-                    }
+                    await PopulateVMAsync(_results.Results);
                 }
                 else
                 {
@@ -700,20 +888,31 @@ namespace EasyBudget.Business
             this.Category = new BudgetCategory();
             this.Category.IsNew = true;
 
+
         }
 
         public async Task SaveChangesAsync()
         {
             bool _saveOk = true;
+            this.Category.categoryName = this.Name;
+            this.Category.description = this.Description;
+            this.Category.categoryType = this.CategoryType;
+            this.Category.budgetAmount = this.Amount;
+            this.Category.systemCategory = this.IsSystemCategory;
+            this.Category.categoryIcon = this.CategoryIcon;
+            this.Category.userSelected = this.IsUserSelected;
+
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
-                if (this.Category.IsNew)
+                if (this.IsNew)
                 {
+                    
                     var _resultsAddCategory = await uow.AddBudgetCategoryAsync(this.Category);
                     if (_resultsAddCategory.Successful)
                     {
                         _saveOk = true;
-
+                        this.CategoryId = _resultsAddCategory.Results.id;
+                        this.IsNew = false;
                     }
                     else
                     {
@@ -738,6 +937,8 @@ namespace EasyBudget.Business
                     if (_resultsUpdateCategory.Successful)
                     {
                         _saveOk = true;
+                        this.Category.id = _resultsUpdateCategory.Results.id;
+                        this.IsNew = false;
                     }
                     else
                     {
@@ -759,6 +960,7 @@ namespace EasyBudget.Business
                 }
                 if (_saveOk)
                 {
+                    
                     //foreach (IncomeItem itm in this.IncomeItems)
                     //{
                         //if (itm.IsNew)

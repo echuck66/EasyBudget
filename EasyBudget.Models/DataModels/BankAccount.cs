@@ -15,14 +15,20 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using SQLite;
 
 namespace EasyBudget.Models.DataModels
 {
     public abstract class BankAccount : BaseObject
     {
 
-        [MaxLength(250)]
         public string bankName { get; set; }
+
+        public string routingNumber { get; set; }
+
+        public string accountNumber { get; set; }
+
+        public string accountNickname { get; set; }
 
         public BankAccountType accountType { get; set; }
 

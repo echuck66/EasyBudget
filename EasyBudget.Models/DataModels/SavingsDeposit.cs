@@ -37,8 +37,6 @@ namespace EasyBudget.Models.DataModels
         [MaxLength(250)]
         public string notation { get; set; }
 
-        public bool recurring { get; set; }
-
         public int? budgetIncomeId { get; set; }
 
         [SQLite.Ignore]
