@@ -59,15 +59,7 @@ namespace EasyBudget.Business
                 }
             }
         }
-
-        public async Task<BankAccountsViewModel> GetBankAccountsViewModelAsync()
-        {
-            BankAccountsViewModel vm = new BankAccountsViewModel(this.dbFilePath);
-            await this.EnsureSystemItemsExistAsync();
-            await vm.LoadBankAccountsAsync();
-            return vm;
-        }
-
+        
         public async Task<BudgetCategoriesViewModel> GetBudgetCategoriesViewModelAsync()
         {
             BudgetCategoriesViewModel vm = new BudgetCategoriesViewModel(this.dbFilePath);
@@ -86,29 +78,19 @@ namespace EasyBudget.Business
             return vm;
         }
 
+        public BudgetCategoryViewModel CreateBudgetCategoryVM()
+        {
+            var vm = new BudgetCategoryViewModel(this.dbFilePath);
+            vm.CreateBudgetCategory();
+
+            return vm;
+        }
+
         public async Task<BudgetItemsViewModel> GetBudgetItemsVM(int categoryId)
         {
             BudgetItemsViewModel vm = new BudgetItemsViewModel(this.dbFilePath);
             await this.EnsureSystemItemsExistAsync();
             await vm.LoadBudgetItemsAsync(categoryId);
-
-            return vm;
-        }
-
-        public async Task<CheckingAccountViewModel> GetCheckingAccountVMAsync(int accountId)
-        {
-            CheckingAccountViewModel vm = new CheckingAccountViewModel(this.dbFilePath);
-            await this.EnsureSystemItemsExistAsync();
-            await vm.LoadCheckingAccountDetailsAsync(accountId);
-
-            return vm;
-        }
-
-        public async Task<SavingsAccountViewModel> GetSavingsAccountVMAsync(int accountId)
-        {
-            SavingsAccountViewModel vm = new SavingsAccountViewModel(this.dbFilePath);
-            await this.EnsureSystemItemsExistAsync();
-            await vm.LoadSavingsAccountDetailsAsync(accountId);
 
             return vm;
         }
@@ -131,6 +113,32 @@ namespace EasyBudget.Business
             return vm;
         }
     
+        public async Task<BankAccountsViewModel> GetBankAccountsViewModelAsync()
+        {
+            BankAccountsViewModel vm = new BankAccountsViewModel(this.dbFilePath);
+            await this.EnsureSystemItemsExistAsync();
+            await vm.LoadBankAccountsAsync();
+            return vm;
+        }
+
+        public async Task<CheckingAccountViewModel> GetCheckingAccountVMAsync(int accountId)
+        {
+            CheckingAccountViewModel vm = new CheckingAccountViewModel(this.dbFilePath);
+            await this.EnsureSystemItemsExistAsync();
+            await vm.LoadCheckingAccountDetailsAsync(accountId);
+
+            return vm;
+        }
+
+        public async Task<SavingsAccountViewModel> GetSavingsAccountVMAsync(int accountId)
+        {
+            SavingsAccountViewModel vm = new SavingsAccountViewModel(this.dbFilePath);
+            await this.EnsureSystemItemsExistAsync();
+            await vm.LoadSavingsAccountDetailsAsync(accountId);
+
+            return vm;
+        }
+
         //public async Task<bool> DeleteBudgetCategoryAsync(BudgetCategory category)
         //{
         //    bool _success = false;  
@@ -158,14 +166,6 @@ namespace EasyBudget.Business
         //    return _success;
         //}
     
-        public BudgetCategoryViewModel CreateBudgetCategoryVM()
-        {
-            var vm = new BudgetCategoryViewModel(this.dbFilePath);
-            vm.CreateBudgetCategory();
-
-            return vm;
-        }
-
         public CheckingAccountViewModel CreateCheckingAccountVM()
         {
             var vm = new CheckingAccountViewModel(this.dbFilePath);

@@ -164,7 +164,7 @@ namespace EasyBudget.Business.ViewModels
         {
             this.Category = new BudgetCategory();
             this.Category.IsNew = true;
-
+            this.IsNew = true;
 
         }
 
