@@ -12,30 +12,16 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-
 using System;
-using System.ComponentModel.DataAnnotations;
-using SQLite;
-
-namespace EasyBudget.Models.DataModels
+namespace EasyBudget.Business.ViewModels
 {
-    public abstract class BankAccount : BaseObject
+
+    public abstract class WithdrawalViewModel : BaseViewModel
     {
-
-        public string bankName { get; set; }
-
-        public string routingNumber { get; set; }
-
-        public string accountNumber { get; set; }
-
-        public string accountNickname { get; set; }
-
-        public BankAccountType accountType { get; set; }
-
-        public decimal currentBalance { get; set; }
-
-        public BankAccount()
+        internal WithdrawalViewModel(string dbFilePath)
+            : base(dbFilePath)
         {
+
         }
     }
 }

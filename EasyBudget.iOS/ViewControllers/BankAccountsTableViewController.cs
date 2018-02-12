@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using EasyBudget.Models.DataModels;
 using System.Linq;
 using EasyBudget.Models;
+using EasyBudget.Business.ViewModels;
 
 namespace EasyBudget.iOS
 {
@@ -71,16 +72,16 @@ namespace EasyBudget.iOS
         protected virtual void OnItemSelected(object sender, BankAccountEventArgs e)
         {
             var item = e.Account;
-            if (item.accountType == BankAccountType.Checking)
+            if (item.AccountType == BankAccountType.Checking)
             {
                 var categoryTBC = this.Storyboard.InstantiateViewController("ViewCheckingTabBarController") as ViewCheckingTabBarController;
-                categoryTBC.Account = item as CheckingAccount;
+                categoryTBC.Account = item as BankAccountViewModel;
                 this.NavigationController.PushViewController(categoryTBC, true);
             }
             else
             {
                 var categoryTBC = this.Storyboard.InstantiateViewController("ViewSavingsTabBarController") as ViewSavingsTabBarController;
-                categoryTBC.Account = item as SavingsAccount;
+                categoryTBC.Account = item as BankAccountViewModel;
                 this.NavigationController.PushViewController(categoryTBC, true);
             }
         }
@@ -95,16 +96,16 @@ namespace EasyBudget.iOS
         protected virtual void OnItemEdit(object sender, BankAccountEventArgs e)
         {
             var item = e.Account;
-            if (item.accountType == BankAccountType.Checking)
+            if (item.AccountType == BankAccountType.Checking)
             {
                 var checkingTBC = this.Storyboard.InstantiateViewController("EditCheckingTabBarController") as EditCheckingTabBarController;
-                checkingTBC.Account = item as CheckingAccount;
+                checkingTBC.Account = item as BankAccountViewModel;
                 this.NavigationController.PushViewController(checkingTBC, true);
             }
             else
             {
                 var savingsTBC = this.Storyboard.InstantiateViewController("EditSavingsTabBarController") as EditSavingsTabBarController;
-                savingsTBC.Account = item as SavingsAccount;
+                savingsTBC.Account = item as BankAccountViewModel;
                 this.NavigationController.PushViewController(savingsTBC, true);
             }
 
@@ -123,9 +124,9 @@ namespace EasyBudget.iOS
     {
         UITableViewController controller;
         EasyBudgetDataService ds;
-        BankAccountsVM vmodel;
+        BankAccountsViewModel vmodel;
 
-        public IGrouping<string, BankAccount>[] grouping { get; set; }
+        public IGrouping<string, BankAccountViewModel>[] grouping { get; set; }
 
         static string CELL_ID = "BankAccountCellId";
 
@@ -162,9 +163,9 @@ namespace EasyBudget.iOS
         {
             var vm = await dataService.GetBankAccountsViewModelAsync();
             this.vmodel = vm;
-            this.grouping = (from a in this.vmodel.BankAccounts
-                             orderby a.accountType ascending
-                             group a by a.accountType.ToString() into g
+            this.grouping = (from a in this.vmodel.BankAccountVMs
+                             orderby a.AccountType ascending
+                             group a by a.AccountType.ToString() into g
                              select g).ToArray();
         }
 
@@ -193,17 +194,17 @@ namespace EasyBudget.iOS
             string titleText = string.Empty;
             decimal currentBalance = 0;
 
-            if (account.accountType == BankAccountType.Checking)
+            if (account.AccountType == BankAccountType.Checking)
             {
                 cell.ImageView.Image = UIImage.FromFile("check-book-22.png");
-                titleText = account.bankName;
-                currentBalance = account.currentBalance;
+                titleText = account.BankName;
+                currentBalance = account.CurrentBalance;
             }
             else
             {
                 cell.ImageView.Image = UIImage.FromFile("coins-22.png");
-                titleText = account.bankName;
-                currentBalance = account.currentBalance;
+                titleText = account.BankName;
+                currentBalance = account.CurrentBalance;
             }
             string subTitleText = string.Format("{0:C}", currentBalance);
 
@@ -233,7 +234,7 @@ namespace EasyBudget.iOS
         public override string TitleForFooter(UITableView tableView, nint section)
         {
             //return base.TitleForFooter(tableView, section);
-            var sumCurrentBalances = (from g in this.grouping[section] select g.currentBalance).Sum();
+            var sumCurrentBalances = (from g in this.grouping[section] select g.CurrentBalance).Sum();
             string footerText = "Total " + string.Format("{0:C}", sumCurrentBalances);
             return footerText;
         }
@@ -273,7 +274,7 @@ namespace EasyBudget.iOS
                 "Edit",
                 delegate
                 {
-                    BankAccount item = grouping[indexPath.Section].ElementAt(indexPath.Row);
+                    BankAccountViewModel item = grouping[indexPath.Section].ElementAt(indexPath.Row);
                     var e = new BankAccountEventArgs();
                     e.Account = item;
                     OnItemEdit(e);
@@ -328,7 +329,7 @@ namespace EasyBudget.iOS
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             //base.RowSelected(tableView, indexPath);
-            BankAccount item = grouping[indexPath.Section].ElementAt(indexPath.Row);
+            BankAccountViewModel item = grouping[indexPath.Section].ElementAt(indexPath.Row);
             var e = new BankAccountEventArgs();
             e.Account = item;
             OnItemSelected(e);
@@ -388,6 +389,6 @@ namespace EasyBudget.iOS
     /// </summary>
     public class BankAccountEventArgs : EventArgs
     {
-        public BankAccount Account { get; set; }
+        public BankAccountViewModel Account { get; set; }
     }
 }

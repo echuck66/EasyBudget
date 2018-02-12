@@ -85,7 +85,7 @@ namespace EasyBudget.Business
                     _defaultIncomeItem.notation = string.Empty;
                     _defaultIncomeItem.budgetCategory = _defaultIncomeCategory;
                     _defaultIncomeItem.budgetCategoryId = _defaultIncomeCategory.id;
-                    _defaultIncomeItem.budgetedAmount = 0;
+                    _defaultIncomeItem.BudgetedAmount = 0;
                     _defaultIncomeItem.dateCreated = DateTime.Now;
                     _defaultIncomeItem.dateModified = DateTime.Now;
                     _defaultIncomeItem.frequency = Frequency.Monthly;
@@ -108,7 +108,7 @@ namespace EasyBudget.Business
                             _defaultIncomeItem.notation = string.Empty;
                             _defaultIncomeItem.budgetCategory = _category;
                             _defaultIncomeItem.budgetCategoryId = _category.id;
-                            _defaultIncomeItem.budgetedAmount = 0;
+                            _defaultIncomeItem.BudgetedAmount = 0;
                             _defaultIncomeItem.dateCreated = DateTime.Now;
                             _defaultIncomeItem.dateModified = DateTime.Now;
                             _defaultIncomeItem.frequency = Frequency.Monthly;
@@ -143,7 +143,7 @@ namespace EasyBudget.Business
                     _defaultExpenseItem.notation = string.Empty;
                     _defaultExpenseItem.budgetCategory = _defaultExpenseCategory;
                     _defaultExpenseItem.budgetCategoryId = _defaultExpenseCategory.id;
-                    _defaultExpenseItem.budgetedAmount = 0;
+                    _defaultExpenseItem.BudgetedAmount = 0;
                     _defaultExpenseItem.dateCreated = DateTime.Now;
                     _defaultExpenseItem.dateModified = DateTime.Now;
                     _defaultExpenseItem.frequency = Frequency.Monthly;
@@ -166,7 +166,7 @@ namespace EasyBudget.Business
                             _defaultExpenseItem.notation = string.Empty;
                             _defaultExpenseItem.budgetCategory = _category;
                             _defaultExpenseItem.budgetCategoryId = _category.id;
-                            _defaultExpenseItem.budgetedAmount = 0;
+                            _defaultExpenseItem.BudgetedAmount = 0;
                             _defaultExpenseItem.dateCreated = DateTime.Now;
                             _defaultExpenseItem.dateModified = DateTime.Now;
                             _defaultExpenseItem.frequency = Frequency.Monthly;
@@ -518,9 +518,9 @@ namespace EasyBudget.Business
                 }
                 expItem.budgetCategory = await repository.GetBudgetCategoryAsync(expItem.budgetCategoryId);
                 decimal previousBudgetCategoryAmount = expItem.budgetCategory.budgetAmount;
-                _results.PreviousBudgetedAmount = expItem.budgetedAmount;
+                _results.PreviousBudgetedAmount = expItem.BudgetedAmount;
                 _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
-                decimal newCategoryBudgetAmount = previousBudgetCategoryAmount + expItem.budgetedAmount;
+                decimal newCategoryBudgetAmount = previousBudgetCategoryAmount + expItem.BudgetedAmount;
                 expItem.budgetCategory.budgetAmount = newCategoryBudgetAmount;
 
                 ExpenseItem _expItem = await repository.AddExpenseItemAsync(expItem);
@@ -530,7 +530,7 @@ namespace EasyBudget.Business
                 _results.BudgetCategory = expItem.budgetCategory;
                 _results.BudgetCategoryId = expItem.budgetCategoryId;
                 _results.NewBudgetCategoryAmount = newCategoryBudgetAmount;
-                _results.NewBudgetedAmount = expItem.budgetedAmount;
+                _results.NewBudgetedAmount = expItem.BudgetedAmount;
             }
             catch (Exception ex)
             {
@@ -553,10 +553,10 @@ namespace EasyBudget.Business
                 }
                 incItem.budgetCategory = await repository.GetBudgetCategoryAsync(incItem.budgetCategoryId);
                 decimal previousBudgetCategoryAmount = incItem.budgetCategory.budgetAmount;
-                _results.PreviousBudgetedAmount = incItem.budgetedAmount;
+                _results.PreviousBudgetedAmount = incItem.BudgetedAmount;
                 _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
 
-                incItem.budgetCategory.budgetAmount += incItem.budgetedAmount;
+                incItem.budgetCategory.budgetAmount += incItem.BudgetedAmount;
                 IncomeItem _incItem = await repository.AddIncomeItemAsync(incItem);
                 int objectsAdded = await this.repository.SaveChangesAsync();
 
@@ -564,7 +564,7 @@ namespace EasyBudget.Business
                 _results.BudgetCategory = incItem.budgetCategory;
                 _results.BudgetCategoryId = incItem.budgetCategoryId;
                 _results.NewBudgetCategoryAmount = incItem.budgetCategory.budgetAmount;
-                _results.NewBudgetedAmount = incItem.budgetedAmount;
+                _results.NewBudgetedAmount = incItem.BudgetedAmount;
 
                 _results.Successful = true;
             }
@@ -596,11 +596,11 @@ namespace EasyBudget.Business
                 // budget amount, then add the new budgeted amount for this item to get the
                 // new category total budget amount ExpenseItem existingItem = await repository.GetExpenseItemAsync(expItem.id);
                 ExpenseItem existingItem = await repository.GetExpenseItemAsync(expItem.id);
-                decimal previousItemBudgetedAmount = existingItem.budgetedAmount;
+                decimal previousItemBudgetedAmount = existingItem.BudgetedAmount;
 
                 _results.PreviousBudgetedAmount = previousItemBudgetedAmount;
                 _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
-                _results.NewBudgetCategoryAmount = previousBudgetCategoryAmount - previousItemBudgetedAmount + expItem.budgetedAmount;
+                _results.NewBudgetCategoryAmount = previousBudgetCategoryAmount - previousItemBudgetedAmount + expItem.BudgetedAmount;
                 // Set the new total amount on the budget category
                 expItem.budgetCategory.budgetAmount = _results.NewBudgetCategoryAmount;
                 // Update the item
@@ -612,7 +612,7 @@ namespace EasyBudget.Business
                 _results.Results = expItem;
                 _results.BudgetCategory = expItem.budgetCategory;
                 _results.BudgetCategoryId = expItem.budgetCategoryId;
-                _results.NewBudgetedAmount = expItem.budgetedAmount;
+                _results.NewBudgetedAmount = expItem.BudgetedAmount;
 
             }
             catch (Exception ex)
@@ -643,11 +643,11 @@ namespace EasyBudget.Business
                 // budget amount, then add the new budgeted amount for this item to get the
                 // new category total budget amount ExpenseItem existingItem = await repository.GetExpenseItemAsync(expItem.id);
                 IncomeItem existingItem = await repository.GetIncomeItemAsync(incItem.id);
-                decimal previousItemBudgetedAmount = existingItem.budgetedAmount;
+                decimal previousItemBudgetedAmount = existingItem.BudgetedAmount;
 
                 _results.PreviousBudgetedAmount = previousItemBudgetedAmount;
                 _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
-                _results.NewBudgetCategoryAmount = previousBudgetCategoryAmount - previousItemBudgetedAmount + incItem.budgetedAmount;
+                _results.NewBudgetCategoryAmount = previousBudgetCategoryAmount - previousItemBudgetedAmount + incItem.BudgetedAmount;
                 // Set the new total amount on the budget category
                 incItem.budgetCategory.budgetAmount = _results.NewBudgetCategoryAmount;
                 // Update the item
@@ -676,9 +676,9 @@ namespace EasyBudget.Business
                 }
                 expItem.budgetCategory = await repository.GetBudgetCategoryAsync(expItem.budgetCategoryId);
                 decimal previousBudgetCategoryAmount = expItem.budgetCategory.budgetAmount;
-                _results.PreviousBudgetedAmount = expItem.budgetedAmount;
+                _results.PreviousBudgetedAmount = expItem.BudgetedAmount;
                 _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
-                decimal newCategoryBudgetAmount = previousBudgetCategoryAmount - expItem.budgetedAmount;
+                decimal newCategoryBudgetAmount = previousBudgetCategoryAmount - expItem.BudgetedAmount;
                 expItem.budgetCategory.budgetAmount = newCategoryBudgetAmount;
 
 
@@ -689,7 +689,7 @@ namespace EasyBudget.Business
                 _results.BudgetCategory = expItem.budgetCategory;
                 _results.BudgetCategoryId = expItem.budgetCategoryId;
                 _results.NewBudgetCategoryAmount = newCategoryBudgetAmount;
-                _results.NewBudgetedAmount = expItem.budgetedAmount;
+                _results.NewBudgetedAmount = expItem.BudgetedAmount;
             }
             catch (Exception ex)
             {
@@ -712,9 +712,9 @@ namespace EasyBudget.Business
                 }
                 incItem.budgetCategory = await repository.GetBudgetCategoryAsync(incItem.budgetCategoryId);
                 decimal previousBudgetCategoryAmount = incItem.budgetCategory.budgetAmount;
-                _results.PreviousBudgetedAmount = incItem.budgetedAmount;
+                _results.PreviousBudgetedAmount = incItem.BudgetedAmount;
                 _results.PreviousBudgetCategoryAmount = previousBudgetCategoryAmount;
-                decimal newCategoryBudgetAmount = previousBudgetCategoryAmount - incItem.budgetedAmount;
+                decimal newCategoryBudgetAmount = previousBudgetCategoryAmount - incItem.BudgetedAmount;
                 incItem.budgetCategory.budgetAmount = newCategoryBudgetAmount;
 
 
@@ -725,7 +725,7 @@ namespace EasyBudget.Business
                 _results.BudgetCategory = incItem.budgetCategory;
                 _results.BudgetCategoryId = incItem.budgetCategoryId;
                 _results.NewBudgetCategoryAmount = newCategoryBudgetAmount;
-                _results.NewBudgetedAmount = incItem.budgetedAmount;
+                _results.NewBudgetedAmount = incItem.BudgetedAmount;
 
                 //await repository.DeleteIncomeItemAsync(incItem);
                 //int objectsAdded = await this.repository.SaveChangesAsync();

@@ -20,6 +20,7 @@ using EasyBudget.Business;
 using System.Threading.Tasks;
 using EasyBudget.Models.DataModels;
 using System.Linq;
+using EasyBudget.Business.ViewModels;
 
 namespace EasyBudget.iOS
 {
@@ -160,8 +161,8 @@ namespace EasyBudget.iOS
     {
         UITableViewController controller;
         EasyBudgetDataService ds;
-        BudgetCategoriesVM vmodel;
-        public IGrouping<string, BudgetCategory>[] grouping { get; set; }
+        BudgetCategoriesViewModel vmodel;
+        public IGrouping<string, BudgetCategoryViewModel>[] grouping { get; set; }
 
         static string CELL_ID = "BudgetCategoryCellId";
 
@@ -208,9 +209,9 @@ namespace EasyBudget.iOS
         {
             var vm = await dataService.GetBudgetCategoriesViewModelAsync();
             this.vmodel = vm;
-            this.grouping = (from c in this.vmodel.BudgetCategories
-                             orderby c.categoryType ascending
-                             group c by c.categoryType.ToString() into g
+            this.grouping = (from c in this.vmodel.BudgetCategoryVMs
+                             orderby c.CategoryType ascending
+                             group c by c.CategoryType.ToString() into g
                              select g).ToArray();
         }
 
@@ -236,8 +237,8 @@ namespace EasyBudget.iOS
             }
 
             var category = this.grouping[indexPath.Section].ElementAt(indexPath.Row);
-            string titleText = category.categoryName;
-            decimal budgetedAmount = category.budgetAmount;
+            string titleText = category.Name;
+            decimal budgetedAmount = category.Amount;
             string subTitleText = string.Format("{0:C}", budgetedAmount);
 
             cell.TextLabel.Text = titleText;
@@ -266,7 +267,7 @@ namespace EasyBudget.iOS
         public override string TitleForFooter(UITableView tableView, nint section)
         {
             //return base.TitleForFooter(tableView, section);
-            var sumBudgetedAmounts = (from g in this.grouping[section] select g.budgetAmount).Sum();
+            var sumBudgetedAmounts = (from g in this.grouping[section] select g.Amount).Sum();
             string footerText = "Total Budgeted " + string.Format("{0:C}", sumBudgetedAmounts);
             return footerText;
         }
@@ -306,7 +307,7 @@ namespace EasyBudget.iOS
                 "Edit",
                 delegate
                 {
-                    BudgetCategory category = grouping[indexPath.Section].ElementAt(indexPath.Row);
+                    BudgetCategoryViewModel category = grouping[indexPath.Section].ElementAt(indexPath.Row);
                     var e = new CategorySelectedEventArgs();
                     e.Category = category;
                     OnCategoryEdit(e);
@@ -361,7 +362,7 @@ namespace EasyBudget.iOS
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             //base.RowSelected(tableView, indexPath);
-            BudgetCategory category = grouping[indexPath.Section].ElementAt(indexPath.Row);
+            BudgetCategoryViewModel category = grouping[indexPath.Section].ElementAt(indexPath.Row);
             var e = new CategorySelectedEventArgs();
             e.Category = category;
             OnCategorySelected(e);
@@ -425,6 +426,6 @@ namespace EasyBudget.iOS
     /// </summary>
     public class CategorySelectedEventArgs : EventArgs
     {
-        public BudgetCategory Category { get; set; }
+        public BudgetCategoryViewModel Category { get; set; }
     }
 }

@@ -13,13 +13,34 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace EasyBudget.Models.DataModels
 {
     public abstract class BudgetItem : BaseObject
     {
+        public int budgetCategoryId { get; set; }
+
+        [SQLite.Ignore]
+        public virtual BudgetCategory budgetCategory { get; set; }
+
         public BudgetItemType ItemType { get; set; }
 
-        public decimal budgetedAmount { get; set; }
+        public decimal BudgetedAmount { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        [MaxLength(250)]
+        public string description { get; set; }
+
+        [MaxLength(250)]
+        public string notation { get; set; }
+
+        public bool recurring { get; set; }
+
+        public Frequency frequency { get; set; }
 
         public BudgetItem()
         {

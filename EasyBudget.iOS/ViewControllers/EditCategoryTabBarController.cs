@@ -2,12 +2,13 @@ using Foundation;
 using System;
 using UIKit;
 using EasyBudget.Models.DataModels;
+using EasyBudget.Business.ViewModels;
 
 namespace EasyBudget.iOS
 {
     public partial class EditCategoryTabBarController : UITabBarController
     {
-        public BudgetCategory Category { get; set; }
+        public BudgetCategoryViewModel Category { get; set; }
 
         public EditCategoryTabBarController (IntPtr handle) : base (handle)
         {
@@ -28,7 +29,7 @@ namespace EasyBudget.iOS
                 var vcItems = controllers[1];
                 if (vcItems != null && this.Category != null)
                 {
-                    (vcItems as BudgetItemsTableViewController).CategoryId = this.Category.id;
+                    (vcItems as BudgetItemsTableViewController).CategoryId = this.Category.CategoryId;
                 }
             }
         }

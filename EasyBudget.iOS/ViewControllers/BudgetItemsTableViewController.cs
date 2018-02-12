@@ -35,6 +35,7 @@ using EasyBudget.Business;
 using System.Threading.Tasks;
 using EasyBudget.Models.DataModels;
 using System.Linq;
+using EasyBudget.Business.ViewModels;
 
 namespace EasyBudget.iOS
 {
@@ -121,9 +122,9 @@ namespace EasyBudget.iOS
     {
         UITableViewController controller;
         EasyBudgetDataService ds;
-        BudgetItemsVM vmodel;
+        BudgetItemsViewModel vmodel;
 
-        public IGrouping<string, BudgetItem>[] grouping { get; set; }
+        public IGrouping<string, BudgetItemViewModel>[] grouping { get; set; }
 
         public int CategoryId { get; set; }
 
@@ -162,7 +163,7 @@ namespace EasyBudget.iOS
         {
             var vm = await dataService.GetBudgetItemsVM(this.CategoryId);
             this.vmodel = vm;
-            this.grouping = (from i in this.vmodel.BudgetItems
+            this.grouping = (from i in this.vmodel.BudgetItemVMs
                              orderby i.ItemType descending
                              group i by i.ItemType.ToString() into g
                              select g).ToArray();
@@ -195,13 +196,13 @@ namespace EasyBudget.iOS
 
             if (budgetItem.ItemType == BudgetItemType.Income)
             {
-                titleText = (budgetItem as IncomeItem).description;
-                budgetedAmount = (budgetItem as IncomeItem).budgetedAmount;
+                titleText = (budgetItem as BudgetItemViewModel).ItemDescription;
+                budgetedAmount = (budgetItem as BudgetItemViewModel).BudgetedAmount;
             }
             else
             {
-                titleText = (budgetItem as ExpenseItem).description;
-                budgetedAmount = (budgetItem as ExpenseItem).budgetedAmount;
+                titleText = (budgetItem as BudgetItemViewModel).ItemDescription;
+                budgetedAmount = (budgetItem as BudgetItemViewModel).BudgetedAmount;
             }
             string subTitleText = string.Format("{0:C}", budgetedAmount);
 
@@ -231,7 +232,7 @@ namespace EasyBudget.iOS
         public override string TitleForFooter(UITableView tableView, nint section)
         {
             //return base.TitleForFooter(tableView, section);
-            var sumBudgetedAmounts = (from g in this.grouping[section] select g.budgetedAmount).Sum();
+            var sumBudgetedAmounts = (from g in this.grouping[section] select g.BudgetedAmount).Sum();
             string footerText = "Total Budgeted " + string.Format("{0:C}", sumBudgetedAmounts);
             return footerText;
         }
@@ -271,7 +272,7 @@ namespace EasyBudget.iOS
                 "Edit",
                 delegate
                 {
-                    BudgetItem item = grouping[indexPath.Section].ElementAt(indexPath.Row);
+                    BudgetItemViewModel item = grouping[indexPath.Section].ElementAt(indexPath.Row);
                     var e = new BudgetItemEventArgs();
                     e.BudgetItem = item;
                     OnItemEdit(e);
@@ -326,7 +327,7 @@ namespace EasyBudget.iOS
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             //base.RowSelected(tableView, indexPath);
-            BudgetItem item = grouping[indexPath.Section].ElementAt(indexPath.Row);
+            BudgetItemViewModel item = grouping[indexPath.Section].ElementAt(indexPath.Row);
             var e = new BudgetItemEventArgs();
             e.BudgetItem = item;
             OnItemSelected(e);
@@ -386,6 +387,6 @@ namespace EasyBudget.iOS
     /// </summary>
     public class BudgetItemEventArgs : EventArgs
     {
-        public BudgetItem BudgetItem { get; set; }
+        public BudgetItemViewModel BudgetItem { get; set; }
     }
 }

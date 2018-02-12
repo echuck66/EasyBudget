@@ -23,13 +23,7 @@ namespace EasyBudget.Models.DataModels
     [SQLite.Table("CheckingAccount")]
     public class CheckingAccount : BankAccount
     {
-        public string routingNumber { get; set; }
-
-        public string accountNumber { get; set; }
-
-        [MaxLength(75), Unique]
-        public string accountNickname { get; set; }
-
+        
         [NotMapped]
         [SQLite.Ignore]
         public ICollection<CheckingDeposit> deposits { get; set; }
