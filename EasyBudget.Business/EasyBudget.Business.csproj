@@ -16,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UoWResults\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>
