@@ -41,6 +41,12 @@ namespace EasyBudget.Business.ViewModels
 
         public ICollection<WithdrawalViewModel> Withdrawals { get; set; }
 
+        public bool CanEdit { get; set; }
+
+        public bool CanDelete { get; set; }
+
+        public bool IsNew { get; set; }
+
         internal BankAccountViewModel(string dbFilePath)
             : base(dbFilePath)
         {

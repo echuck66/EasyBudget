@@ -3,13 +3,14 @@ using System;
 using UIKit;
 using EasyBudget.Models.DataModels;
 using EasyBudget.iOS.Models;
+using EasyBudget.Business.ViewModels;
 
 namespace EasyBudget.iOS
 {
     public partial class EditBudgetCategoryViewController : UIViewController
     {
 
-        public BudgetCategory Category { get; set; }
+        public BudgetCategoryViewModel Category { get; set; }
 
         public EditBudgetCategoryViewController (IntPtr handle) : base (handle)
         {
@@ -24,10 +25,10 @@ namespace EasyBudget.iOS
             bool enableTypePicker = Category == null;
             if (this.Category != null)
             {
-                typeSelection = Category.categoryType == EasyBudget.Models.BudgetCategoryType.Income ? 0 : 1;
-                txtCategoryName.Text = Category.categoryName;
-                txtCategoryDescription.Text = Category.description;
-                pickerModel.SelectedType = Category.categoryType;
+                typeSelection = Category.CategoryType == EasyBudget.Models.BudgetCategoryType.Income ? 0 : 1;
+                txtCategoryName.Text = Category.Name;
+                txtCategoryDescription.Text = Category.Description;
+                pickerModel.SelectedType = Category.CategoryType;
                 categoryTypePicker.Select(typeSelection, 0, true);
             }
             

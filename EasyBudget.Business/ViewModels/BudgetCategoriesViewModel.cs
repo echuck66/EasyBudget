@@ -14,12 +14,14 @@
 //    limitations under the License.
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EasyBudget.Business.ViewModels
 {
 
-    public class BudgetCategoriesViewModel : BaseViewModel
+    public class BudgetCategoriesViewModel : BaseViewModel, INotifyCollectionChanged
     {
 
         public ICollection<BudgetCategoryViewModel> BudgetCategoryVMs { get; set; }
@@ -29,6 +31,8 @@ namespace EasyBudget.Business.ViewModels
         {
             this.BudgetCategoryVMs = new List<BudgetCategoryViewModel>();
         }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         internal async Task LoadBudgetCategoriesAsync()
         {
@@ -62,6 +66,57 @@ namespace EasyBudget.Business.ViewModels
             }
         }
 
+        public void AddNewBudgetCategory()
+        {
+            BudgetCategoryViewModel vm = new BudgetCategoryViewModel(this.dbFilePath);
+            vm.IsNew = true;
+            this.BudgetCategoryVMs.Add(vm);
+            OnCollectionChanged(NotifyCollectionChangedAction.Add);
+        }
+
+        public async Task AddNewBudgetCategoryAsync()
+        {
+            BudgetCategoryViewModel vm = new BudgetCategoryViewModel(this.dbFilePath);
+            vm.IsNew = true;
+            await Task.Run(() => this.BudgetCategoryVMs.Add(vm));
+            OnCollectionChanged(NotifyCollectionChangedAction.Add);
+        }
+
+        public async Task<bool> DeleteBudgetCategoryAsync(BudgetCategoryViewModel vm)
+        {
+            bool deleted = false;
+            if (vm.CanDelete && this.BudgetCategoryVMs.Contains(vm, new BudgetCategoryViewModelComparer()))
+            {
+                this.BudgetCategoryVMs.Remove(vm);
+
+                // TODO use the BudgetCategoryViewModel class to delete item
+                //using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+                //{
+                //    var _resultsCategory = await uow.GetBudgetCategoryAsync(vm.CategoryId);
+                //    if (_resultsCategory.Successful)
+                //    {
+                //        var _resultsDeleteCategory = await uow.DeleteBudgetCategoryAsync(_resultsCategory.Results);
+                //        deleted = _resultsDeleteCategory.Successful;
+                //        if (!_resultsDeleteCategory.Successful)
+                //        {
+                //            // TODO handle failure here
+                //        }
+                //    }
+                //}
+
+                OnCollectionChanged(NotifyCollectionChangedAction.Remove);
+            }
+
+            return deleted;
+        }
+
+        public void OnCollectionChanged(NotifyCollectionChangedAction action)
+        {
+            if (CollectionChanged != null)
+            {
+                CollectionChanged(this, new NotifyCollectionChangedEventArgs(action));
+            }
+        }
     }
 
 }

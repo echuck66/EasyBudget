@@ -43,6 +43,10 @@ namespace EasyBudget.Business.ViewModels
 
         public ICollection<BudgetItemViewModel> BudgetItemVMs { get; set; }
 
+        public bool CanEdit { get; set; }
+
+        public bool CanDelete { get; set; }
+
         public bool IsNew { get; set; }
 
         public BudgetCategoryViewModel(string dbFilePath)
@@ -64,6 +68,8 @@ namespace EasyBudget.Business.ViewModels
             this.CategoryIcon = category.categoryIcon;
             this.CategoryType = category.categoryType;
             this.IsNew = category.IsNew;
+            this.CanEdit = category.CanEdit;
+            this.CanDelete = category.CanDelete;
 
             using (UnitOfWork uow = new UnitOfWork(dbFilePath))
             {
@@ -366,4 +372,17 @@ namespace EasyBudget.Business.ViewModels
         }
     }
 
+    public class BudgetCategoryViewModelComparer : IEqualityComparer<BudgetCategoryViewModel>
+    {
+        public bool Equals(BudgetCategoryViewModel x, BudgetCategoryViewModel y)
+        {
+            return x.CategoryId == y.CategoryId;
+        }
+
+        public int GetHashCode(BudgetCategoryViewModel obj)
+        {
+            int hashCode = obj.CategoryId.GetHashCode() + obj.Name.GetHashCode() + obj.Description.GetHashCode();
+            return hashCode;
+        }
+    }
 }

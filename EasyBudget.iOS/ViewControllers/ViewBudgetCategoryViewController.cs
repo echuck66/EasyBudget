@@ -2,12 +2,13 @@ using Foundation;
 using System;
 using UIKit;
 using EasyBudget.Models.DataModels;
+using EasyBudget.Business.ViewModels;
 
 namespace EasyBudget.iOS
 {
     public partial class ViewBudgetCategoryViewController : UIViewController
     {
-        public BudgetCategory Category { get; set; }
+        public BudgetCategoryViewModel Category { get; set; }
 
         public ViewBudgetCategoryViewController()
         {
@@ -24,8 +25,8 @@ namespace EasyBudget.iOS
 
             if (this.Category != null)
             {
-                this.lblCategoryName.Text = Category?.categoryName;
-                lblCategoryDescription.Text = Category?.description;
+                this.lblCategoryName.Text = Category?.Name;
+                lblCategoryDescription.Text = Category?.Description;
             }
         }
 

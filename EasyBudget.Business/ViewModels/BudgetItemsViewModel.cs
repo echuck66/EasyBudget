@@ -25,7 +25,7 @@ namespace EasyBudget.Business.ViewModels
 
         List<BudgetItem> BudgetItems { get; set; }
 
-        ICollection<BudgetItemViewModel> BudgetItemVMs { get; set; }
+        public ICollection<BudgetItemViewModel> BudgetItemVMs { get; set; }
 
         internal BudgetItemsViewModel(string dbFilePath)
             : base(dbFilePath)

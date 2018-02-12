@@ -65,7 +65,7 @@ namespace EasyBudget.Android
             {
                 var categoriesVM = ds.GetBudgetCategoriesViewModelAsync().Result;
 
-                int categoryCount = categoriesVM.BudgetCategories.Count;
+                int categoryCount = categoriesVM.BudgetCategoryVMs.Count;
             }
         }
 

@@ -46,6 +46,12 @@ namespace EasyBudget.Business.ViewModels
 
         public DateTime EndDate { get; set; }
 
+        public bool CanEdit { get; set; }
+
+        public bool CanDelete { get; set; }
+
+        public bool IsNew { get; set; }
+
         internal BudgetItemViewModel(string dbFilePath)
             : base(dbFilePath)
         {
@@ -120,7 +126,9 @@ namespace EasyBudget.Business.ViewModels
                         this.ItemFrequency = this.source.frequency;
                         this.ItemNotation = this.source.notation;
                         this.ItemType = this.source.ItemType;
-
+                        this.CanEdit = this.source.CanEdit;
+                        this.CanDelete = this.source.CanDelete;
+                        this.IsNew = this.source.IsNew;
                     }
                     else
                     {
