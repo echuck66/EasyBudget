@@ -13,6 +13,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBudget.Models", "EasyBu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBudget.Data", "EasyBudget.Data\EasyBudget.Data.csproj", "{62CB7B2E-A000-40AF-8D46-9FE34C64B558}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{4E29B1F5-08C0-4940-A7B0-A7E3A1324F47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{E5B4F54A-C33B-46C1-9D0B-440858336058}"
+	ProjectSection(SolutionItems) = preProject
+		EBClassDiagram1.png = EBClassDiagram1.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,5 +107,8 @@ Global
 		Policies = $0
 		$0.StandardHeader = $1
 		$1.Text = @\n Copyright ${Year}  ${CopyrightHolder}\n\n   Licensed under the Apache License, Version 2.0 (the "License");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an "AS IS" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5B4F54A-C33B-46C1-9D0B-440858336058} = {4E29B1F5-08C0-4940-A7B0-A7E3A1324F47}
 	EndGlobalSection
 EndGlobal
