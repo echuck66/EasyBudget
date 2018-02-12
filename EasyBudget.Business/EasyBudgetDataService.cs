@@ -78,13 +78,13 @@ namespace EasyBudget.Business
             return vm;
         }
 
-        public BudgetCategoryViewModel CreateBudgetCategoryVM()
-        {
-            var vm = new BudgetCategoryViewModel(this.dbFilePath);
-            vm.CreateBudgetCategory();
+        //public BudgetCategoryViewModel CreateBudgetCategoryVM()
+        //{
+        //    var vm = new BudgetCategoryViewModel(this.dbFilePath);
+        //    vm.CreateBudgetCategory();
 
-            return vm;
-        }
+        //    return vm;
+        //}
 
         public async Task<BudgetItemsViewModel> GetBudgetItemsVM(int categoryId)
         {
