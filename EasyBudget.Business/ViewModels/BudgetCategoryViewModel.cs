@@ -341,7 +341,8 @@ namespace EasyBudget.Business.ViewModels
 
                 if (_saveOk)
                 {
-
+                    this.IsNew = false;
+                    this.IsDirty = false;
                 }
             }
         }

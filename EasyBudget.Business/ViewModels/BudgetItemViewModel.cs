@@ -233,7 +233,119 @@ namespace EasyBudget.Business.ViewModels
             }
         }
 
+        public async Task<bool> DeleteAsync()
+        {
+            bool deleted = false;
 
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                switch (this.ItemType)
+                {
+                    case BudgetItemType.Expense:
+                        var _resultsGetExpenseItem = await uow.GetExpenseItemAsync(this.BudgetItemId);
+                        if (_resultsGetExpenseItem.Successful)
+                        {
+                            var _resultsDeleteExpense = await uow.DeleteExpenseItemAsync(_resultsGetExpenseItem.Results);
+                            deleted = _resultsDeleteExpense.Successful;
+                            if (!_resultsDeleteExpense.Successful)
+                            {
+                                if (_resultsDeleteExpense.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsDeleteExpense.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsDeleteExpense.Message))
+                                {
+                                    WriteErrorCondition(_resultsDeleteExpense.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred loading item's BudgetCategory object");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (_resultsGetExpenseItem.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsGetExpenseItem.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsGetExpenseItem.Message))
+                            {
+                                WriteErrorCondition(_resultsGetExpenseItem.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred loading item's BudgetCategory object");
+                            }
+                        }
+
+                        break;
+                    case BudgetItemType.Income:
+                        var _resultsGetIncomeItem = await uow.GetIncomeItemAsync(this.BudgetItemId);
+                        if (_resultsGetIncomeItem.Successful)
+                        {
+                            var _resultsDeleteIncome = await uow.DeleteIncomeItemAsync(_resultsGetIncomeItem.Results);
+                            deleted = _resultsDeleteIncome.Successful;
+                            if (!_resultsDeleteIncome.Successful)
+                            {
+                                if (_resultsDeleteIncome.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsDeleteIncome.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsDeleteIncome.Message))
+                                {
+                                    WriteErrorCondition(_resultsDeleteIncome.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred loading item's BudgetCategory object");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (_resultsGetIncomeItem.WorkException != null)
+                            {
+                                WriteErrorCondition(_resultsGetIncomeItem.WorkException);
+                            }
+                            else if (!string.IsNullOrEmpty(_resultsGetIncomeItem.Message))
+                            {
+                                WriteErrorCondition(_resultsGetIncomeItem.Message);
+                            }
+                            else
+                            {
+                                WriteErrorCondition("An unknown error has occurred loading item's BudgetCategory object");
+                            }
+                        }
+                        break;
+                }
+            }
+
+            return deleted;
+        }
+    
+        public async Task SaveChangesAsync()
+        {
+            bool _saveOk = true;
+
+            using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
+            {
+                if (this.IsNew)
+                {
+                    
+                }
+                else
+                {
+                    
+                }
+            }
+
+            if (_saveOk)
+            {
+                this.IsNew = false;
+                this.IsDirty = false;
+            }
+        }
     }
 
 }
