@@ -30,7 +30,7 @@ namespace EasyBudget.Models.DataModels
 
         public DateTime StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [MaxLength(250)]
         public string description { get; set; }

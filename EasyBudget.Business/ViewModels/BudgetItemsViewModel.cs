@@ -40,7 +40,7 @@ namespace EasyBudget.Business.ViewModels
             await LoadExpenseItemsAsync(categoryId);
         }
 
-        private async Task LoadIncomeItemsAsync(int categoryId)
+        async Task LoadIncomeItemsAsync(int categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -53,10 +53,11 @@ namespace EasyBudget.Business.ViewModels
                     {
                         foreach (var item in _resultsIncomeItems.Results)
                         {
+                            item.budgetCategory = category;
                             item.ItemType = BudgetItemType.Income;
                             this.BudgetItems.Add(item);
                             var vm = new BudgetItemViewModel(this.dbFilePath);
-                            await vm.PopulateVMAsync(item.id, item.ItemType);
+                            await vm.PopulateVMAsync(item);
                             this.BudgetItemVMs.Add(vm);
                         }
                     }
@@ -94,7 +95,7 @@ namespace EasyBudget.Business.ViewModels
             }
         }
 
-        private async Task LoadExpenseItemsAsync(int categoryId)
+        async Task LoadExpenseItemsAsync(int categoryId)
         {
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
@@ -107,10 +108,11 @@ namespace EasyBudget.Business.ViewModels
                     {
                         foreach (var item in _resultsIncomeItems.Results)
                         {
+                            item.budgetCategory = category;
                             item.ItemType = BudgetItemType.Expense;
                             this.BudgetItems.Add(item);
                             var vm = new BudgetItemViewModel(this.dbFilePath);
-                            await vm.PopulateVMAsync(item.id, item.ItemType);
+                            await vm.PopulateVMAsync(item);
                             this.BudgetItemVMs.Add(vm);
                         }
                     }

@@ -70,6 +70,7 @@ namespace EasyBudget.Business.ViewModels
         {
             BudgetCategoryViewModel vm = new BudgetCategoryViewModel(this.dbFilePath);
             vm.IsNew = true;
+
             this.BudgetCategoryVMs.Add(vm);
             OnCollectionChanged(this.BudgetCategoryVMs, NotifyCollectionChangedAction.Add);
         }
