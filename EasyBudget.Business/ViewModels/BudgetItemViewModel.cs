@@ -327,16 +327,186 @@ namespace EasyBudget.Business.ViewModels
         public async Task SaveChangesAsync()
         {
             bool _saveOk = true;
-
+            BudgetItem item;
             using (UnitOfWork uow = new UnitOfWork(this.dbFilePath))
             {
                 if (this.IsNew)
                 {
-                    
+                    switch (this.ItemType)
+                    {
+                        case BudgetItemType.Expense:
+                            item = new ExpenseItem();
+                            item.budgetCategoryId = this.CategoryId;
+                            item.BudgetedAmount = this.BudgetedAmount;
+                            item.CanDelete = this.CanDelete;
+                            item.CanEdit = this.CanEdit;
+                            item.description = this.ItemDescription;
+                            item.EndDate = this.EndDate;
+                            item.StartDate = this.StartDate;
+                            item.frequency = this.ItemFrequency;
+                            item.IsNew = this.IsNew;
+                            item.ItemType = this.ItemType;
+                            item.notation = this.ItemNotation;
+                            item.recurring = this.IsRecurring;
+                            var _resultsAddExpense = await uow.AddExpenseItemAsync(item as ExpenseItem);
+                            _saveOk = _resultsAddExpense.Successful;
+                            if (!_saveOk)
+                            {
+                                if (_resultsAddExpense.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddExpense.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddExpense.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddExpense.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred adding budget item object");
+                                }
+                            }
+                            break;
+                        case BudgetItemType.Income:
+                            item = new IncomeItem();
+                            item.budgetCategoryId = this.CategoryId;
+                            item.BudgetedAmount = this.BudgetedAmount;
+                            item.CanDelete = this.CanDelete;
+                            item.CanEdit = this.CanEdit;
+                            item.description = this.ItemDescription;
+                            item.EndDate = this.EndDate;
+                            item.StartDate = this.StartDate;
+                            item.frequency = this.ItemFrequency;
+                            item.IsNew = this.IsNew;
+                            item.ItemType = this.ItemType;
+                            item.notation = this.ItemNotation;
+                            item.recurring = this.IsRecurring;
+                            var _resultsAddIncome = await uow.AddIncomeItemAsync(item as IncomeItem);
+                            _saveOk = _resultsAddIncome.Successful;
+                            if (!_saveOk)
+                            {
+                                if (_resultsAddIncome.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsAddIncome.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsAddIncome.Message))
+                                {
+                                    WriteErrorCondition(_resultsAddIncome.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred adding budget item object");
+                                }
+                            }
+                            break;
+                    }
                 }
                 else
                 {
-                    
+                    switch (this.ItemType)
+                    {
+                        case BudgetItemType.Expense:
+                            var _resultsGetExpense = await uow.GetExpenseItemAsync(this.BudgetItemId);
+                            if (_resultsGetExpense.Successful)
+                            {
+                                item = _resultsGetExpense.Results;
+                                item.budgetCategoryId = this.CategoryId;
+                                item.BudgetedAmount = this.BudgetedAmount;
+                                item.CanDelete = this.CanDelete;
+                                item.CanEdit = this.CanEdit;
+                                item.description = this.ItemDescription;
+                                item.EndDate = this.EndDate;
+                                item.StartDate = this.StartDate;
+                                item.frequency = this.ItemFrequency;
+                                item.IsNew = this.IsNew;
+                                item.ItemType = this.ItemType;
+                                item.notation = this.ItemNotation;
+                                item.recurring = this.IsRecurring;
+                                var _resultsUpdateExpense = await uow.UpdateExpenseItemAsync(item as ExpenseItem);
+                                _saveOk = _resultsUpdateExpense.Successful;
+                                if (!_saveOk)
+                                {
+                                    if (_resultsUpdateExpense.WorkException != null)
+                                    {
+                                        WriteErrorCondition(_resultsUpdateExpense.WorkException);
+                                    }
+                                    else if (!string.IsNullOrEmpty(_resultsUpdateExpense.Message))
+                                    {
+                                        WriteErrorCondition(_resultsUpdateExpense.Message);
+                                    }
+                                    else
+                                    {
+                                        WriteErrorCondition("An unknown error has occurred updating budget item object");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (_resultsGetExpense.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsGetExpense.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsGetExpense.Message))
+                                {
+                                    WriteErrorCondition(_resultsGetExpense.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred locating original budget item object");
+                                }
+                            }
+                            break;
+                        case BudgetItemType.Income:
+                            var _resultsGetIncome = await uow.GetIncomeItemAsync(this.BudgetItemId);
+                            if (_resultsGetIncome.Successful)
+                            {
+                                item = _resultsGetIncome.Results;
+                                item.budgetCategoryId = this.CategoryId;
+                                item.BudgetedAmount = this.BudgetedAmount;
+                                item.CanDelete = this.CanDelete;
+                                item.CanEdit = this.CanEdit;
+                                item.description = this.ItemDescription;
+                                item.EndDate = this.EndDate;
+                                item.StartDate = this.StartDate;
+                                item.frequency = this.ItemFrequency;
+                                item.IsNew = this.IsNew;
+                                item.ItemType = this.ItemType;
+                                item.notation = this.ItemNotation;
+                                item.recurring = this.IsRecurring;
+                                var _resultsUpdateIncome = await uow.UpdateIncomeItemAsync(item as IncomeItem);
+                                _saveOk = _resultsUpdateIncome.Successful;
+                                if (!_saveOk)
+                                {
+                                    if (_resultsUpdateIncome.WorkException != null)
+                                    {
+                                        WriteErrorCondition(_resultsUpdateIncome.WorkException);
+                                    }
+                                    else if (!string.IsNullOrEmpty(_resultsUpdateIncome.Message))
+                                    {
+                                        WriteErrorCondition(_resultsUpdateIncome.Message);
+                                    }
+                                    else
+                                    {
+                                        WriteErrorCondition("An unknown error has occurred updating budget item object");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (_resultsGetIncome.WorkException != null)
+                                {
+                                    WriteErrorCondition(_resultsGetIncome.WorkException);
+                                }
+                                else if (!string.IsNullOrEmpty(_resultsGetIncome.Message))
+                                {
+                                    WriteErrorCondition(_resultsGetIncome.Message);
+                                }
+                                else
+                                {
+                                    WriteErrorCondition("An unknown error has occurred locating original budget item object");
+                                }
+                            }
+                            break;
+                    }
                 }
             }
 
